@@ -1,0 +1,26 @@
+{
+  "exam_set": "set1",
+  "order": 1,
+  "body": "テスト問題です。AWSのオブジェクトストレージサービスはどれですか？",
+  "option_a": "EC2",
+  "option_b": "S3",
+  "option_c": "RDS",
+  "option_d": "Lambda",
+  "answer": "B",
+  "domain": "S3",
+  "explanation": {
+    "key_conditions": "オブジェクトストレージサービスを問う",
+    "what_is_asked": "AWSのオブジェクトストレージサービス",
+    "decision_axis": "AWSサービスの基本知識",
+    "keywords": [
+      { "keyword": "オブジェクトストレージ", "pattern": "正解", "reason": "S3はオブジェクトストレージサービス" }
+    ],
+    "options_analysis": [
+      { "option": "A", "text": "EC2", "is_correct": false, "reason": "EC2はコンピューティングサービス" },
+      { "option": "B", "text": "S3", "is_correct": true, "reason": "S3はSimple Storage Serviceでオブジェクトストレージ" },
+      { "option": "C", "text": "RDS", "is_correct": false, "reason": "RDSはリレーショナルDBサービス" },
+      { "option": "D", "text": "Lambda", "is_correct": false, "reason": "Lambdaはサーバーレス関数実行サービス" }
+    ],
+    "essence": "S3がAWSの代表的なオブジェクトストレージであることを覚える"
+  }
+}
