@@ -1,0 +1,48 @@
+{
+  "exam_set": "set2",
+  "order": 3,
+  "body": "ある企業は、AWS上でアプリケーションを開発しています。このアプリケーションはAWS Lambda関数を用いて実行されるサーバーレスアプリケーションです。データベース層にはAmazon RDS for MySQL DBインスタンスを使用し、Lambda関数によって多くのデータ処理を行う必要があります。その際の接続構成を最適化することが求められます。\n\n運用上のオーバーヘッドを抑えつつ、これらの要件を満たすソリューションはどれでしょうか。",
+  "option_a": "RDSエンドポイントを利用して、Amazon RDS DBインスタンスに接続する。",
+  "option_b": "RDS Proxyを構成して、Amazon RDS DBインスタンスへの接続にRDS Proxyを使用する。",
+  "option_c": "RDSライターエンドポイントを利用して、Amazon RDS DBインスタンスに接続する。",
+  "option_d": "RDSリーダーエンドポイントを利用して、Amazon RDS DBインスタンスに接続する。",
+  "answer": "B",
+  "domain": "RDS",
+  "explanation": {
+    "key_conditions": "Lambda関数（高並列）からRDS for MySQLへの接続 / 多くのデータ処理 / 運用オーバーヘッドの抑制",
+    "what_is_asked": "Lambda + RDSの接続構成を最適化するサービス",
+    "decision_axis": "接続数の管理（コネクションプール）/ 運用オーバーヘッド",
+    "keywords": [
+      { "keyword": "Lambda + RDS", "pattern": "正解", "reason": "LambdaはスケールアウトするたびにRDSへの新規接続を張る。接続数が爆発するリスクがあるのでRDS Proxyを即座に想起する" },
+      { "keyword": "接続を最適化", "pattern": "正解", "reason": "接続最適化＝コネクションプーリング＝RDS Proxy" },
+      { "keyword": "ライター/リーダーエンドポイント", "pattern": "誤り", "reason": "ライター・リーダーエンドポイントはAurora Clusterの機能。RDS for MySQLの単一インスタンスには適用されない" }
+    ],
+    "options_analysis": [
+      {
+        "option": "A",
+        "text": "RDSエンドポイントへ直接接続",
+        "is_correct": false,
+        "reason": "Lambdaが並列スケールするたびに新規DB接続が発生し、RDSの接続数上限を超えるリスクがある。接続確立のオーバーヘッドも大きい"
+      },
+      {
+        "option": "B",
+        "text": "RDS Proxy経由で接続",
+        "is_correct": true,
+        "reason": "RDS Proxyはコネクションプーリングを提供し、Lambda関数からの大量の接続リクエストをプールして再利用する。RDSへの実接続数を大幅に削減でき、フルマネージドで運用オーバーヘッドも低い"
+      },
+      {
+        "option": "C",
+        "text": "RDSライターエンドポイント",
+        "is_correct": false,
+        "reason": "ライターエンドポイントはAurora Clusterの機能。RDS for MySQL（非Aurora）の単一インスタンスには存在しないため不適"
+      },
+      {
+        "option": "D",
+        "text": "RDSリーダーエンドポイント",
+        "is_correct": false,
+        "reason": "リーダーエンドポイントもAurora Clusterの機能。CとDはRDS for MySQLへの誤った適用であり、接続数問題の解決にもならない"
+      }
+    ],
+    "essence": "Lambda + RDS の組み合わせが出たらRDS Proxyを即答。Lambdaの高並列接続によるコネクション枯渇をProxyのプーリングで解決する"
+  }
+}

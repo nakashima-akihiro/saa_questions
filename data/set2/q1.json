@@ -1,0 +1,48 @@
+{
+  "exam_set": "set2",
+  "order": 1,
+  "body": "ある企業は、オンプレミス環境においてWindowsサーバーを用いたバッチジョブを運用しています。このバッチジョブは、日次で最大1時間実行されます。ソリューションアーキテクトは、このバッチジョブプロセスをAWSに移行し、最適化する必要があります。\n\n運用上のオーバーヘッドを抑えつつ、これらの要件を満たすソリューションはどれでしょうか。",
+  "option_a": "AWS Batch上でEC2インスタンス・Windowsサーバーを起動し、Amazon EventBridgeを利用した日次スケジュールを設定したバッチジョブ処理を実施する。",
+  "option_b": "Auto Scalingグループを構成したAmazon EC2インスタンスのフリートに、Amazon EventBridgeを利用した日次スケジュールを設定したバッチジョブ処理を実施する。",
+  "option_c": "Amazon EventBridgeルールによって日次スケジュールを設定して、バッチジョブを処理するAWS Lambda関数を呼び出す。",
+  "option_d": "StepFunctionsのステートマシン上で日次スケジュールを設定して、バッチジョブ処理を実施する。",
+  "answer": "A",
+  "domain": "AWS Batch",
+  "explanation": {
+    "key_conditions": "Windowsサーバーのバッチジョブ / 日次・最大1時間の実行 / 運用オーバーヘッドを最小化",
+    "what_is_asked": "オンプレWindowsバッチジョブをAWSに移行する際に、最も運用負荷が低いサービス構成",
+    "decision_axis": "運用オーバーヘッド（マネージド度合い）/ 実行時間制限への対応",
+    "keywords": [
+      { "keyword": "最大1時間の実行", "pattern": "正解", "reason": "Lambda（最大15分）は不適。AWS BatchはEC2上で長時間ジョブに対応" },
+      { "keyword": "運用オーバーヘッドを抑える", "pattern": "正解", "reason": "AWS Batchはジョブキュー・スケジューリング・リソース管理をマネージド提供。EC2 Auto Scalingは自己管理が必要" },
+      { "keyword": "Windowsサーバー", "pattern": "正解", "reason": "AWS BatchはWindows EC2インスタンスをサポート" }
+    ],
+    "options_analysis": [
+      {
+        "option": "A",
+        "text": "AWS Batch + EC2 Windows + EventBridge",
+        "is_correct": true,
+        "reason": "AWS Batchはジョブのスケジューリング・リソースプロビジョニング・キュー管理をフルマネージドで提供。EventBridgeで日次トリガー可能。Windowsも対応。運用オーバーヘッド最小"
+      },
+      {
+        "option": "B",
+        "text": "EC2 Auto Scalingフリート + EventBridge",
+        "is_correct": false,
+        "reason": "EC2インスタンスの起動・停止・ジョブ管理を自前で行う必要があり、AWS Batchと比べて運用オーバーヘッドが高い"
+      },
+      {
+        "option": "C",
+        "text": "EventBridge + Lambda",
+        "is_correct": false,
+        "reason": "AWS Lambdaの最大実行時間は15分。日次で最大1時間のバッチジョブには対応できない"
+      },
+      {
+        "option": "D",
+        "text": "Step Functionsステートマシン + 日次スケジュール",
+        "is_correct": false,
+        "reason": "Step Functionsはワークフローのオーケストレーションツールであり、バッチジョブの実行基盤にはならない。実際の処理はLambdaやEC2等に委譲する必要があり、バッチジョブ専用のAWS Batchより運用オーバーヘッドが高くなる"
+      }
+    ],
+    "essence": "長時間バッチジョブ移行はAWS Batchが最適解。Lambdaの15分制限・EC2自己管理の運用コストとの差を押さえる"
+  }
+}

@@ -1,0 +1,49 @@
+{
+  "exam_set": "set2",
+  "order": 2,
+  "body": "ある金融機関は、銀行業務においてハイパフォーマンスコンピューティングと機械学習を活用した不正検出システムを開発しています。この金融機関は、ワークロードを迅速に処理するための分散処理を求めています。\n\n運用上のオーバーヘッドを抑制しつつ、これらの要件を満たすソリューションはどれでしょうか。",
+  "option_a": "Amazon EKSと複数のコンテナを利用して、ハイパフォーマンスコンピューティング (HPC) クラスターをデプロイする。",
+  "option_b": "AWS ParallelClusterとEFAを利用したMessage Passing Interface（MPI）ライブラリを使用して、ハイパフォーマンスコンピューティング (HPC) クラスターをデプロイする。",
+  "option_c": "Amazon EC2インスタンスにAmazon SQSを連携して、分散並列処理を構成し、ハイパフォーマンスコンピューティング (HPC) クラスターをデプロイする。",
+  "option_d": "Amazon ECSと複数のコンテナを利用して、ハイパフォーマンスコンピューティング (HPC) クラスターをデプロイする。",
+  "answer": "B",
+  "domain": "HPC",
+  "explanation": {
+    "key_conditions": "ハイパフォーマンスコンピューティング（HPC）/ 機械学習を使った不正検出 / ワークロードの迅速な分散処理 / 運用オーバーヘッドの抑制",
+    "what_is_asked": "HPCクラスターを最小の運用負荷でAWS上に構築できるサービス構成",
+    "decision_axis": "HPC専用サービスの有無 / 密結合な並列処理への対応 / 運用オーバーヘッド",
+    "keywords": [
+      { "keyword": "ハイパフォーマンスコンピューティング (HPC)", "pattern": "正解", "reason": "HPCが出たらAWS ParallelCluster + EFAを想起する。HPC専用のマネージドサービス" },
+      { "keyword": "MPI / 密結合な並列処理", "pattern": "正解", "reason": "MPIはノード間の低レイテンシー通信が必須。EFA（Elastic Fabric Adapter）がこれを実現する" },
+      { "keyword": "分散処理 + SQS", "pattern": "誤り", "reason": "SQSは疎結合なメッセージキュー。HPCの密結合並列処理には不適" },
+      { "keyword": "コンテナ (EKS/ECS) + HPC", "pattern": "誤り", "reason": "コンテナはHPC向けに最適化されておらず、EFA等の低レイテンシーネットワークを活かせない" }
+    ],
+    "options_analysis": [
+      {
+        "option": "A",
+        "text": "Amazon EKS + 複数コンテナ",
+        "is_correct": false,
+        "reason": "EKSはコンテナオーケストレーションであり、HPC向けの密結合並列処理には最適化されていない。EFAやMPIとの統合も複雑"
+      },
+      {
+        "option": "B",
+        "text": "AWS ParallelCluster + EFA + MPI",
+        "is_correct": true,
+        "reason": "AWS ParallelClusterはHPCクラスターのプロビジョニング・管理をマネージドで提供。EFAにより低レイテンシー・高帯域の密結合通信を実現し、MPIワークロードに最適。運用オーバーヘッドも最小"
+      },
+      {
+        "option": "C",
+        "text": "Amazon EC2 + SQS + 分散並列処理",
+        "is_correct": false,
+        "reason": "SQSは疎結合なメッセージングサービスであり、HPCが必要とする密結合・低レイテンシーの並列処理には不向き。EC2の管理も自前で行う必要があり運用負荷が高い"
+      },
+      {
+        "option": "D",
+        "text": "Amazon ECS + 複数コンテナ",
+        "is_correct": false,
+        "reason": "ECSもEKSと同様にコンテナ基盤であり、HPC向けの密結合並列処理には最適化されていない。AとDは実質的に同じ理由で不正解"
+      }
+    ],
+    "essence": "HPCが出たらParallelCluster + EFA（低レイテンシーネットワーク）の組み合わせを即座に想起する。SQS・EKS・ECSはHPCの密結合処理には不適"
+  }
+}
