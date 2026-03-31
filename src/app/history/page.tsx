@@ -3,6 +3,8 @@ import { getRecentSessions } from '../actions/sessions'
 import { getAllSetStats } from '../actions/questions'
 import type { ExamSet } from '@/types'
 
+export const dynamic = 'force-dynamic'
+
 const SET_LABELS: Record<ExamSet, string> = {
   set1: 'Set 1', set2: 'Set 2', set3: 'Set 3', set4: 'Set 4', set5: 'Set 5',
 }

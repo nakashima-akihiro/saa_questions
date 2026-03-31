@@ -4,6 +4,8 @@ import { createSession } from '../actions/sessions'
 import QuizClient from './QuizClient'
 import type { ExamSet } from '@/types'
 
+export const dynamic = 'force-dynamic'
+
 export default async function QuizPage({
   searchParams,
 }: {

@@ -2,6 +2,8 @@ import Link from 'next/link'
 import { getAllSetStats } from './actions/questions'
 import type { ExamSet } from '@/types'
 
+export const dynamic = 'force-dynamic'
+
 const SET_LABELS: Record<ExamSet, string> = {
   set1: 'Set 1',
   set2: 'Set 2',
