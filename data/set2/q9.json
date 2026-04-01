@@ -1,0 +1,48 @@
+{
+  "exam_set": "set2",
+  "order": 9,
+  "body": "ある企業は、グローバルにアクセスされるAmazon EC2インスタンス上で株式取引アプリケーションを運営しています。このアプリケーションのデータレイヤーには、Amazon DynamoDBテーブルが使用されています。同社は、多数のリアルタイム取引を処理するために、秒間数百万件のインターネットトラフィックリクエストを処理可能なソリューションを必要としています。\n\nこれらの要件を満たす最適なソリューションはどれでしょうか。",
+  "option_a": "Application Load Balancerのリスナールールにおいてインターネットトラフィックに必要なプロトコルとポートを設定する。このALBをEC2インスタンスに構成する。AWS Global AcceleratorをALBに構成する。",
+  "option_b": "Application Load Balancerのリスナールールにおいてインターネットトラフィックに必要なプロトコルとポートを設定する。このALBをEC2インスタンスに構成する。",
+  "option_c": "Network Load Balancerのリスナールールにおいてインターネットトラフィックに必要なプロトコルとポートを設定する。このNLBをEC2インスタンスに構成する。",
+  "option_d": "Network Load Balancerのリスナールールにおいてインターネットトラフィックに必要なプロトコルとポートを設定する。このNLBをEC2インスタンスに構成する。AWS Global AcceleratorをNLBに構成する。",
+  "answer": "D",
+  "domain": "NLB / Global Accelerator",
+  "explanation": {
+    "key_conditions": "グローバルアクセス / 秒間数百万件のリクエスト / リアルタイム取引 / EC2 + DynamoDB",
+    "what_is_asked": "グローバルに超高トラフィックを処理するロードバランサー構成",
+    "decision_axis": "超高スループット → NLB / グローバル最適化 → Global Accelerator",
+    "keywords": [
+      { "keyword": "秒間数百万件", "pattern": "正解", "reason": "超高スループット＝NLB。ALBはL7処理のオーバーヘッドがあり、NLBのほうが極限スループットに向く" },
+      { "keyword": "グローバルアクセス + 低レイテンシー", "pattern": "正解", "reason": "グローバルユーザーへの低レイテンシー＝Global Accelerator。AWSバックボーンネットワークでルーティング最適化" },
+      { "keyword": "ALB + 超高スループット", "pattern": "誤り", "reason": "ALBはL7（HTTP/HTTPS）処理。秒間数百万件の超高スループットにはNLBが適している" }
+    ],
+    "options_analysis": [
+      {
+        "option": "A",
+        "text": "ALB + Global Accelerator",
+        "is_correct": false,
+        "reason": "ALBはL7ロードバランサーで秒間数百万件の超高スループットには不向き。Global Acceleratorは正しいがALBの選択が不適"
+      },
+      {
+        "option": "B",
+        "text": "ALBのみ",
+        "is_correct": false,
+        "reason": "ALBは超高スループットに不向きかつグローバル最適化もない。二重に要件を満たさない"
+      },
+      {
+        "option": "C",
+        "text": "NLBのみ",
+        "is_correct": false,
+        "reason": "NLBは超高スループットに対応するが、グローバルユーザーへの低レイテンシー最適化がない"
+      },
+      {
+        "option": "D",
+        "text": "NLB + Global Accelerator",
+        "is_correct": true,
+        "reason": "NLBはL4ロードバランサーで秒間数百万件の超高スループットに対応。Global AcceleratorはAWSバックボーンを使いグローバルユーザーへの低レイテンシーを実現。両要件を満たす"
+      }
+    ],
+    "essence": "超高スループット→NLB、グローバル低レイテンシー→Global Accelerator。ALBはHTTP/HTTPSのL7処理向き"
+  }
+}

@@ -1,0 +1,47 @@
+{
+  "exam_set": "set2",
+  "order": 36,
+  "body": "あるソリューションアーキテクトは、社内のドキュメントを保存およびアーカイブするためのソリューションを設計しており、ストレージにはGlacierが最も適していると考えています。データをGlacierに保存した後、ボールトへのアクセス制御を設定して、そのポリシーが変更できないようにする必要があります。\n\nこの要件を満たすには、どのように設定すればよいでしょうか。",
+  "option_a": "ボールトロックポリシーを設定してから、迅速取り出しを設定する。",
+  "option_b": "ボールトロックポリシーを設定してから、暗号化を有効化する。",
+  "option_c": "ボールトロックポリシーを設定してから、Vault Lockを設定する。",
+  "option_d": "ボールトロックポリシーを設定してから、Read Onlyを有効化する。",
+  "answer": "C",
+  "domain": "Glacier",
+  "explanation": {
+    "key_conditions": "Glacierのボールト / アクセス制御ポリシーが変更できないようにする",
+    "what_is_asked": "Glacierのアクセスポリシーを不変（イミュータブル）にする機能",
+    "decision_axis": "ポリシーの不変化 → Vault Lock（完全施錠）",
+    "keywords": [
+      { "keyword": "ポリシーが変更できないようにする", "pattern": "正解", "reason": "Vault Lockはボールトロックポリシーを確定・不変にする機能。一度Lockすると変更・削除不可" },
+      { "keyword": "ボールトロックポリシー設定後に迅速取り出し/暗号化/Read Only", "pattern": "誤り", "reason": "これらはポリシーを不変にする操作ではない。Vault Lockが正しい操作" }
+    ],
+    "options_analysis": [
+      {
+        "option": "A",
+        "text": "ボールトロックポリシー + 迅速取り出し",
+        "is_correct": false,
+        "reason": "迅速取り出しはデータ取得速度の設定。ポリシーを不変にする操作ではない"
+      },
+      {
+        "option": "B",
+        "text": "ボールトロックポリシー + 暗号化",
+        "is_correct": false,
+        "reason": "暗号化はデータ保護の設定。ポリシー自体を変更不可にするものではない"
+      },
+      {
+        "option": "C",
+        "text": "ボールトロックポリシー + Vault Lock",
+        "is_correct": true,
+        "reason": "ボールトロックポリシーを設定後、Vault Lockを完了（Complete）するとポリシーが不変（イミュータブル）になる。コンプライアンス要件（WORM）を満たすための機能"
+      },
+      {
+        "option": "D",
+        "text": "ボールトロックポリシー + Read Only",
+        "is_correct": false,
+        "reason": "GlacierにRead Onlyオプションは存在しない。Vault Lockが正しい不変化の手段"
+      }
+    ],
+    "essence": "Glacierのポリシーを不変（変更不可）にする＝Vault Lock。コンプライアンス（WORM）要件に対応"
+  }
+}

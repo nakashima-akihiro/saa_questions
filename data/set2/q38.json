@@ -1,0 +1,48 @@
+{
+  "exam_set": "set2",
+  "order": 38,
+  "body": "ある企業は、電話による問い合わせにおいて、適切な担当者に通話を自動的に振り分ける音声応答システムを開発しています。このシステムは、マルチAZ配置のEC2インスタンスに対してAuto Scalingグループ、ALBが設定されており、データ層にはRDS DBインスタンスが構成されています。顧客データの保護を確実にするために、EC2インスタンスが特定のプロファイル認証情報を使用してRDS DBインスタンスに接続できるようにする必要があります。\n\nこの要件を満たすための適切なソリューションはどれでしょうか。",
+  "option_a": "RDS DBインスタンスでIAMデータベース認証を有効にし、EC2インスタンスにアタッチされたIAMロールにデータベースへの接続権限を付与する。",
+  "option_b": "SSL認証によるRDSへの暗号化接続を実施する。",
+  "option_c": "EC2インスタンスにRDSアクセス権限が設定されたIAMポリシーを付与する。",
+  "option_d": "EC2インスタンスにRDSアクセス権限が設定されたSTSを付与する。",
+  "answer": "A",
+  "domain": "RDS / IAM",
+  "explanation": {
+    "key_conditions": "EC2がRDSに特定のプロファイル認証情報で接続 / 顧客データ保護",
+    "what_is_asked": "EC2がIAMプロファイルを使ってRDSに認証する設定",
+    "decision_axis": "パスワードレス認証 → IAMデータベース認証 + IAMロール",
+    "keywords": [
+      { "keyword": "特定のプロファイル認証情報でRDSに接続", "pattern": "正解", "reason": "RDSのIAMデータベース認証を使うとパスワードの代わりにIAMトークンで接続。EC2のIAMロールがプロファイルとして機能" },
+      { "keyword": "SSL認証", "pattern": "誤り", "reason": "SSLは暗号化（通信の保護）であり認証情報による接続制御ではない" },
+      { "keyword": "IAMポリシーをEC2に付与", "pattern": "誤り", "reason": "IAMポリシーのみではRDS接続の認証にはならない。RDS側でIAMデータベース認証の有効化が必要" }
+    ],
+    "options_analysis": [
+      {
+        "option": "A",
+        "text": "RDS IAMデータベース認証 + EC2のIAMロール",
+        "is_correct": true,
+        "reason": "RDS IAMデータベース認証を有効にすると、EC2にアタッチされたIAMロールを使ってパスワードレスでRDSに接続できる。特定のプロファイル（IAMロール）による接続制御が実現できる"
+      },
+      {
+        "option": "B",
+        "text": "SSL認証によるRDS暗号化接続",
+        "is_correct": false,
+        "reason": "SSL/TLSは通信の暗号化であり、接続元の認証（特定プロファイルによる接続）とは別の概念"
+      },
+      {
+        "option": "C",
+        "text": "EC2にRDSアクセス権限のIAMポリシーを付与",
+        "is_correct": false,
+        "reason": "IAMポリシーだけではRDBMS接続の認証にはならない。RDS IAMデータベース認証の有効化とIAMロールのセットが必要"
+      },
+      {
+        "option": "D",
+        "text": "STSをEC2に付与",
+        "is_correct": false,
+        "reason": "STSはIAMロールを引き受けるサービス。直接的にRDS接続の認証設定にはならない"
+      }
+    ],
+    "essence": "EC2からRDSへの特定プロファイル認証＝RDS IAMデータベース認証 + EC2のIAMロール。パスワード不要でセキュアな接続"
+  }
+}

@@ -1,0 +1,47 @@
+{
+  "exam_set": "set2",
+  "order": 50,
+  "body": "あなたはS3バケットを用いてデータの共有を行っていますが、現状のデータ保存方法はコスト効率が良くないため、改善が求められています。そのため、S3バケットへのアクセス状況を詳細に分析し、適切なデータを適切なストレージクラスに移行するタイミングを見極めることが重要です。\n\nこの要件を満たすソリューションを選定してください。",
+  "option_a": "S3バケットに対して、CloudTrail Insightによるアクティビティログの分析を実施する。",
+  "option_b": "S3バケットに対して、S3 Access Analyzerの分析を実施する。",
+  "option_c": "S3バケットに対して、サーバーアクセスログの分析を実施する。",
+  "option_d": "S3バケットに対して、ストレージクラス分析を実施する。",
+  "answer": "D",
+  "domain": "S3",
+  "explanation": {
+    "key_conditions": "S3のアクセス状況分析 / 適切なストレージクラスへの移行タイミング特定",
+    "what_is_asked": "S3データのアクセスパターンを分析してストレージクラス移行を最適化するサービス",
+    "decision_axis": "ストレージクラス最適化のためのアクセス分析 → S3ストレージクラス分析",
+    "keywords": [
+      { "keyword": "ストレージクラス移行タイミング + アクセス状況分析", "pattern": "正解", "reason": "S3ストレージクラス分析はオブジェクトのアクセスパターンを分析してライフサイクルポリシーの設定を推奨する専用機能" },
+      { "keyword": "S3 Access Analyzer", "pattern": "誤り", "reason": "S3 Access Analyzerはバケットポリシーの外部アクセス権限を分析するセキュリティツール。ストレージクラス最適化とは無関係" }
+    ],
+    "options_analysis": [
+      {
+        "option": "A",
+        "text": "CloudTrail Insight",
+        "is_correct": false,
+        "reason": "CloudTrail Insightは異常なAPI使用パターンを検出するセキュリティ機能。ストレージクラス最適化の分析ではない"
+      },
+      {
+        "option": "B",
+        "text": "S3 Access Analyzer",
+        "is_correct": false,
+        "reason": "S3 Access Analyzerはバケットへの外部アクセス許可（パブリックアクセス等）を分析するセキュリティツール。ストレージクラス移行タイミングの分析ではない"
+      },
+      {
+        "option": "C",
+        "text": "サーバーアクセスログ",
+        "is_correct": false,
+        "reason": "サーバーアクセスログはリクエストの詳細ログを記録する。ストレージクラス移行の推奨機能はない。手動でログ分析する必要があり非効率"
+      },
+      {
+        "option": "D",
+        "text": "ストレージクラス分析",
+        "is_correct": true,
+        "reason": "S3ストレージクラス分析はオブジェクトのアクセス頻度・パターンを分析してS3 StandardからS3 Standard-IAへのライフサイクルポリシー設定を推奨する専用サービス"
+      }
+    ],
+    "essence": "S3ストレージクラスの移行タイミング最適化＝ストレージクラス分析。S3 Access Analyzerはアクセス権限のセキュリティ分析"
+  }
+}

@@ -1,0 +1,48 @@
+{
+  "exam_set": "set2",
+  "order": 17,
+  "body": "ある企業がEC2インスタンスとDynamoDBテーブルを用いたアプリケーションを運営しています。あなたはソリューションアーキテクトとして、現在DynamoDBテーブルで発生している障害に対処しています。このDynamoDBテーブルでは、顧客のセッションデータを大量に処理しており、現在、一時的にセッションデータの処理量が増加しているため、DynamoDBのスループットが低下していることが確認されています。\n\nこの問題を解決するために、コスト効率の良いソリューションはどれでしょうか。",
+  "option_a": "DynamoDBのリードレプリカを増設する。",
+  "option_b": "DynamoDB Accelerator（DAX）を有効化してキャッシュ処理を実施する。",
+  "option_c": "DynamoDBのAuto Scalingを有効化して、処理負荷が高まった場合にスケーリングできるようにする。",
+  "option_d": "DynamoDBグローバルテーブルを有効化する。",
+  "answer": "C",
+  "domain": "DynamoDB",
+  "explanation": {
+    "key_conditions": "DynamoDBのスループット低下 / 一時的な処理量増加 / コスト効率",
+    "what_is_asked": "DynamoDBのスループット不足を自動スケーリングで解決する方法",
+    "decision_axis": "スループット不足の根本解決 / コスト効率",
+    "keywords": [
+      { "keyword": "DynamoDB + スループット低下 + 一時的な増加", "pattern": "正解", "reason": "スループット不足＝DynamoDB Auto Scaling。需要に応じて読み取り/書き込みキャパシティを自動調整" },
+      { "keyword": "DAX", "pattern": "誤り", "reason": "DAXは読み取りキャッシュ。書き込みスループット不足には効果がなく、コストも増加する" },
+      { "keyword": "DynamoDBリードレプリカ", "pattern": "誤り", "reason": "DynamoDBにリードレプリカの概念はない（Auroraとの混同に注意）" }
+    ],
+    "options_analysis": [
+      {
+        "option": "A",
+        "text": "DynamoDBリードレプリカを増設",
+        "is_correct": false,
+        "reason": "DynamoDBはリードレプリカの機能を持たない。AuroraやRDSの概念と混同しないこと"
+      },
+      {
+        "option": "B",
+        "text": "DAXを有効化",
+        "is_correct": false,
+        "reason": "DAXはDynamoDBの読み取りキャッシュ。書き込みスループット問題には効果がない。コストも追加発生する"
+      },
+      {
+        "option": "C",
+        "text": "DynamoDB Auto Scalingを有効化",
+        "is_correct": true,
+        "reason": "Auto ScalingはDynamoDBの読み取り/書き込みキャパシティを需要に応じて自動調整する。一時的な増加にも対応でき、不要時はスケールダウンするためコスト効率も良い"
+      },
+      {
+        "option": "D",
+        "text": "DynamoDBグローバルテーブルを有効化",
+        "is_correct": false,
+        "reason": "グローバルテーブルはマルチリージョンレプリケーション。スループット改善には直結しない"
+      }
+    ],
+    "essence": "DynamoDBのスループット不足＝Auto Scaling。リードレプリカはDynamoDBには存在しない。DAXは読み取りキャッシュのみ"
+  }
+}

@@ -1,0 +1,48 @@
+{
+  "exam_set": "set2",
+  "order": 42,
+  "body": "ある企業は、オンプレミスのネットワークとAWSの両方にシステムをホストしています。あなたはソリューションアーキテクトとして、Active Directoryの資格情報を利用して、すべてのユーザーが両方の環境にあるリソースにアクセスできるようにする設定を行っています。\n\nこの要件を満たすための適切な方法を選択してください。",
+  "option_a": "IAMグループの資格情報を、オンプレミス環境のActive Directoryと連携して、AWS Single Sign-Onを利用する。",
+  "option_b": "AWS Cognitoによる認証機能を、オンプレミス環境のActive Directoryと連携する。",
+  "option_c": "AWS OrganizationsのActive Directory機能を利用して、オンプレミス環境のActive Directoryと連携させる。",
+  "option_d": "AWS IAM Identity Centerを利用して、オンプレミス環境のActive Directoryと連携して、SAMLフェデレーションを設定する。",
+  "answer": "D",
+  "domain": "IAM Identity Center",
+  "explanation": {
+    "key_conditions": "オンプレミスとAWS両方へのアクセス / Active Directory資格情報を使用 / シングルサインオン",
+    "what_is_asked": "ADを使ってオンプレミスとAWSに統合SSOするサービス",
+    "decision_axis": "オンプレAD + AWS統合SSO → IAM Identity Center + SAMLフェデレーション",
+    "keywords": [
+      { "keyword": "Active Directory + オンプレ + AWS統合アクセス", "pattern": "正解", "reason": "IAM Identity Center（旧AWS SSO）はオンプレADとSAML/SCIMでフェデレーション。AWSリソースとオンプレリソースへの統合SSOを実現" },
+      { "keyword": "AWS Organizations + AD機能", "pattern": "誤り", "reason": "AWS OrganizationsにはオンプレミスのActive Directoryと連携する機能はない" },
+      { "keyword": "Cognito + AD", "pattern": "誤り", "reason": "CognitoはWebアプリやモバイルアプリのユーザー認証向け。企業内のAD統合SSOには向かない" }
+    ],
+    "options_analysis": [
+      {
+        "option": "A",
+        "text": "IAMグループ + AD + AWS SSO",
+        "is_correct": false,
+        "reason": "IAMグループはAWS IAMのグループ管理。オンプレADとの直接連携は複雑。IAM Identity Center（旧SSO）が正しい表現"
+      },
+      {
+        "option": "B",
+        "text": "Cognito + AD",
+        "is_correct": false,
+        "reason": "CognitoはWebアプリのユーザー認証サービス。企業のAD統合SSO用途には適していない"
+      },
+      {
+        "option": "C",
+        "text": "AWS Organizations + AD機能",
+        "is_correct": false,
+        "reason": "AWS Organizationsはアカウント管理サービス。オンプレADとの連携機能は持たない"
+      },
+      {
+        "option": "D",
+        "text": "IAM Identity Center + AD + SAMLフェデレーション",
+        "is_correct": true,
+        "reason": "IAM Identity Center（旧AWS SSO）はオンプレミスのActive DirectoryとSAMLフェデレーションで連携でき、AWS + オンプレリソースへの統合SSOを実現できる"
+      }
+    ],
+    "essence": "オンプレAD + AWS統合SSO＝IAM Identity Center + SAMLフェデレーション。Cognitoはモバイル/Web向け、Organizationsにはこの機能なし"
+  }
+}

@@ -1,0 +1,47 @@
+{
+  "exam_set": "set2",
+  "order": 46,
+  "body": "あなたはソリューションアーキテクトとして、Amazon CloudFrontを利用してAmazon S3バケットに保存された動画コンテンツを配信するアプリケーションを開発しています。このアプリケーションに有料会員制度を導入することを決定しました。そのため、現在のオブジェクトURLを変更せずに、有料会員のみに複数のプライベート動画ファイルへのアクセスを提供する必要があります。\n\nこの要件を満たすための設定方法を選択してください。",
+  "option_a": "署名付きCookiesを利用して、誰がプライベートファイルにアクセスできるかを管理する。",
+  "option_b": "署名付きURLを利用して、誰がプライベートファイルにアクセスできるかを管理する。",
+  "option_c": "誰がプライベートファイルにアクセスできるかを管理するために、フィールドレベルの暗号化を利用して、CloudFrontを構成する。",
+  "option_d": "AWS Cognitoを利用して、誰がプライベートファイルにアクセスできるかを管理する。",
+  "answer": "A",
+  "domain": "CloudFront",
+  "explanation": {
+    "key_conditions": "複数のプライベートファイルへのアクセス制御 / 現在のURLを変更しない",
+    "what_is_asked": "URLを変更せずに複数ファイルへのアクセスを制御するCloudFrontの機能",
+    "decision_axis": "URLを変更しない + 複数ファイル → 署名付きCookie / 単一ファイル → 署名付きURL",
+    "keywords": [
+      { "keyword": "URLを変更しない + 複数ファイル", "pattern": "正解", "reason": "署名付きCookieはURLを変更せずに複数コンテンツへのアクセスを制御できる。署名付きURLは各URLに署名を付与するためURLが変わる" },
+      { "keyword": "署名付きURL", "pattern": "誤り", "reason": "署名付きURLは各ファイルのURLに署名パラメータが付与されるためURLが変更される。要件（URLを変更しない）と不一致" }
+    ],
+    "options_analysis": [
+      {
+        "option": "A",
+        "text": "署名付きCookies",
+        "is_correct": true,
+        "reason": "署名付きCookieはCloudFrontへのリクエストにCookieとして認証情報を付与する。URLを変更せず、複数のコンテンツへのアクセス制御が可能"
+      },
+      {
+        "option": "B",
+        "text": "署名付きURL",
+        "is_correct": false,
+        "reason": "署名付きURLは各ファイルのURLに有効期限と署名パラメータが追加される。URLが変更されるため要件を満たさない"
+      },
+      {
+        "option": "C",
+        "text": "フィールドレベルの暗号化",
+        "is_correct": false,
+        "reason": "フィールドレベル暗号化はHTTPSリクエストの特定フィールドを暗号化するもの。コンテンツのアクセス制御には使用しない"
+      },
+      {
+        "option": "D",
+        "text": "AWS Cognito",
+        "is_correct": false,
+        "reason": "CognitoはユーザープールによるID管理だが、CloudFrontのコンテンツアクセス制御に直接使うにはカスタム実装が必要"
+      }
+    ],
+    "essence": "URLを変更せず複数ファイルのアクセス制御＝署名付きCookie。URLが変わってよければ署名付きURL（単一ファイル向き）"
+  }
+}

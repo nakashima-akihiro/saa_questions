@@ -1,0 +1,55 @@
+{
+  "exam_set": "set2",
+  "order": 41,
+  "body": "あなたはソリューションアーキテクトとして、EC2インスタンス上にホストされたデータベースに対する読み取りクエリを並行処理するソリューションを設計しています。EC2インスタンスを活用し、EBS汎用ボリュームをルートボリュームとして設定しています。パフォーマンスを評価した結果、データベースへのI/O処理を向上させる必要があることが判明しました。このサービスを円滑に運用するためには、インスタンス自体の処理性能を向上させつつ、EBSボリュームに対する約25,000のIOPS性能を達成する必要があります。\n\nこの要件を満たす、コスト効率の良いソリューションは組み合わせはどれでしょうか。（2つ選択）",
+  "option_a": "EC2インスタンスタイプのサイズを大きくする。",
+  "option_b": "2つのEBSボリューム（汎用）のRAID0構成を設定する。",
+  "option_c": "2つのEBSボリューム（汎用）のRAID1構成を設定する。",
+  "option_d": "EBSボリューム（汎用）をプロビジョンドIOPSストレージ（io2 Block Express）に変更する。",
+  "option_e": "PV AMIを利用してEC2インスタンスを再起動して、拡張ネットワークを有効化する。",
+  "answer": "A,B",
+  "domain": "EC2 / EBS",
+  "explanation": {
+    "key_conditions": "約25,000 IOPS達成 / インスタンス性能向上 / コスト効率",
+    "what_is_asked": "EBS汎用ボリュームで高IOPS（25,000）を実現するコスト効率の良い方法（2つ）",
+    "decision_axis": "IOPS向上 → RAID0で複数ボリューム合算 / インスタンス性能 → サイズアップ / io2は高コスト",
+    "keywords": [
+      { "keyword": "RAID0 + EBS汎用", "pattern": "正解", "reason": "RAID0は複数EBSのIOPSを合算する。汎用SSD（gp3）は最大16,000 IOPS。2本RAID0で約32,000 IOPSを低コストで実現" },
+      { "keyword": "RAID1", "pattern": "誤り", "reason": "RAID1はミラーリング（冗長化）。IOPSは増加しない" },
+      { "keyword": "io2 Block Express", "pattern": "誤り", "reason": "io2は高IOPS対応だが高コスト。コスト効率の観点でRAID0より不利" }
+    ],
+    "options_analysis": [
+      {
+        "option": "A",
+        "text": "EC2インスタンスタイプのサイズを大きくする",
+        "is_correct": true,
+        "reason": "インスタンスサイズを大きくするとEBSの最大帯域幅とIOPSスループットが向上する。インスタンス自体の処理性能向上要件にも対応"
+      },
+      {
+        "option": "B",
+        "text": "2つのEBSボリューム（汎用）のRAID0構成",
+        "is_correct": true,
+        "reason": "RAID0は複数ボリュームのIOPSを合算する。汎用SSD（gp3）2本でRAID0を組むことで25,000 IOPSを低コストで達成可能"
+      },
+      {
+        "option": "C",
+        "text": "2つのEBSボリューム（汎用）のRAID1構成",
+        "is_correct": false,
+        "reason": "RAID1はデータを2本のボリュームにミラーリングする。IOPSは増加せず冗長性向上のみ"
+      },
+      {
+        "option": "D",
+        "text": "io2 Block Expressに変更",
+        "is_correct": false,
+        "reason": "io2は高コストのプロビジョンドIOPSボリューム。コスト効率の観点でRAID0より不利"
+      },
+      {
+        "option": "E",
+        "text": "PV AMIで再起動 + 拡張ネットワーク",
+        "is_correct": false,
+        "reason": "PV AMIは旧世代の仮想化方式。拡張ネットワークはネットワーク性能向上でありEBSのIOPSとは無関係"
+      }
+    ],
+    "essence": "高IOPS低コスト＝RAID0（複数EBSのIOPS合算）。RAID1はミラーリングでIOPS増加なし。io2は高コスト"
+  }
+}

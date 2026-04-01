@@ -1,0 +1,48 @@
+{
+  "exam_set": "set2",
+  "order": 5,
+  "body": "あるゲーム開発会社は、オンプレミス環境において複数のゲームアプリケーションを運営しています。あなたはソリューションアーキテクトとして、これらのアプリケーションで使用されるストレージソリューションの設定を担当しています。現在、Lustreクライアントから接続可能なAWS上の共有ストレージが必要とされています。また、これらのソリューションはAWSのフルマネージドサービスを利用して実装することが求められています。\n\nこれらのストレージ要件を満たすために適切なソリューションは何でしょうか。",
+  "option_a": "AWS Storage Gatewayファイルゲートウェイによってファイル共有を作成する。アプリケーションをファイル共有に接続する。",
+  "option_b": "Amazon EC2 WindowsインスタンスにWindowsファイル共有をインストールして構成する。アプリケーションサーバーをファイル共有に接続する。",
+  "option_c": "Amazon EFSファイルシステムにより、Lustreファイル共有を設定する。アプリケーションサーバーをファイルシステムに接続する。",
+  "option_d": "Amazon FSx for Lustreファイルシステムを作成して、アプリケーションサーバーをファイルシステムに接続する。",
+  "answer": "D",
+  "domain": "FSx",
+  "explanation": {
+    "key_conditions": "Lustreクライアントから接続可能 / AWSの共有ストレージ / フルマネージドサービス",
+    "what_is_asked": "LustreクライアントをサポートするAWSのフルマネージド共有ストレージ",
+    "decision_axis": "Lustreプロトコル対応 / フルマネージド",
+    "keywords": [
+      { "keyword": "Lustreクライアント", "pattern": "正解", "reason": "LustreクライアントをサポートするAWSサービスはFSx for Lustreのみ。即座にFSx for Lustreを想起" },
+      { "keyword": "フルマネージド + 共有ストレージ", "pattern": "正解", "reason": "FSx for Lustreはフルマネージドで高性能な共有ファイルシステム" },
+      { "keyword": "EFSでLustre", "pattern": "誤り", "reason": "EFSはNFSプロトコル。LustreクライアントはサポートしていないためEFSにLustreファイル共有は設定できない" }
+    ],
+    "options_analysis": [
+      {
+        "option": "A",
+        "text": "Storage Gatewayファイルゲートウェイ",
+        "is_correct": false,
+        "reason": "Storage GatewayファイルゲートウェイはNFS/SMBプロトコル。Lustreクライアントには非対応"
+      },
+      {
+        "option": "B",
+        "text": "EC2 Windowsファイル共有",
+        "is_correct": false,
+        "reason": "EC2自己管理でフルマネージドではない。Windowsファイル共有はSMBプロトコルでLustreクライアントに非対応"
+      },
+      {
+        "option": "C",
+        "text": "EFSでLustreファイル共有を設定",
+        "is_correct": false,
+        "reason": "EFSはNFSプロトコルのみサポート。Lustreファイル共有は設定できない"
+      },
+      {
+        "option": "D",
+        "text": "Amazon FSx for Lustre",
+        "is_correct": true,
+        "reason": "FSx for LustreはLustreクライアントをネイティブサポートするAWSのフルマネージド高性能ファイルシステム。要件に完全一致"
+      }
+    ],
+    "essence": "LustreクライアントはFSx for Lustreの一択。EFSはNFS、EFSにLustreは設定不可という誤選択肢に注意"
+  }
+}

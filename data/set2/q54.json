@@ -1,0 +1,48 @@
+{
+  "exam_set": "set2",
+  "order": 54,
+  "body": "ある企業は、Amazon EC2インスタンス上で業務アプリケーションを運用しています。このアプリケーションのデータレイヤーには、マルチAZ配置のAmazon RDS for MySQL DBインスタンスが使用されています。このDBインスタンスには、オンプレミスにデプロイされたデスクトップクライアントから直接接続する必要があります。RDSセキュリティグループでは、社内クライアントのIP範囲からDBインスタンスへのアクセスが許可されています。\n\n安全な方法でDB接続を構成するには、どのソリューションを利用すればよいでしょうか。",
+  "option_a": "RDS DBインスタンスをパブリックサブネットに配置する。社内ネットワークのカスタマーゲートウェイからAWS Site-to-Site VPNを接続する。",
+  "option_b": "RDS DBインスタンスをプライベートサブネットに配置する。社内ネットワークのカスタマーゲートウェイからAWS Site-to-Site VPNに接続する。",
+  "option_c": "RDS DBインスタンスをパブリックサブネットに配置する。VPCエンドポイント経由でDBインスタンスにアクセスする。",
+  "option_d": "RDS DBインスタンスをプライベートサブネットに配置する。VPCエンドポイント経由でDBインスタンスにアクセスする。",
+  "answer": "B",
+  "domain": "RDS / VPN",
+  "explanation": {
+    "key_conditions": "オンプレミスのデスクトップクライアントからRDSへ直接接続 / 安全な接続",
+    "what_is_asked": "オンプレミスからRDSへの安全な接続方法",
+    "decision_axis": "安全 → プライベートサブネット + Site-to-Site VPN / パブリックサブネットは不安全",
+    "keywords": [
+      { "keyword": "オンプレミスからRDSへ安全に接続", "pattern": "正解", "reason": "RDSをプライベートサブネットに配置 + Site-to-Site VPNでオンプレからAWSへの暗号化トンネルを確立" },
+      { "keyword": "VPCエンドポイント + オンプレRDS接続", "pattern": "誤り", "reason": "VPCエンドポイントはVPC内のリソースがAWSサービスにアクセスするもの。オンプレミスからRDSへの接続には使用しない" },
+      { "keyword": "RDSをパブリックサブネット", "pattern": "誤り", "reason": "DBインスタンスをパブリックサブネットに配置するのはセキュリティ上不適切" }
+    ],
+    "options_analysis": [
+      {
+        "option": "A",
+        "text": "パブリックサブネット + Site-to-Site VPN",
+        "is_correct": false,
+        "reason": "RDSをパブリックサブネットに配置するのはセキュリティ上問題がある。プライベートサブネットに配置すべき"
+      },
+      {
+        "option": "B",
+        "text": "プライベートサブネット + Site-to-Site VPN",
+        "is_correct": true,
+        "reason": "RDSをプライベートサブネットに配置してインターネットから隔離。オンプレミスからはSite-to-Site VPN（暗号化トンネル）でAWS VPCに接続しRDSにアクセス。安全な構成"
+      },
+      {
+        "option": "C",
+        "text": "パブリックサブネット + VPCエンドポイント",
+        "is_correct": false,
+        "reason": "VPCエンドポイントはVPC内からAWSサービスへのプライベート接続用。オンプレミスクライアントには使用しない。パブリックサブネットも不適切"
+      },
+      {
+        "option": "D",
+        "text": "プライベートサブネット + VPCエンドポイント",
+        "is_correct": false,
+        "reason": "VPCエンドポイントはオンプレミスからVPC外にあるRDSへのアクセス手段ではない。オンプレミスとの接続にはVPNかDirect Connectが必要"
+      }
+    ],
+    "essence": "オンプレミスからRDSへの安全な接続＝RDSをプライベートサブネット + Site-to-Site VPN。パブリックサブネットは不安全"
+  }
+}

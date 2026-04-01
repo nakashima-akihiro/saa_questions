@@ -1,0 +1,56 @@
+{
+  "exam_set": "set2",
+  "order": 60,
+  "body": "ある企業は、自社のチャットボットアプリケーションにおいて、テキストを音声に変換する機能を開発しています。この機能は、ユーザーがチャットボットにテキストを入力すると、その内容をリアルタイムで音声ファイルに変換します。したがって、エッジ最適化エンドポイントを利用して低レイテンシーで音声ファイルを配信する必要があります。\n\nこれらの要件を満たすソリューションの組み合わせはどれでしょうか。（2つ選択）",
+  "option_a": "AWS Lambda関数からAmazon Pollyを呼び出して、音声ファイルを生成するアプリケーションを実装する。",
+  "option_b": "AWS Lambda関数からAmazon Lexを呼び出して、音声ファイルを生成するアプリケーションを実装する。",
+  "option_c": "AWS Lambda関数からAmazon Transcribeを呼び出して、音声ファイルを生成するアプリケーションを実装する。",
+  "option_d": "Amazon API Gateway HTTP APIを使用してアプリケーションを公開する。Amazon CloudFrontディストリビューションにより音声ファイルを配信する。",
+  "option_e": "Amazon API Gateway REST APIを使用してアプリケーションを公開する。Amazon CloudFrontディストリビューションにより音声ファイルを配信する。",
+  "answer": "A,E",
+  "domain": "Polly / API Gateway / CloudFront",
+  "explanation": {
+    "key_conditions": "テキスト→音声変換 / リアルタイム / エッジ最適化エンドポイント / 低レイテンシー配信",
+    "what_is_asked": "テキスト音声変換 + エッジ最適化エンドポイントの正しい組み合わせ（2つ）",
+    "decision_axis": "テキスト→音声＝Polly / エッジ最適化エンドポイント＝API Gateway REST API + CloudFront",
+    "keywords": [
+      { "keyword": "テキストを音声に変換", "pattern": "正解", "reason": "テキスト→音声変換＝Amazon Polly。TranscribeはSTT（音声→テキスト）、Lexは会話AI" },
+      { "keyword": "エッジ最適化エンドポイント", "pattern": "正解", "reason": "API GatewayのエッジRESTエンドポイントはCloudFrontと統合して低レイテンシーを実現。HTTP APIはエッジ最適化をサポートしない" },
+      { "keyword": "Amazon Transcribe", "pattern": "誤り", "reason": "TranscribeはSTT（音声→テキスト変換）。テキスト→音声はPolly" },
+      { "keyword": "API Gateway HTTP API + エッジ最適化", "pattern": "誤り", "reason": "HTTP APIはエッジ最適化エンドポイントをサポートしない。REST APIのみエッジ最適化が可能" }
+    ],
+    "options_analysis": [
+      {
+        "option": "A",
+        "text": "Lambda + Amazon Polly",
+        "is_correct": true,
+        "reason": "Amazon Pollyはテキストを音声に変換するAIサービス。LambdaからPollyを呼び出して音声ファイルを生成する"
+      },
+      {
+        "option": "B",
+        "text": "Lambda + Amazon Lex",
+        "is_correct": false,
+        "reason": "Amazon Lexは会話AIサービス（チャットボット構築用）。テキスト→音声変換ではない"
+      },
+      {
+        "option": "C",
+        "text": "Lambda + Amazon Transcribe",
+        "is_correct": false,
+        "reason": "Amazon TranscribeはSTT（音声→テキスト変換）サービス。要件と逆方向"
+      },
+      {
+        "option": "D",
+        "text": "API Gateway HTTP API + CloudFront",
+        "is_correct": false,
+        "reason": "API Gateway HTTP APIはエッジ最適化エンドポイントをサポートしない。エッジ最適化にはREST APIが必要"
+      },
+      {
+        "option": "E",
+        "text": "API Gateway REST API + CloudFront",
+        "is_correct": true,
+        "reason": "API Gateway REST APIはエッジ最適化エンドポイントをサポート。CloudFrontと統合してグローバルに低レイテンシーで音声ファイルを配信できる"
+      }
+    ],
+    "essence": "テキスト→音声＝Polly。エッジ最適化エンドポイント＝API Gateway REST API（HTTP APIは非対応）+ CloudFront"
+  }
+}

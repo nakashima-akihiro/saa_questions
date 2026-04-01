@@ -1,0 +1,48 @@
+{
+  "exam_set": "set2",
+  "order": 45,
+  "body": "あなたはソリューションアーキテクトとして、AWSを利用してサーバーレスアプリケーションを開発しています。AWS LambdaとAPI Gatewayを活用して構築したREST API形式のシンプルなアプリケーションを通じて、Twitter（X）に最新のニュースを配信します。新聞広告の掲載が決定し、今後数日間で訪問者数と新規ユーザー数が大幅に増加する見込みです。\n\n最小限の労力で実施可能なソリューションはどれでしょうか。",
+  "option_a": "AWS Lambda関数にAmazon API Gatewayを統合させたアプリケーションにAuto Scalingを適用する。",
+  "option_b": "Amazon API Gatewayのスロットリング制限設定とキャッシュを有効化する。",
+  "option_c": "AWS Lambda関数のスケーリング機能を有効化する。",
+  "option_d": "Amazon API Gatewayのスケーリング機能を有効化する。",
+  "answer": "B",
+  "domain": "API Gateway",
+  "explanation": {
+    "key_conditions": "急激なトラフィック増加 / Lambda + API Gatewayのサーバーレス / 最小限の労力",
+    "what_is_asked": "急激なトラフィック増加に対してAPI Gatewayで最小労力で対応する方法",
+    "decision_axis": "最小労力 + トラフィック急増 → API Gatewayのスロットリング（過負荷防止）+ キャッシュ（バックエンド負荷軽減）",
+    "keywords": [
+      { "keyword": "Lambda + API Gateway + 急激なトラフィック増加 + 最小労力", "pattern": "正解", "reason": "API Gatewayのスロットリングでトラフィックを制御、キャッシュでLambda呼び出し回数を削減。設定のみで対応可能" },
+      { "keyword": "API GatewayにAuto Scaling適用", "pattern": "誤り", "reason": "API GatewayはサーバーレスでAuto Scalingを手動設定する概念がない" },
+      { "keyword": "Lambdaのスケーリング機能を有効化", "pattern": "誤り", "reason": "Lambdaはデフォルトで自動スケーリング。手動で有効化する設定はない" }
+    ],
+    "options_analysis": [
+      {
+        "option": "A",
+        "text": "API GW + Lambda + Auto Scaling",
+        "is_correct": false,
+        "reason": "API GatewayとLambdaはサーバーレスで自動スケールする。別途Auto Scalingを設定する概念がない"
+      },
+      {
+        "option": "B",
+        "text": "API Gatewayのスロットリング + キャッシュ",
+        "is_correct": true,
+        "reason": "スロットリング制限でトラフィックの急激な増加からバックエンドを保護、キャッシュでLambda呼び出し回数を削減してレスポンスを高速化。どちらも設定変更のみで最小労力"
+      },
+      {
+        "option": "C",
+        "text": "Lambdaのスケーリング機能を有効化",
+        "is_correct": false,
+        "reason": "Lambdaは自動的にスケールする。手動で有効化するスケーリング機能は存在しない"
+      },
+      {
+        "option": "D",
+        "text": "API Gatewayのスケーリング機能を有効化",
+        "is_correct": false,
+        "reason": "API Gatewayにユーザーが手動で有効化するスケーリング機能はない。スロットリングとキャッシュが正しいアプローチ"
+      }
+    ],
+    "essence": "API Gatewayの急激なトラフィック増加への対応＝スロットリング（制御）+ キャッシュ（負荷軽減）。Lambda/API GWは自動スケール"
+  }
+}

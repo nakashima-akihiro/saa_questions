@@ -1,0 +1,48 @@
+{
+  "exam_set": "set2",
+  "order": 62,
+  "body": "ある企業がAWSを活用してデータ共有アプリケーションを開発しています。共有されるPDFファイルの平均サイズは10MBであり、今後もデータ量は増加する見込みです。そのため、総データ量は非常に大きくなると予想されています。このアプリケーションでは、Amazon S3バケットに保存されている大容量のPDFファイルをJPEGファイルに変換することで、データ量を削減することを目指しています。\n\nこの要件を達成するために、ソリューションアーキテクトはどのようなアプローチを取るべきでしょうか。",
+  "option_a": "PDFファイルがAmazon S3バケットに保存される際に、S3イベント通知によりAWS Lambda関数を呼び出す。Lambda関数によってファイルをJPEG形式に変換してから、Amazon S3バケットに保存する。S3バケットのライフサイクルルールを設定して、数日後にPDFファイルを削除する。",
+  "option_b": "PDFファイルがAmazon S3バケットに保存される際に、S3イベント通知によりAmazon Data Firehoseを呼び出す。Data Firehoseと統合したLambda関数によってファイルをJPEG形式に変換してから、Amazon S3バケットに保存する。S3バケットのライフサイクルルールを設定して、数日後にPDFファイルを削除する。",
+  "option_c": "PDFファイルがAmazon S3バケットに保存される際に、DynamoDBストリームによりAWS Lambda関数を呼び出す。Lambda関数によってファイルをJPEG形式に変換してから、Amazon S3バケットに保存する。S3バケットのライフサイクルルールを設定して、数日後にPDFファイルを削除する。",
+  "option_d": "PDFファイルをAmazon Data Firehoseによって一時的に取得する。Data Firehoseにライフサイクルルールを設定して、数日後にPDFファイルを削除する。Lambda関数によってファイルをJPEG形式に変換してから、Amazon S3バケットに保存する。",
+  "answer": "A",
+  "domain": "S3 / Lambda",
+  "explanation": {
+    "key_conditions": "S3にPDF保存 → JPEG変換 / 変換後の元PDFは数日後に削除 / 自動処理",
+    "what_is_asked": "S3へのアップロードをトリガーにLambdaで変換処理するサーバーレス構成",
+    "decision_axis": "S3イベント通知 → Lambda（変換処理）/ S3ライフサイクルルール（PDF削除）",
+    "keywords": [
+      { "keyword": "S3アップロード → Lambda変換処理", "pattern": "正解", "reason": "S3イベント通知でPutObjectをトリガーにLambdaを起動して変換処理するのが標準的なサーバーレス構成" },
+      { "keyword": "DynamoDBストリームでS3ファイル変換トリガー", "pattern": "誤り", "reason": "DynamoDBストリームはDynamoDBの変更イベント。S3のアップロードをトリガーにはできない" },
+      { "keyword": "Firehoseでイベント通知", "pattern": "誤り", "reason": "FirehoseはS3イベント通知の代替にはならない。S3→Lambdaのトリガーにはイベント通知が正しい" }
+    ],
+    "options_analysis": [
+      {
+        "option": "A",
+        "text": "S3イベント通知 → Lambda → JPEG変換 → S3保存 + ライフサイクルルール",
+        "is_correct": true,
+        "reason": "S3のPutObjectイベントでLambdaを自動起動。LambdaがPDF→JPEG変換してS3に保存。S3ライフサイクルルールで数日後にPDFを自動削除。シンプルでサーバーレスな標準構成"
+      },
+      {
+        "option": "B",
+        "text": "S3イベント通知 → Firehose → Lambda → S3",
+        "is_correct": false,
+        "reason": "S3イベント通知はFirehoseを直接トリガーしない。Firehoseはストリームデータの配信サービスでPDF変換パイプラインには不適"
+      },
+      {
+        "option": "C",
+        "text": "DynamoDBストリーム → Lambda",
+        "is_correct": false,
+        "reason": "DynamoDBストリームはDynamoDB変更のトリガー。S3へのファイルアップロードをトリガーにはできない"
+      },
+      {
+        "option": "D",
+        "text": "Firehoseで一時取得 + Firehoseライフサイクル",
+        "is_correct": false,
+        "reason": "FirehoseにはS3のようなライフサイクルルールはない。FirehoseでPDFファイルを一時保持する設計も不適"
+      }
+    ],
+    "essence": "S3アップロード→自動処理の定番パターン＝S3イベント通知 → Lambda。ライフサイクルルールでS3の自動削除"
+  }
+}

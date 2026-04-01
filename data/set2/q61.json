@@ -1,0 +1,47 @@
+{
+  "exam_set": "set2",
+  "order": 61,
+  "body": "ある自動車保険会社は、保険の適用を目的として自動車の位置情報を追跡するアプリケーションを開発しています。このアプリケーションは、多数の自動車から送信される膨大な位置情報のストリーミングデータをリアルタイムで処理します。これらのデータポイントは、既存のプラットフォームで利用できるように、REST APIを介してストリーミングデータを収集する必要があります。\n\nこの要件を満たすために、ソリューションアーキテクトはどのようなアプローチを取るべきでしょうか。",
+  "option_a": "Amazon S3とAmazon API Gatewayを統合して、APIからアクセス可能なアプリケーションを構成する。",
+  "option_b": "AWS LambdaとAmazon API Gatewayを統合して、APIからアクセス可能なアプリケーションを構成する。",
+  "option_c": "EC2インスタンスとAmazon API Gatewayを統合して、APIからアクセス可能なアプリケーションを構成する。",
+  "option_d": "Amazon Kinesis Data StreamsとAmazon API Gatewayを統合して、コンシューマーにEC2インスタンスを構成することでAPIからアクセス可能なアプリケーションを構成する。",
+  "answer": "D",
+  "domain": "Kinesis / API Gateway",
+  "explanation": {
+    "key_conditions": "多数のデバイスからのリアルタイムストリーミングデータ / REST API経由でデータ収集 / 既存プラットフォームと連携",
+    "what_is_asked": "REST API経由で大量のリアルタイムストリームデータを収集・処理するアーキテクチャ",
+    "decision_axis": "REST API受付 → API Gateway / 大量リアルタイムストリーム → Kinesis Data Streams / 処理 → EC2コンシューマー",
+    "keywords": [
+      { "keyword": "大量ストリーミングデータ + REST API + リアルタイム", "pattern": "正解", "reason": "API GatewayがREST APIを受け付けKinesisにデータを送信。EC2コンシューマーがKinesisからリアルタイムで処理する" },
+      { "keyword": "Lambda + API Gateway + 大量ストリームデータ", "pattern": "誤り", "reason": "LambdaはKinesisトリガーで処理できるが、多数の自動車からの膨大なストリームデータの継続処理にはEC2コンシューマーが適切" }
+    ],
+    "options_analysis": [
+      {
+        "option": "A",
+        "text": "S3 + API Gateway",
+        "is_correct": false,
+        "reason": "S3はオブジェクトストレージ。リアルタイムストリームデータの処理には不適"
+      },
+      {
+        "option": "B",
+        "text": "Lambda + API Gateway",
+        "is_correct": false,
+        "reason": "Lambda + API GatewayはREST API実装の一般的な手法だが、膨大なストリームデータの継続的処理には限界がある。Kinesisによるストリームバッファリングが必要"
+      },
+      {
+        "option": "C",
+        "text": "EC2 + API Gateway",
+        "is_correct": false,
+        "reason": "EC2を直接API Gatewayに統合するだけではストリームデータの大量受信・バッファリングに対応できない"
+      },
+      {
+        "option": "D",
+        "text": "Kinesis Data Streams + API Gateway + EC2コンシューマー",
+        "is_correct": true,
+        "reason": "API GatewayがREST APIを提供してKinesisにストリームデータを送信。Kinesisが大量データをバッファリングしてEC2コンシューマーがリアルタイムで処理。既存プラットフォームとの連携も容易"
+      }
+    ],
+    "essence": "REST API + 大量リアルタイムストリーム処理＝API Gateway + Kinesis Data Streams + EC2コンシューマー"
+  }
+}

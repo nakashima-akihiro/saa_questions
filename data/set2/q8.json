@@ -1,0 +1,47 @@
+{
+  "exam_set": "set2",
+  "order": 8,
+  "body": "次のIAMポリシーでAWSリソースに対する権限設定を行っています。\n\n{\n    \"Version\": \"2012-10-17\",\n    \"Statement\": [\n        {\n            \"Effect\": \"Deny\",\n            \"Action\": \"*\",\n            \"Resource\": \"*\",\n            \"Condition\": {\n                \"NotIpAddress\": {\n                    \"aws:SourceIp\": [\n                        \"172.101.1.36/32\"\n                    ]\n                }\n            }\n        }\n    ]\n}\n\nこの設定内容として正しい内容を選択してください。",
+  "option_a": "IPアドレス（172.101.1.36）以外は全てのリソースのアクセス権限を拒否されている。",
+  "option_b": "IPアドレス（172.101.1.36）は全てのリソースのアクセス権限を有している。",
+  "option_c": "IPアドレス（172.101.1.36）以外は全てのリソースのアクセス権限を有している。",
+  "option_d": "IPアドレス（172.101.1.6）は全てのリソースのアクセス権限を有している。",
+  "answer": "A",
+  "domain": "IAM",
+  "explanation": {
+    "key_conditions": "Effect: Deny / Action: * / Resource: * / Condition: NotIpAddress / aws:SourceIp: 172.101.1.36/32",
+    "what_is_asked": "NotIpAddressとDenyの組み合わせによるアクセス制御の効果",
+    "decision_axis": "Deny + NotIpAddress の論理解釈",
+    "keywords": [
+      { "keyword": "Effect: Deny + NotIpAddress", "pattern": "正解", "reason": "「指定IPアドレスでない場合にDeny」= 指定IP以外からのアクセスを全拒否。論理を正確に読む" },
+      { "keyword": "NotIpAddress", "pattern": "正解", "reason": "NotIpAddress条件は「条件に一致しないIP」を指す。172.101.1.36以外の全IPがこの条件に一致→Deny適用" }
+    ],
+    "options_analysis": [
+      {
+        "option": "A",
+        "text": "172.101.1.36以外は全リソースのアクセスを拒否",
+        "is_correct": true,
+        "reason": "NotIpAddress条件は「172.101.1.36ではないIPアドレス」に一致する。それらに対してEffect:Denyが適用されるため、172.101.1.36以外からの全アクセスが拒否される"
+      },
+      {
+        "option": "B",
+        "text": "172.101.1.36は全リソースのアクセス権限を有している",
+        "is_correct": false,
+        "reason": "このポリシーはDenyのみ。172.101.1.36はこのポリシーのDenyから除外されるだけで、アクセス許可はAllowポリシーが別途必要"
+      },
+      {
+        "option": "C",
+        "text": "172.101.1.36以外は全リソースのアクセス権限を有している",
+        "is_correct": false,
+        "reason": "論理が逆。172.101.1.36以外はDenyされる（アクセス権限を拒否される）"
+      },
+      {
+        "option": "D",
+        "text": "172.101.1.6は全リソースのアクセス権限を有している",
+        "is_correct": false,
+        "reason": "IPアドレスが異なる（172.101.1.36 vs 172.101.1.6）。172.101.1.6はDenyの対象になる"
+      }
+    ],
+    "essence": "Deny + NotIpAddress = 「指定IP以外を全拒否」。Denyに除外されていても許可ではない点も注意"
+  }
+}

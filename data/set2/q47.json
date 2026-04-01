@@ -1,0 +1,48 @@
+{
+  "exam_set": "set2",
+  "order": 47,
+  "body": "ある企業は、Amazon EC2インスタンス上にウェブアプリケーションを構築しています。あなたはソリューションアーキテクトとして、このアプリケーションの高可用性を確保し、さらに需要に応じて実行インスタンスの数を調整してコストの最適化を図る必要があります。\n\nこの要件を満たすために、ソリューションアーキテクトはどのような手段を講じるべきでしょうか。",
+  "option_a": "Auto ScalingグループにALBのターゲットグループを構成して、EC2インスタンスを複数のAWSリージョンに分散させる。",
+  "option_b": "Auto ScalingグループにCloudFrontディストリビューションを構成して、EC2インスタンスを複数のアベイラビリティゾーンに分散させる。",
+  "option_c": "Auto ScalingグループにALBのターゲットグループを構成して、EC2インスタンスを複数のVPCに分散させる。",
+  "option_d": "Auto ScalingグループにALBのターゲットグループを構成して、EC2インスタンスを複数のアベイラビリティゾーンに分散させる。",
+  "answer": "D",
+  "domain": "EC2 / Auto Scaling / ALB",
+  "explanation": {
+    "key_conditions": "高可用性 / 需要に応じたスケーリング / コスト最適化",
+    "what_is_asked": "高可用性とスケーリングのための基本構成",
+    "decision_axis": "高可用性 → 複数AZ / スケーリング → Auto Scaling / 負荷分散 → ALB",
+    "keywords": [
+      { "keyword": "高可用性 + スケーリング + EC2", "pattern": "正解", "reason": "ALB + Auto Scaling + 複数AZが高可用性・スケーリング・コスト最適の基本構成" },
+      { "keyword": "複数リージョンに分散", "pattern": "誤り", "reason": "Auto Scalingグループは単一リージョン内で動作する。複数リージョン分散は別の仕組みが必要" },
+      { "keyword": "CloudFrontをAuto Scalingに構成", "pattern": "誤り", "reason": "CloudFrontはCDNサービス。Auto ScalingグループのターゲットとしてCloudFrontを設定することはできない" }
+    ],
+    "options_analysis": [
+      {
+        "option": "A",
+        "text": "ALB + Auto Scaling + 複数リージョン",
+        "is_correct": false,
+        "reason": "Auto Scalingグループは単一リージョン内の複数AZに対応する。複数リージョン分散はRoute53等の別の仕組みが必要"
+      },
+      {
+        "option": "B",
+        "text": "CloudFront + Auto Scaling + 複数AZ",
+        "is_correct": false,
+        "reason": "CloudFrontはAuto Scalingグループのターゲットにはならない。負荷分散にはALBを使用する"
+      },
+      {
+        "option": "C",
+        "text": "ALB + Auto Scaling + 複数VPC",
+        "is_correct": false,
+        "reason": "Auto Scalingグループは単一VPC内で動作する。複数VPCへの分散はAuto Scalingの機能ではない"
+      },
+      {
+        "option": "D",
+        "text": "ALB + Auto Scaling + 複数AZ",
+        "is_correct": true,
+        "reason": "ALBでトラフィックを分散、Auto Scalingで需要に応じてEC2インスタンスを増減、複数AZで可用性を確保する基本構成"
+      }
+    ],
+    "essence": "EC2の高可用性 + スケーリング基本構成＝ALB + Auto Scaling + 複数AZ。複数リージョンや複数VPCではない"
+  }
+}

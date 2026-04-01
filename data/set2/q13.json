@@ -1,0 +1,48 @@
+{
+  "exam_set": "set2",
+  "order": 13,
+  "body": "ある企業がAWS上でEコマースアプリケーションを運用しており、データベース層にAmazon Auroraを採用しています。あなたはソリューションアーキテクトとして、Auroraデータベースに蓄積されたデータを用いてレポーティング機能を実施しています。しかし、大量のレポートを生成する際にEコマースアプリケーションのパフォーマンスが低下するという問題が発生しています。CloudWatchのメトリクスを確認した結果、月次レポートの実行時に読み取り処理とCPU使用率が急激に増加していることがわかりました。\n\nこの問題を解決するための最もコスト効率の良いソリューションは何でしょうか。",
+  "option_a": "AuroraデータをAmazon Data Migration Serviceを経由してAmazon Redshiftに連携して、Amazon Redshiftにレポーティング機能を接続する。",
+  "option_b": "Auroraレプリカを増設して、リーダーエンドポイントにレポーティング機能を接続する。",
+  "option_c": "AuroraインスタンスにAmazon ElastiCacheクラスターを連携して、キャッシュにレポーティング機能を接続する。",
+  "option_d": "Auroraインスタンスを大規模なタイプにスケールして、レポーティング処理のパフォーマンスを向上させる。",
+  "answer": "B",
+  "domain": "Aurora",
+  "explanation": {
+    "key_conditions": "Auroraのレポーティングによるパフォーマンス低下 / 読み取り処理とCPU使用率の急増 / コスト効率",
+    "what_is_asked": "Auroraの読み取り負荷をメインインスタンスから分離するコスト効率の良い方法",
+    "decision_axis": "読み取りオフロード / コスト最適",
+    "keywords": [
+      { "keyword": "Aurora + レポーティングで読み取り増加", "pattern": "正解", "reason": "読み取り負荷の分離＝Auroraレプリカ + リーダーエンドポイント。レプリカへのオフロードが最もシンプルでコスト効率が良い" },
+      { "keyword": "Redshiftへ移行", "pattern": "誤り", "reason": "DMSでRedshiftへ連携はコストと運用オーバーヘッドが高い。月次レポートのみのためにDWHを構築するのは過剰" },
+      { "keyword": "スケールアップ", "pattern": "誤り", "reason": "スケールアップは高コスト。読み取り負荷の分離にはレプリカが最適" }
+    ],
+    "options_analysis": [
+      {
+        "option": "A",
+        "text": "DMS + Redshift",
+        "is_correct": false,
+        "reason": "DMS設定とRedshiftクラスターのコスト・運用オーバーヘッドが高い。月次レポートのみのユースケースには過剰"
+      },
+      {
+        "option": "B",
+        "text": "Auroraレプリカ + リーダーエンドポイント",
+        "is_correct": true,
+        "reason": "Auroraレプリカは読み取りをプライマリから分離できる。リーダーエンドポイントにレポーティングを接続することで、本番アプリへの影響なくレポート処理が可能。コスト効率も高い"
+      },
+      {
+        "option": "C",
+        "text": "ElastiCache + キャッシュに接続",
+        "is_correct": false,
+        "reason": "ElastiCacheは頻繁に参照されるデータのキャッシュに有効だが、月次レポートのような大量一括読み取りには効果が薄い"
+      },
+      {
+        "option": "D",
+        "text": "インスタンスタイプのスケールアップ",
+        "is_correct": false,
+        "reason": "スケールアップはコストが高く、月次のピーク時以外は無駄になる。レプリカによる読み取り分離が最適"
+      }
+    ],
+    "essence": "Aurora読み取り負荷の分離＝レプリカ + リーダーエンドポイント。Redshiftへの移行やスケールアップより低コストで解決できる"
+  }
+}

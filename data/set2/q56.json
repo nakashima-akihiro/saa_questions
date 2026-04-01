@@ -1,0 +1,48 @@
+{
+  "exam_set": "set2",
+  "order": 56,
+  "body": "ある企業は、コンテナクラスターを利用したマルチテナントアプリケーションを実装しています。その際、クラスター内の各Podに対して独自のホスト環境を確保することが求められています。これらの環境ではCPU、メモリ、ストレージ、Elastic Network Interfaceを共有してはいけません。\n\nこれらの要件を満たすソリューションはどれですか。",
+  "option_a": "PodのマニフェストでnodeSelectorまたはNode Affinityのみを設定し、各テナントのPodがそれぞれ指定された専用のワーカーノードに配置されるようにする。",
+  "option_b": "テナントごとに異なるKubernetes Namespace（名前空間）を作成し、それぞれにNetwork Policiesを適用することで、各Pod独自の環境を確保しリソースの共有を防ぐ。",
+  "option_c": "Amazon EKSのセルフマネージド型ノードグループを使用する。Taint/TolerationとNode Affinityを一体として使用することで、特定のノード上で特定のPodを一貫してスケジュールし、分離を強制する。",
+  "option_d": "KubernetesのResourceQuotasとLimitRangesを使用して、各テナントのPodが使用できるCPUとメモリの上限および下限を厳密に割り当てる。",
+  "answer": "C",
+  "domain": "EKS",
+  "explanation": {
+    "key_conditions": "マルチテナント / CPU・メモリ・ストレージ・ENIの共有不可 / 各Podに独自のホスト環境",
+    "what_is_asked": "EKSでPodを完全に分離されたノードに配置する方法",
+    "decision_axis": "ハードウェアレベルの分離 → Taint/Toleration + Node Affinity でノードを専有",
+    "keywords": [
+      { "keyword": "CPU・メモリ・ENIの共有不可 + 独自ホスト環境", "pattern": "正解", "reason": "Taint/TolerationとNode Affinityを組み合わせると特定Podのみが特定ノードに配置されハードウェアを専有できる" },
+      { "keyword": "Node Affinityのみ", "pattern": "誤り", "reason": "Node Affinityのみでは他のPodも同じノードに配置される可能性がある。Taintで他のPodを排除する必要がある" },
+      { "keyword": "ResourceQuotas + LimitRanges", "pattern": "誤り", "reason": "ResourceQuotas/LimitRangesはリソース使用量の上限設定。ノードの専有（ハードウェア分離）はできない" }
+    ],
+    "options_analysis": [
+      {
+        "option": "A",
+        "text": "nodeSelector/Node Affinityのみ",
+        "is_correct": false,
+        "reason": "Node Affinityは特定ノードへの優先配置を指定するが、他のPodが同じノードに配置されるのを防げない。ENI等のハードウェア共有が発生しうる"
+      },
+      {
+        "option": "B",
+        "text": "Namespace + Network Policies",
+        "is_correct": false,
+        "reason": "NamespaceとNetwork Policiesはネットワーク通信の分離。CPU・メモリ・ENIなどのハードウェアリソースの物理的な分離はできない"
+      },
+      {
+        "option": "C",
+        "text": "EKSセルフマネージド + Taint/Toleration + Node Affinity",
+        "is_correct": true,
+        "reason": "Taintを使うと特定のTolerationを持つPodのみが特定ノードに配置される（他のPodを排除）。Node Affinityと組み合わせることで特定テナントのPodを専用ノードに固定し、CPU・メモリ・ENIの完全分離を実現"
+      },
+      {
+        "option": "D",
+        "text": "ResourceQuotas + LimitRanges",
+        "is_correct": false,
+        "reason": "リソース量の上限設定であり、ノードの専有や物理的なENI分離はできない"
+      }
+    ],
+    "essence": "EKSでPodを専用ノードに完全分離＝Taint（他Pod排除）+ Toleration（許可Pod指定）+ Node Affinity（ノード指定）"
+  }
+}

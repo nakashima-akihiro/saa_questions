@@ -1,0 +1,48 @@
+{
+  "exam_set": "set2",
+  "order": 58,
+  "body": "ある企業は、コンテナアプリケーションの実装を計画しています。このアプリケーションは、AMQP（Advanced Message Queuing Protocol）を用いてメッセージキューと通信する必要があります。また、ビジネスニーズに応じて、トラフィックの急増などにも迅速にスケーリングできる性能が求められています。\n\n最小限の運用上のオーバーヘッドで、これらの要件を満たすソリューションはどれですか。",
+  "option_a": "Amazon EKSを利用してコンテナアプリケーションを実装する。Amazon SQSを使用してメッセージを取得する。",
+  "option_b": "Amazon EKSを利用してコンテナアプリケーションを実装する。Amazon MQを使用してメッセージを取得する。",
+  "option_c": "Auto Scalingグループを構成したAmazon EC2インスタンスを使用して、コンテナアプリケーションを実行する。Amazon SQSを使用してメッセージを取得する。",
+  "option_d": "Auto Scalingグループを構成したAmazon EC2インスタンスを使用して、コンテナアプリケーションを実行する。Amazon MQを使用してメッセージを取得する。",
+  "answer": "B",
+  "domain": "EKS / Amazon MQ",
+  "explanation": {
+    "key_conditions": "AMQP（Advanced Message Queuing Protocol）/ コンテナアプリケーション / スケーリング / 運用オーバーヘッド最小",
+    "what_is_asked": "AMQPプロトコルに対応したマネージドメッセージキューサービス + コンテナ基盤",
+    "decision_axis": "AMQP → Amazon MQ（RabbitMQ/ActiveMQ）/ EKSはEC2より運用オーバーヘッド低",
+    "keywords": [
+      { "keyword": "AMQP", "pattern": "正解", "reason": "AMQPをサポートするのはAmazon MQ（RabbitMQまたはActiveMQ）。SQSはAWS独自のAPIでAMQPをサポートしない" },
+      { "keyword": "SQS + AMQP", "pattern": "誤り", "reason": "SQSはAWS独自のAPIのみ。AMQPプロトコルはサポートしない" },
+      { "keyword": "コンテナ + 運用オーバーヘッド最小", "pattern": "正解", "reason": "EKSはEC2に直接コンテナを立てるより管理が容易。Auto Scaling EC2より運用オーバーヘッドが低い" }
+    ],
+    "options_analysis": [
+      {
+        "option": "A",
+        "text": "EKS + SQS",
+        "is_correct": false,
+        "reason": "SQSはAMQPをサポートしない。既存のAMQPアプリケーションとの互換性がない"
+      },
+      {
+        "option": "B",
+        "text": "EKS + Amazon MQ",
+        "is_correct": true,
+        "reason": "Amazon MQはAMQP、MQTT、STOMP、OpenWire等のプロトコルをサポートするマネージドメッセージブローカー。EKSはマネージドコンテナ基盤。両者の組み合わせで運用オーバーヘッド最小"
+      },
+      {
+        "option": "C",
+        "text": "EC2 Auto Scaling + SQS",
+        "is_correct": false,
+        "reason": "EC2の管理オーバーヘッドがEKSより高い。SQSもAMQP非対応"
+      },
+      {
+        "option": "D",
+        "text": "EC2 Auto Scaling + Amazon MQ",
+        "is_correct": false,
+        "reason": "MQは正しいがEC2の管理オーバーヘッドがEKSより高い"
+      }
+    ],
+    "essence": "AMQP対応メッセージキュー＝Amazon MQ（SQSはAMQP非対応）。コンテナ + 低運用オーバーヘッド＝EKS"
+  }
+}

@@ -1,0 +1,47 @@
+{
+  "exam_set": "set2",
+  "order": 33,
+  "body": "ある企業では、複数のAmazon S3バケットを利用してドキュメントの管理やファイルの保存を行っています。ソリューションアーキテクトは、バージョニングが無効になっているすべてのS3バケットを特定したいと考えています。\n\nこの要件を満たすソリューションはどれでしょうか。",
+  "option_a": "AWS CloudTrailイベントを使用して、バージョニングが有効になっていないS3バケットを特定する。",
+  "option_b": "Amazon EventBridgeを使用して、バージョニングが有効になっていないS3バケットを特定する。",
+  "option_c": "Amazon S3 Storage Lensを使用して、バージョニングが有効になっていないS3バケットを特定する。",
+  "option_d": "IAM Access Analyzer For S3を使用して、バージョニングが有効になっていないS3バケットを特定する。",
+  "answer": "C",
+  "domain": "S3",
+  "explanation": {
+    "key_conditions": "バージョニングが無効なS3バケットの特定 / 複数バケット",
+    "what_is_asked": "S3バケットのバージョニング設定状況を一括確認できるサービス",
+    "decision_axis": "S3のバケット設定・使用状況の可視化 → S3 Storage Lens",
+    "keywords": [
+      { "keyword": "S3バケットのバージョニング設定確認", "pattern": "正解", "reason": "S3 Storage LensはS3バケットの設定・使用状況をダッシュボードで可視化。バージョニング有効/無効の確認が可能" },
+      { "keyword": "IAM Access Analyzer For S3", "pattern": "誤り", "reason": "IAM Access Analyzer For S3はバケットへのアクセス権限（外部公開等）を分析するツール。バージョニング設定の確認ではない" }
+    ],
+    "options_analysis": [
+      {
+        "option": "A",
+        "text": "CloudTrailイベント",
+        "is_correct": false,
+        "reason": "CloudTrailはAPI呼び出しのログ。バケットの現在の設定状態（バージョニング有効/無効）をリスト表示する機能ではない"
+      },
+      {
+        "option": "B",
+        "text": "Amazon EventBridge",
+        "is_correct": false,
+        "reason": "EventBridgeはイベント駆動の通知・ルーティングサービス。バケット設定の一括確認には使えない"
+      },
+      {
+        "option": "C",
+        "text": "S3 Storage Lens",
+        "is_correct": true,
+        "reason": "S3 Storage Lensは組織全体のS3バケットの使用状況・設定をダッシュボードで提供。バージョニングが無効なバケットをフィルタリングして特定できる"
+      },
+      {
+        "option": "D",
+        "text": "IAM Access Analyzer For S3",
+        "is_correct": false,
+        "reason": "IAM Access Analyzer For S3はパブリックアクセスや外部アカウントへのアクセス許可の分析ツール。バージョニング設定の確認は対象外"
+      }
+    ],
+    "essence": "S3バケットの設定状況（バージョニング有無等）の一括確認＝S3 Storage Lens"
+  }
+}

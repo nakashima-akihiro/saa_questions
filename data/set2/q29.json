@@ -1,0 +1,47 @@
+{
+  "exam_set": "set2",
+  "order": 29,
+  "body": "あなたはソリューションアーキテクトとして、データセンターのストレージ容量を拡張する計画を立てています。将来的には、事業継続性計画（BCP）に対応するために、複数のリージョンにデータを保存する必要があります。そのため、Amazon S3バケットをプライマリーストレージとして利用し、これをオンプレミス環境に拡張し、データセンターのストレージデータを一時的な高速アクセス用に保持することを決定しました。\n\nこの要件を満たすために、どのストレージサービスを選択すべきでしょうか。",
+  "option_a": "AWS Storage Gatewayのストアドボリューム（保管型ボリューム）を構成する。",
+  "option_b": "AWS Snowball Edgeを利用してS3にストレージデータを移行する。",
+  "option_c": "AWS Storage Gatewayのキャッシュ型ボリュームを構成する。",
+  "option_d": "Direct Connectを利用してS3にストレージデータを移行する。",
+  "answer": "C",
+  "domain": "Storage Gateway",
+  "explanation": {
+    "key_conditions": "S3をプライマリーストレージとして利用 / オンプレミスに拡張 / 一時的な高速アクセス用にローカル保持",
+    "what_is_asked": "S3がプライマリでオンプレミスをキャッシュとするStorage Gateway構成",
+    "decision_axis": "S3がプライマリ → キャッシュ型 / ローカルがプライマリ → 保管型",
+    "keywords": [
+      { "keyword": "S3がプライマリ + ローカルは高速アクセス用キャッシュ", "pattern": "正解", "reason": "S3がプライマリ＝キャッシュ型ボリューム。ローカルは頻繁にアクセスされるデータのキャッシュとして機能" },
+      { "keyword": "保管型ボリューム（ストアドボリューム）", "pattern": "誤り", "reason": "保管型はローカルがプライマリでS3はバックアップ。要件と逆" }
+    ],
+    "options_analysis": [
+      {
+        "option": "A",
+        "text": "保管型ボリューム（ストアドボリューム）",
+        "is_correct": false,
+        "reason": "保管型ボリュームはオンプレミスがプライマリでS3にバックアップを非同期スナップショット。要件の「S3がプライマリ」と逆の構成"
+      },
+      {
+        "option": "B",
+        "text": "AWS Snowball Edge",
+        "is_correct": false,
+        "reason": "Snowball Edgeは大容量データの物理的な移行ツール。継続的なストレージ拡張やキャッシュ機能は提供しない"
+      },
+      {
+        "option": "C",
+        "text": "キャッシュ型ボリューム",
+        "is_correct": true,
+        "reason": "キャッシュ型ボリュームはS3がプライマリストレージで、オンプレミスには頻繁にアクセスされるデータのキャッシュを保持。「S3をプライマリ、ローカルは一時的な高速アクセス」の要件に完全一致"
+      },
+      {
+        "option": "D",
+        "text": "Direct Connect",
+        "is_correct": false,
+        "reason": "Direct Connectは専用線によるオンプレ〜AWS接続サービス。キャッシュ型のStorage Gatewayと組み合わせることはあるが、Direct Connect単体ではストレージ拡張を実現しない"
+      }
+    ],
+    "essence": "S3がプライマリ + ローカルはキャッシュ＝Storage Gatewayキャッシュ型ボリューム。ローカルがプライマリ + S3はバックアップ＝保管型ボリューム（q4との対比）"
+  }
+}

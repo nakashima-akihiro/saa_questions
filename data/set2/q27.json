@@ -1,0 +1,48 @@
+{
+  "exam_set": "set2",
+  "order": 27,
+  "body": "ある企業は、Application Load Balancerの背後にあるAuto Scalingグループに属するAmazon EC2オンデマンドインスタンス上で動作している経費処理アプリケーションを運営しています。このアプリケーションは、領収書の画像をAmazon S3バケットにアップロードすると、経費処理に必要なデータを抽出し、その後経費処理を実行します。この経費処理には、数時間にわたる連続的な処理時間がかかることがあります。\n\n経費処理後の画像はほとんど使用されませんが、7年間は保存する必要があります。ソリューションアーキテクトは、このアプリケーションの運用コストを削減するように求められました。\n\nパフォーマンスを下げずに、コスト最適化を実現するためのソリューションはどれでしょうか。",
+  "option_a": "Compute Savings Plansを利用して必要最大数のEC2インスタンスを購入する。S3ライフサイクルポリシーにより、31日後に領収書画像をGlacier Deep Archiveにアーカイブし、7年後には削除する。",
+  "option_b": "Compute Savings Plansを利用して必要最小数のEC2インスタンスを購入する。オンデマンドインスタンスをピーク時のスケーリング用に使用する。S3ライフサイクルポリシーにより、31日後に領収書画像をGlacier Deep Archiveにアーカイブし、7年後には削除する。",
+  "option_c": "Compute Savings Plansを利用して必要最大数のEC2インスタンスを購入する。スポットインスタンスをピーク時のスケーリング用に使用する。S3ライフサイクルポリシーにより、31日後に領収書画像をGlacier Deep Archiveにアーカイブし、7年後には削除する。",
+  "option_d": "Compute Savings Plansを利用して必要最小数のEC2インスタンスを購入する。スポットインスタンスをピーク時のスケーリング用に使用する。S3ライフサイクルポリシーにより、31日後に領収書画像をGlacier Deep Archiveにアーカイブし、7年後には削除する。",
+  "answer": "B",
+  "domain": "EC2 / S3 / Savings Plans",
+  "explanation": {
+    "key_conditions": "数時間にわたる連続処理 / コスト削減 / パフォーマンス維持 / 画像は7年保存・ほぼ未アクセス",
+    "what_is_asked": "長時間処理のEC2コスト最適化 + 画像の長期保存コスト最適化",
+    "decision_axis": "ベースライン → Savings Plans最小数 / ピーク → スポットは中断リスクあるためオンデマンド / 長期保存 → Glacier Deep Archive",
+    "keywords": [
+      { "keyword": "数時間の連続処理 + スポットインスタンス", "pattern": "誤り", "reason": "スポットインスタンスは中断される可能性がある。数時間の連続処理では中断リスクが致命的" },
+      { "keyword": "Savings Plans最小数 + オンデマンドでスケーリング", "pattern": "正解", "reason": "ベースラインはSavings Plans（割引）、ピーク時追加分はオンデマンド。スポットは中断リスクで長時間処理に不適" },
+      { "keyword": "7年保存 + ほぼ未アクセス", "pattern": "正解", "reason": "長期保存・ほぼ未アクセス＝Glacier Deep Archive（最安）+ ライフサイクルポリシー" }
+    ],
+    "options_analysis": [
+      {
+        "option": "A",
+        "text": "Savings Plans最大数 + スケーリング用なし",
+        "is_correct": false,
+        "reason": "最大数のSavings Plansを購入すると非ピーク時に過剰なコミットが発生。最小数 + 追加分オンデマンドが最適"
+      },
+      {
+        "option": "B",
+        "text": "Savings Plans最小数 + オンデマンドでスケーリング + Glacier Deep Archive",
+        "is_correct": true,
+        "reason": "ベースラインの最小数をSavings Plansで確保しコスト削減。ピーク時の追加分はオンデマンド（スポットは数時間処理の中断リスクがあり不適）。画像はライフサイクルでGlacier Deep Archiveに移行してコスト最適"
+      },
+      {
+        "option": "C",
+        "text": "Savings Plans最大数 + スポットでスケーリング",
+        "is_correct": false,
+        "reason": "最大数のSavings Plansは過剰。スポットは数時間処理の中断リスクがある"
+      },
+      {
+        "option": "D",
+        "text": "Savings Plans最小数 + スポットでスケーリング",
+        "is_correct": false,
+        "reason": "スポットインスタンスは数時間にわたる連続処理に不適。中断されると処理が失敗しパフォーマンスが下がる"
+      }
+    ],
+    "essence": "長時間処理にはスポット不適（中断リスク）。Savings Plans最小数 + オンデマンドでスケーリング。長期未アクセス画像はGlacier Deep Archive"
+  }
+}

@@ -1,0 +1,48 @@
+{
+  "exam_set": "set2",
+  "order": 32,
+  "body": "ある企業は、Amazon EC2インスタンス上で運営されているウェブサイトを管理しています。このウェブサイトのEC2インスタンスは、HTTPトラフィックとHTTPSトラフィックをそれぞれ処理するように、ALBのターゲットグループが設定されています。この企業は、このウェブサイトに対する全てのリクエストがHTTPSを利用するようにしたいと考えています。\n\nこの要件を実現するために、ソリューションアーキテクトはどのような手段を講じるべきでしょうか。",
+  "option_a": "HTTPSトラフィックだけを許可するようにALBのネットワークACLルールを設定する。",
+  "option_b": "HTTPをHTTPSに変換するリスナールールをALBで設定する。",
+  "option_c": "HTTPトラフィックをHTTPSトラフィックにリダイレクトするリスナールールをALBで設定する。",
+  "option_d": "ALBをNLBに置き換えて、HTTPトラフィックをHTTPSトラフィックにリダイレクトするリスナールールを設定する。",
+  "answer": "C",
+  "domain": "ALB",
+  "explanation": {
+    "key_conditions": "全リクエストをHTTPSにする / ALBを使用",
+    "what_is_asked": "ALBでHTTP→HTTPSのリダイレクトを設定する方法",
+    "decision_axis": "ALBリスナールールによるHTTPリダイレクト",
+    "keywords": [
+      { "keyword": "全リクエストをHTTPS + ALB", "pattern": "正解", "reason": "ALBのリスナールールでHTTP（80番）をHTTPS（443番）にリダイレクトするアクションを設定する" },
+      { "keyword": "ネットワークACLでHTTPSのみ許可", "pattern": "誤り", "reason": "HTTPを拒否すると接続自体が切断される。リダイレクトではないため要件を満たさない" },
+      { "keyword": "NLBに置き換え", "pattern": "誤り", "reason": "NLBはL4でHTTPリダイレクトの概念がない。ALBのままリスナールールを設定すべき" }
+    ],
+    "options_analysis": [
+      {
+        "option": "A",
+        "text": "ネットワークACLでHTTPSのみ許可",
+        "is_correct": false,
+        "reason": "HTTPをブロックすると接続が拒否される。HTTPSへのリダイレクトにはならない"
+      },
+      {
+        "option": "B",
+        "text": "HTTPをHTTPSに変換するリスナールール",
+        "is_correct": false,
+        "reason": "「変換」はALBリスナールールの正式な機能名ではない。正しくは「リダイレクト」アクション"
+      },
+      {
+        "option": "C",
+        "text": "HTTPをHTTPSにリダイレクトするリスナールール",
+        "is_correct": true,
+        "reason": "ALBのHTTPリスナー（ポート80）に「リダイレクト」アクションを設定してHTTPS（ポート443）へ転送する。標準的なHTTPS強制の設定方法"
+      },
+      {
+        "option": "D",
+        "text": "ALBをNLBに置き換え",
+        "is_correct": false,
+        "reason": "NLBはL4ロードバランサーでHTTPリダイレクト機能を持たない。ALBのままリスナールールで対応すべき"
+      }
+    ],
+    "essence": "HTTP→HTTPSの強制＝ALBリスナールールで「リダイレクト」アクションを設定。NLBにはHTTPリダイレクト機能なし"
+  }
+}

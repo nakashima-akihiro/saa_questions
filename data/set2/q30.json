@@ -1,0 +1,49 @@
+{
+  "exam_set": "set2",
+  "order": 30,
+  "body": "ある企業がAWS上でIoTアプリケーションを開発しています。このアプリケーションは、数千のデバイスからのストリームデータを集約し、リアルタイムでデータをクエリ処理して時系列に分割します。さらに、分割されたデータをストレージに保存する必要があります。その際は、バッファリング、リトライ、ファイルサイズの最適化を効率的に実施する必要があります。\n\nこれらの要件を達成するために、ソリューションアーキテクトはどのようなアプローチを取るべきでしょうか。",
+  "option_a": "デバイスからのデータをAmazon Data Firehoseの配信ストリームで取得して、Amazon Managed Service for Apache Flinkのクエリ処理でデータを分割する。その上で、Amazon Data FirehoseによってデータをAmazon S3バケットに保存する。",
+  "option_b": "デバイスからのデータをAmazon Kinesis Data Streamに取得して、Amazon Managed Service for Apache Flinkのクエリ処理でデータを分割する。その後、Amazon Data Firehoseの配信ストリームにデータを送信して、Amazon S3バケットに保存する。",
+  "option_c": "デバイスからのデータをAmazon Kinesis Data Streamに取得して、Amazon Data FirehoseのSQL処理でデータを分割する。その上で、Amazon Data FirehoseによってデータをAmazon S3バケットに保存する。",
+  "option_d": "デバイスからのデータをAmazon Kinesis Data Streamが取得して、Amazon Managed Service for Apache Flinkのクエリ処理でデータを分割してからAmazon S3バケットに保存する。",
+  "answer": "B",
+  "domain": "Kinesis / Firehose",
+  "explanation": {
+    "key_conditions": "リアルタイムクエリ処理 / 時系列分割 / バッファリング・リトライ・ファイルサイズ最適化 / S3保存",
+    "what_is_asked": "リアルタイム処理→S3への最適化配信パイプライン構成",
+    "decision_axis": "リアルタイム処理 → Kinesis Data Streams + Apache Flink / バッファリング・S3最適化配信 → Firehose",
+    "keywords": [
+      { "keyword": "リアルタイムクエリ + Apache Flink", "pattern": "正解", "reason": "リアルタイムストリーム処理にはKinesis Data Streams + Apache Flinkが標準パイプライン" },
+      { "keyword": "バッファリング・リトライ・ファイルサイズ最適化", "pattern": "正解", "reason": "S3への配信時のバッファリング・リトライ・ファイル最適化＝Data Firehoseの機能" },
+      { "keyword": "FirehoseのSQL処理", "pattern": "誤り", "reason": "FirehoseはSQL処理をネイティブサポートしない。処理にはApache FlinkやLambdaが必要" },
+      { "keyword": "Apache Flink → S3直接保存", "pattern": "誤り", "reason": "Apache FlinkからS3への直接保存はバッファリング・ファイルサイズ最適化がない。Firehoseを経由すべき" }
+    ],
+    "options_analysis": [
+      {
+        "option": "A",
+        "text": "Firehose取得 → Apache Flink → Firehose → S3",
+        "is_correct": false,
+        "reason": "FirehoseはApache Flinkの入力ソースとして直接使えない。リアルタイム処理にはKinesis Data Streamsが適切"
+      },
+      {
+        "option": "B",
+        "text": "Kinesis Data Streams → Apache Flink → Firehose → S3",
+        "is_correct": true,
+        "reason": "Kinesis Data Streamsでデータ収集→Apache Flinkでリアルタイムクエリ・時系列分割→Firehoseでバッファリング・リトライ・ファイルサイズ最適化してS3に保存。要件を全て満たす"
+      },
+      {
+        "option": "C",
+        "text": "Kinesis Data Streams → FirehoseのSQL処理 → S3",
+        "is_correct": false,
+        "reason": "FirehoseはSQLでのクエリ処理をネイティブサポートしない"
+      },
+      {
+        "option": "D",
+        "text": "Kinesis Data Streams → Apache Flink → S3直接",
+        "is_correct": false,
+        "reason": "Firehoseを経由しないためバッファリング・リトライ・ファイルサイズ最適化が欠落する"
+      }
+    ],
+    "essence": "リアルタイム処理パイプライン: Kinesis Data Streams → Apache Flink（処理） → Firehose（バッファリング・最適化） → S3"
+  }
+}

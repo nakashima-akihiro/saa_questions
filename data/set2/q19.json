@@ -1,0 +1,55 @@
+{
+  "exam_set": "set2",
+  "order": 19,
+  "body": "あなたはソリューションアーキテクトとして、AWSを活用したIoTデータソリューションの構築に取り組んでいます。このソリューションは、さまざまなセンサーからデータを収集・蓄積しながら、リアルタイムでストリーミングデータを処理することを目的としています。ストリーミングデータを蓄積する際は、データ形式を分析に適した形に変換し、その後コスト効率の良いデータレイヤーに保存する必要があります。\n\n運用上のオーバヘッドを最小限にしつつ、要件を満たすためのソリューションの組み合わせはどれでしょうか。（2つ選択）",
+  "option_a": "Amazon Kinesis Data Streamsを利用したデータ取得アプリケーションを作成して、リアルタイムデータ処理を実施した上で、Amazon Data Firehoseに連携する。",
+  "option_b": "Amazon Kinesis Data Streamsがデータを取得し、そのストリームデータをAmazon Managed Service for Apache Flinkアプリケーションによって処理してから、Amazon Data Firehoseに連携する。",
+  "option_c": "Amazon Data Firehose上のストリームデータをLambda関数が変換処理してから、Amazon S3バケットにデータを格納する。",
+  "option_d": "API GatewayとLambda関数を統合したアプリケーションがデータ処理を実行して、Amazon Data Firehoseに連携する。",
+  "option_e": "Amazon Data Firehose上のストリームデータをAmazon Data Firehoseが変換処理してから、Amazon S3バケットにデータを格納する。",
+  "answer": "B,C",
+  "domain": "Kinesis / Firehose",
+  "explanation": {
+    "key_conditions": "リアルタイムストリーミングデータ処理 / データ形式の変換 / コスト効率の良いデータレイヤー（S3）/ 運用オーバーヘッド最小",
+    "what_is_asked": "リアルタイム処理→変換→S3保存のパイプラインを最小運用で構築する組み合わせ",
+    "decision_axis": "リアルタイム処理 → Kinesis Data Streams + Apache Flink / データ変換 + S3格納 → Firehose + Lambda変換",
+    "keywords": [
+      { "keyword": "リアルタイムストリーム + 変換", "pattern": "正解", "reason": "Kinesis Data Streams → Apache Flink（リアルタイム処理）→ Firehose → Lambda変換 → S3 がマネージドパイプラインの定番" },
+      { "keyword": "Firehose + Lambda変換 + S3", "pattern": "正解", "reason": "FirehoseはLambda変換を組み込みでサポート。データ変換してS3に格納する運用オーバーヘッド最小の構成" },
+      { "keyword": "Firehose自身が変換処理", "pattern": "誤り", "reason": "FirehoseのデータはFirehose自身では変換できない。変換にはLambdaのサポートが必要" }
+    ],
+    "options_analysis": [
+      {
+        "option": "A",
+        "text": "Kinesis Data Streams + データ取得アプリ + Firehose",
+        "is_correct": false,
+        "reason": "「リアルタイムデータ処理を実施した上で」が曖昧でApache Flinkのような適切なリアルタイム処理エンジンが含まれていない"
+      },
+      {
+        "option": "B",
+        "text": "Kinesis Data Streams + Apache Flink + Firehose",
+        "is_correct": true,
+        "reason": "Kinesis Data Streamsでデータを取得し、Apache Flinkでリアルタイム処理後にFirehoseへ連携。フルマネージドで運用オーバーヘッド最小"
+      },
+      {
+        "option": "C",
+        "text": "Firehose + Lambda変換 + S3",
+        "is_correct": true,
+        "reason": "FirehoseはS3配信前にLambda関数でデータ変換する機能を組み込みで持つ。コスト効率の良いS3への格納と変換を一体で実現"
+      },
+      {
+        "option": "D",
+        "text": "API GW + Lambda + Firehose",
+        "is_correct": false,
+        "reason": "API GW + Lambdaはリアルタイムストリーム処理向きではない。センサーデータのストリーミングにはKinesisが適切"
+      },
+      {
+        "option": "E",
+        "text": "Firehose自身が変換してS3",
+        "is_correct": false,
+        "reason": "FirehoseはLambdaなしにデータ変換する機能を持たない。変換にはLambdaの組み込みが必要"
+      }
+    ],
+    "essence": "リアルタイムストリーム処理パイプライン定番: Kinesis Data Streams → Apache Flink → Firehose → Lambda変換 → S3"
+  }
+}

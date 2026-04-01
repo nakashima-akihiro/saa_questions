@@ -1,0 +1,47 @@
+{
+  "exam_set": "set2",
+  "order": 26,
+  "body": "ある企業は、3層アプリケーションをAWS上で開発しています。あなたはソリューションアーキテクトとして、Amazon Elastic Kubernetes Service（Amazon EKS）を利用してコンテナアプリケーションを実装しています。その際、Amazon EKSに保存されるすべてのシークレットは、Kubernetesのシークレットストアで暗号化する必要があります。\n\nコスト効率よく、これらの要件を満たすソリューションはどれですか。",
+  "option_a": "AWS KMSカスタマーマネージドキーを作成する。AWS Secrets ManagerシークレットにEKSのシークレット情報を保存する。このシークレットをKMSカスタマーマネージドキーを利用して暗号化する。",
+  "option_b": "AWS KMSカスタマーマネージドキーを作成する。Amazon EKSクラスターに構成されたAmazon EBSボリュームの暗号化を有効にする。このボリュームにシークレット情報を保存する。",
+  "option_c": "AWS KMSカスタマーマネージドキーを作成する。AWS Secrets Managerシークレットを連携して、EKSシークレットをEKS内に作成する。このシークレットをKMSカスタマーマネージドキーを利用して暗号化する。",
+  "option_d": "AWS KMSカスタマーマネージドキーを作成する。Amazon EKSクラスターのKubernetesシークレットを利用してシークレット情報を保存する。KMSカスタマーマネージドキーを利用してKubernetesシークレットを暗号化する。",
+  "answer": "D",
+  "domain": "EKS / KMS",
+  "explanation": {
+    "key_conditions": "EKSのシークレット / Kubernetesのシークレットストアで暗号化 / コスト効率",
+    "what_is_asked": "KubernetesネイティブのシークレットをKMSで暗号化する方法",
+    "decision_axis": "Kubernetesシークレットストアを使う / KMSによる暗号化",
+    "keywords": [
+      { "keyword": "Kubernetesシークレットストアで暗号化", "pattern": "正解", "reason": "KubernetesネイティブのシークレットオブジェクトをKMSカスタマーマネージドキーで暗号化するのが要件。EKSはKMS envelopeネイティブサポート" },
+      { "keyword": "Secrets Managerに保存 + EKS", "pattern": "誤り", "reason": "Secrets ManagerはKubernetesシークレットストアではない。要件の「Kubernetesのシークレットストアで暗号化」を満たさない" }
+    ],
+    "options_analysis": [
+      {
+        "option": "A",
+        "text": "KMS + Secrets ManagerにEKSシークレットを保存",
+        "is_correct": false,
+        "reason": "Secrets ManagerはAWSのシークレット管理サービスだが、KubernetesのシークレットストアではないためKubernetesネイティブの暗号化要件を満たさない"
+      },
+      {
+        "option": "B",
+        "text": "KMS + EBSボリューム暗号化 + ボリュームにシークレット保存",
+        "is_correct": false,
+        "reason": "EBSボリューム暗号化はストレージレベルの暗号化。Kubernetesシークレットストアでの暗号化要件とは異なる"
+      },
+      {
+        "option": "C",
+        "text": "KMS + Secrets Manager連携 + EKSシークレット作成",
+        "is_correct": false,
+        "reason": "Secrets Managerとの連携は有効だが、シークレット自体はSecrets Managerに保存される。KubernetesネイティブのシークレットストアをKMSで直接暗号化する要件から外れる"
+      },
+      {
+        "option": "D",
+        "text": "KMS + Kubernetesシークレット + KMSで暗号化",
+        "is_correct": true,
+        "reason": "EKSはKubernetes Secrets Encryption（エンベロープ暗号化）をKMSカスタマーマネージドキーでサポート。KubernetesネイティブのシークレットストアをKMSで暗号化する最もシンプルでコスト効率の良い方法"
+      }
+    ],
+    "essence": "EKSのKubernetesシークレットをKMS暗号化＝EKSのKubernetes Secrets EncryptionにKMSカスタマーマネージドキーを設定"
+  }
+}

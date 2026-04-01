@@ -1,0 +1,49 @@
+{
+  "exam_set": "set2",
+  "order": 6,
+  "body": "ある企業では、請求処理をアウトソーシングしています。請求情報はCSV形式で保存され、SQLクエリによって処理されます。処理結果は30日間のみ保存され、その後は不要となります。\n\nこれらの要件を満たす、コスト効率の良いストレージタイプの設定方法はどれでしょうか。",
+  "option_a": "Amazon RDS MySQLによってデータのクエリ処理を実施する。その後、Amazon RDS MySQLインスタンスにデータを30日後に削除するライフサイクルポリシーを設定する。",
+  "option_b": "Amazon S3バケットの標準ストレージにデータを保存して、Amazon DynamoDBを利用してデータを解析する。Amazon S3バケットにデータを30日後に削除するライフサイクルポリシーを設定する。",
+  "option_c": "Amazon S3バケットの標準ストレージにデータを保存して、Amazon Athenaを利用してデータを解析する。Amazon S3バケットにデータを30日後に削除するライフサイクルポリシーを設定する。",
+  "option_d": "Amazon S3 Glacier Instant Retrievalにデータを保存して、Amazon Redshiftでデータを解析する。Amazon S3バケットにデータを30日後に削除するライフサイクルポリシーを設定する。",
+  "answer": "C",
+  "domain": "S3 / Athena",
+  "explanation": {
+    "key_conditions": "CSVデータ / SQLクエリで処理 / 30日後に削除 / コスト効率",
+    "what_is_asked": "S3上のCSVデータをSQLクエリで安価に処理し、30日後に自動削除する構成",
+    "decision_axis": "SQLクエリ対応 / コスト効率 / サーバーレス",
+    "keywords": [
+      { "keyword": "CSV + SQLクエリ", "pattern": "正解", "reason": "S3上のCSVをSQLで直接クエリ＝Athena。サーバーレスでコスト効率最高" },
+      { "keyword": "30日後に削除", "pattern": "正解", "reason": "S3ライフサイクルポリシーで有効期限を設定するだけで自動削除。RDSにはライフサイクルポリシーはない" },
+      { "keyword": "DynamoDB + SQL分析", "pattern": "誤り", "reason": "DynamoDBはNoSQLのKVS。複雑なSQLクエリ処理には不適" },
+      { "keyword": "Glacier + 30日保存", "pattern": "誤り", "reason": "Glacierは長期アーカイブ向け。30日の短期保存でS3標準より高コストになる可能性。RedshiftはETL後のDWH向けでCSV直接クエリには過剰" }
+    ],
+    "options_analysis": [
+      {
+        "option": "A",
+        "text": "RDS MySQL + ライフサイクルポリシー",
+        "is_correct": false,
+        "reason": "RDSにはライフサイクルポリシー機能がない。常時稼働のDBインスタンス費用が発生しコスト効率が悪い"
+      },
+      {
+        "option": "B",
+        "text": "S3 + DynamoDB",
+        "is_correct": false,
+        "reason": "DynamoDBはKVS/NoSQL。SQLクエリによる複雑な分析処理には不向き"
+      },
+      {
+        "option": "C",
+        "text": "S3 + Athena + ライフサイクルポリシー",
+        "is_correct": true,
+        "reason": "AthenaはS3上のCSVを直接SQLクエリで処理できるサーバーレスサービス。インフラ不要でコスト効率が高い。S3ライフサイクルポリシーで30日後の自動削除も簡単に設定可能"
+      },
+      {
+        "option": "D",
+        "text": "S3 Glacier + Redshift",
+        "is_correct": false,
+        "reason": "Glacierは長期アーカイブ向けで30日保存の短期データには不適。RedshiftはDWH向けでデータロードが必要、サーバー費用もかかりコスト過剰"
+      }
+    ],
+    "essence": "S3上のCSVをSQLで処理＝Athena。30日後削除＝S3ライフサイクルポリシー。サーバーレスでコスト最適"
+  }
+}

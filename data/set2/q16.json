@@ -1,0 +1,47 @@
+{
+  "exam_set": "set2",
+  "order": 16,
+  "body": "あなたはソリューションアーキテクトとして、画像識別APIを活用した予測分析システムの構築に取り組んでいます。この外部の画像識別APIにアクセスし、画像解析を実施した上で、その画像解析データに基づいて予測分析を数分以内に完了させる必要があります。得られた予測結果はDynamoDBテーブルに保存されます。この予測分析処理は外部APIを利用するため、特別なハードウェアは不要であり、処理するデータの容量もそれほど大きくありません。\n\nコスト最適に要件を満たすことができる適切なソリューションはどれでしょうか。",
+  "option_a": "DynamoDBストリームから画像識別APIを呼び出す。DynamoDBトランザクションを設定して、APIから処理結果を取得する。",
+  "option_b": "AWS Lambda関数から画像識別APIを呼び出す。画像解析結果を取得して、そのデータを利用した分析処理を実施する。その上で、そのLambda関数がDynamoDBテーブルに処理結果を保存する。",
+  "option_c": "Amazon Managed Service for Apache Flinkを画像識別APIに連携して、画像解析結果を利用した分析処理を実施する。Amazon Managed Service for Apache FlinkがDynamoDBテーブルに処理結果を配信する。",
+  "option_d": "EC2インスタンスから画像識別APIを呼び出す。画像解析結果を取得して、そのデータを利用した分析処理を実施する。その上で、そのEC2インスタンスがDynamoDBテーブルに処理結果を保存する。",
+  "answer": "B",
+  "domain": "Lambda",
+  "explanation": {
+    "key_conditions": "外部APIへのアクセス / 数分以内の処理完了 / 特別なハードウェア不要 / データ容量が小さい / コスト最適",
+    "what_is_asked": "外部APIを呼び出してDynamoDBに保存するコスト最適なサーバーレス構成",
+    "decision_axis": "特別なハードウェア不要・小規模処理 → Lambda（EC2は常時稼働コスト発生）",
+    "keywords": [
+      { "keyword": "特別なハードウェア不要 + 小規模 + コスト最適", "pattern": "正解", "reason": "特別なHW不要・小規模＝Lambda。常時稼働のEC2は不要。数分以内の処理もLambdaの15分制限内" },
+      { "keyword": "EC2 + 小規模処理", "pattern": "誤り", "reason": "EC2は常時稼働コストが発生。小規模な処理にはLambdaのほうがコスト最適" }
+    ],
+    "options_analysis": [
+      {
+        "option": "A",
+        "text": "DynamoDBストリームから画像識別APIを呼び出す",
+        "is_correct": false,
+        "reason": "DynamoDBストリームは既存データの変更をトリガーにするもの。外部APIを呼び出す処理の起点としては設計が不自然"
+      },
+      {
+        "option": "B",
+        "text": "Lambda + 外部API + DynamoDB",
+        "is_correct": true,
+        "reason": "Lambdaはサーバーレスで使用した分だけ課金。特別なHW不要・小規模・数分以内の処理に最適。EC2常時稼働コスト不要でコスト最適"
+      },
+      {
+        "option": "C",
+        "text": "Apache Flink + 外部API + DynamoDB",
+        "is_correct": false,
+        "reason": "Apache FlinkはリアルタイムストリームのデータパイプライN向け。外部APIを単純に呼び出す用途には過剰でコストも高い"
+      },
+      {
+        "option": "D",
+        "text": "EC2 + 外部API + DynamoDB",
+        "is_correct": false,
+        "reason": "EC2は常時稼働でインスタンス費用が発生。小規模処理にはLambdaが圧倒的にコスト効率が良い"
+      }
+    ],
+    "essence": "特別なHW不要・小規模・短時間処理＝Lambda。EC2の常時稼働コストと比較してサーバーレスが最適"
+  }
+}

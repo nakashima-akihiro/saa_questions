@@ -1,0 +1,47 @@
+{
+  "exam_set": "set2",
+  "order": 63,
+  "body": "ある企業は、AWSを利用して社内向けのドキュメント共有アプリケーションを運用しています。ストレージ層にはAmazon S3バケットを使用しています。ソリューションアーキテクトは、社員がオンプレミス環境ネットワークの仮想アプライアンスを介してドキュメントをAmazon S3バケットにアップロードできるようにします。来週から大量の過去ドキュメントをアップロードする予定であるため、同社は増加するアップロードリクエストに耐えられるようにする必要があります。\n\n最小限の運用上のオーバーヘッドで、これらの要件を満たすソリューションはどれですか。",
+  "option_a": "AWS DataSyncをプロビジョニングする。ユーザーのブラウザからファイルゲートウェイに画像を直接アップロードする。",
+  "option_b": "AWS Storage Gatewayファイルゲートウェイをプロビジョニングする。ユーザーのブラウザからファイルゲートウェイに画像を直接アップロードする。",
+  "option_c": "Amazon S3バケットのTransfer Acceleration機能を有効化する。",
+  "option_d": "Amazon S3バケットのマルチパートアップロード機能を有効化する。",
+  "answer": "B",
+  "domain": "Storage Gateway",
+  "explanation": {
+    "key_conditions": "オンプレミスの仮想アプライアンス経由でS3にアップロード / 大量ドキュメント / 運用オーバーヘッド最小",
+    "what_is_asked": "オンプレミスからS3へのファイルアップロードを仮想アプライアンスで実現するサービス",
+    "decision_axis": "オンプレミス仮想アプライアンス + S3連携 → Storage Gatewayファイルゲートウェイ",
+    "keywords": [
+      { "keyword": "オンプレミスの仮想アプライアンス + S3アップロード", "pattern": "正解", "reason": "Storage Gatewayファイルゲートウェイはオンプレミスに仮想アプライアンスとしてデプロイしNFS/SMBでS3にファイルをアップロードする" },
+      { "keyword": "DataSync + ファイルゲートウェイにアップロード", "pattern": "誤り", "reason": "DataSyncはオンプレから AWSへのデータコピーツール。ブラウザからのリアルタイムアップロードには不向き" }
+    ],
+    "options_analysis": [
+      {
+        "option": "A",
+        "text": "DataSync + ファイルゲートウェイにアップロード",
+        "is_correct": false,
+        "reason": "DataSyncはスケジュールされたデータコピー向け。ブラウザからのリアルタイムドキュメントアップロードのワークフローには不適"
+      },
+      {
+        "option": "B",
+        "text": "Storage Gatewayファイルゲートウェイ + ブラウザからアップロード",
+        "is_correct": true,
+        "reason": "Storage GatewayファイルゲートウェイはオンプレミスにNFS/SMBファイル共有を提供し、ファイルをS3に透過的に保存する。オンプレミスの仮想アプライアンスとして動作し、ユーザーは通常のファイル操作でS3にアップロードできる"
+      },
+      {
+        "option": "C",
+        "text": "S3 Transfer Acceleration",
+        "is_correct": false,
+        "reason": "Transfer Accelerationはグローバルユーザーからのアップロード高速化向け（CloudFrontエッジ経由）。オンプレミス仮想アプライアンス経由のアップロードには直接関係しない"
+      },
+      {
+        "option": "D",
+        "text": "S3マルチパートアップロード",
+        "is_correct": false,
+        "reason": "マルチパートアップロードは大容量ファイルの分割アップロード機能。オンプレミスからの仮想アプライアンス経由の連携には Storage Gatewayが適切"
+      }
+    ],
+    "essence": "オンプレミス仮想アプライアンス経由でS3にファイルを保存＝Storage Gatewayファイルゲートウェイ（NFS/SMB共有をS3に透過的にマッピング）"
+  }
+}

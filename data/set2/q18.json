@@ -1,0 +1,47 @@
+{
+  "exam_set": "set2",
+  "order": 18,
+  "body": "次のバケットポリシーでS3バケットに対する権限設定を行っています。\n\n{\n    \"Version\": \"2012-10-17\",\n    \"Statement\": [\n        {\n            \"Sid\": \"PublicReadForGetBucketObjects\",\n            \"Effect\": \"Allow\",\n            \"Principal\": \"*\",\n            \"Action\": \"s3:GetObject\",\n            \"Resource\": \"arn:aws:s3:::mybucket/*\"\n        }\n    ]\n}\n\nこの設定内容として正しい内容を選択してください。",
+  "option_a": "このS3バケットの全てのアクションが許可されている。",
+  "option_b": "このS3バケットを利用した静的ホスティングを有効化できる。",
+  "option_c": "該当バケットの所有者は削除以外の操作が全て実行できる。",
+  "option_d": "このS3バケットはオブジェクトのアップロードが可能である。",
+  "answer": "B",
+  "domain": "S3 / IAM",
+  "explanation": {
+    "key_conditions": "Principal: * / Effect: Allow / Action: s3:GetObject / Resource: mybucket/*",
+    "what_is_asked": "全ユーザーにs3:GetObjectを許可するバケットポリシーの効果",
+    "decision_axis": "s3:GetObjectのみ許可 / 静的ウェブサイトホスティングの要件",
+    "keywords": [
+      { "keyword": "Principal: * + s3:GetObject", "pattern": "正解", "reason": "全ユーザーへのGetObject許可＝パブリック読み取り。静的ウェブサイトホスティングに必要な設定" },
+      { "keyword": "s3:GetObjectのみ", "pattern": "誤り", "reason": "GetObjectのみ許可。PutObject（アップロード）やDeleteObjectは許可されていない" }
+    ],
+    "options_analysis": [
+      {
+        "option": "A",
+        "text": "全てのアクションが許可",
+        "is_correct": false,
+        "reason": "Action: s3:GetObjectのみ許可。全アクション許可にはAction: s3:*が必要"
+      },
+      {
+        "option": "B",
+        "text": "静的ホスティングを有効化できる",
+        "is_correct": true,
+        "reason": "S3の静的ウェブサイトホスティングはパブリックなGetObject権限が必要。このポリシーで全ユーザーにGetObjectを許可しているため、静的ホスティングの要件を満たす"
+      },
+      {
+        "option": "C",
+        "text": "バケット所有者は削除以外の操作が全て実行できる",
+        "is_correct": false,
+        "reason": "このポリシーはPrincipal: *への権限のみ定義。バケット所有者の権限はIAMポリシーで別途管理され、このポリシーからは読み取れない"
+      },
+      {
+        "option": "D",
+        "text": "オブジェクトのアップロードが可能",
+        "is_correct": false,
+        "reason": "アップロードはs3:PutObjectが必要。このポリシーはs3:GetObjectのみ許可しているためアップロード不可"
+      }
+    ],
+    "essence": "Principal: * + s3:GetObject = パブリック読み取り = 静的ウェブサイトホスティングに必要な設定。アップロードはPutObject権限が別途必要"
+  }
+}

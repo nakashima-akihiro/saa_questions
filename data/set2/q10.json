@@ -1,0 +1,48 @@
+{
+  "exam_set": "set2",
+  "order": 10,
+  "body": "ある企業は特定の企業のアプリケーションをAWSプラットフォーム上で開発しています。あなたはソリューションアーキテクトとして、EC2インスタンスを活用し、EBS汎用ボリュームをルートボリュームとして設定しています。その際に、セキュリティ要件の一環として、データを定期的にバックアップする必要があります。\n\nこの要件を満たすためのバックアップソリューションはどれでしょうか。",
+  "option_a": "Amazon EBSボリュームを複数利用したミラーリングを実施する。",
+  "option_b": "Amazon DLMのライフサイクルポリシーを利用してEBSのスナップショットの取得スケジュールを設定する。",
+  "option_c": "Amazon S3バケットにAmazon EBSボリュームのスナップショットを取得するように設定して、取得スケジュールを設定するためのライフサイクルポリシーを設定する。",
+  "option_d": "Amazon EBSの自動バックアップ機能を有効化して、取得スケジュールを設定する。",
+  "answer": "B",
+  "domain": "EBS / DLM",
+  "explanation": {
+    "key_conditions": "EBSボリュームのバックアップ / 定期的なスケジュール / セキュリティ要件",
+    "what_is_asked": "EBSボリュームの定期バックアップをスケジュール設定できるサービス",
+    "decision_axis": "EBSスナップショットの自動化 / マネージドサービス",
+    "keywords": [
+      { "keyword": "EBS + 定期バックアップ", "pattern": "正解", "reason": "EBSの定期スナップショット自動化＝Amazon DLM（Data Lifecycle Manager）を即座に想起" },
+      { "keyword": "EBSミラーリング", "pattern": "誤り", "reason": "ミラーリングは可用性対策。バックアップ（時点復元）の要件を満たさない" },
+      { "keyword": "EBSの自動バックアップ機能", "pattern": "誤り", "reason": "EBS単体に自動バックアップ機能は存在しない。DLMを使う必要がある" }
+    ],
+    "options_analysis": [
+      {
+        "option": "A",
+        "text": "EBSミラーリング",
+        "is_correct": false,
+        "reason": "ミラーリングは冗長化・可用性向上の手段。定期バックアップ（特定時点へのデータ復元）の要件を満たさない"
+      },
+      {
+        "option": "B",
+        "text": "Amazon DLM ライフサイクルポリシー",
+        "is_correct": true,
+        "reason": "Amazon DLM（Data Lifecycle Manager）はEBSスナップショットの作成・保持・削除をスケジュールで自動化するマネージドサービス。定期バックアップ要件に最適"
+      },
+      {
+        "option": "C",
+        "text": "S3にEBSスナップショット + ライフサイクルポリシー",
+        "is_correct": false,
+        "reason": "EBSスナップショットはS3に保存されるがユーザーが直接S3バケットを指定して設定するものではない。スナップショット取得スケジュールの自動化にはDLMを使うべき"
+      },
+      {
+        "option": "D",
+        "text": "EBSの自動バックアップ機能",
+        "is_correct": false,
+        "reason": "EBS単体に自動バックアップ機能は存在しない。スナップショット自動化にはDLMが必要"
+      }
+    ],
+    "essence": "EBSの定期スナップショット自動化＝Amazon DLM。EBSに自動バックアップ機能は単独では存在しない"
+  }
+}

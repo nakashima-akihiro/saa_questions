@@ -1,0 +1,48 @@
+{
+  "exam_set": "set2",
+  "order": 48,
+  "body": "ある企業は、Application Load Balancerの背後にあるAuto Scalingグループ内のAmazon EC2オンデマンドインスタンスで稼働している注文管理アプリケーションを運営しています。ストレージレイヤーにはAmazon DynamoDBを利用しています。また、Amazon SQSキューを使用して疎結合で注文を処理し、複数のEC2インスタンスによって並行処理を行っています。\n\n最近、トラフィックが急増しており、ピーク時にはEC2インスタンスのCPU使用率が100％に達し、SQSキューが満杯になっていることが判明しました。このピーク時間帯は予測が困難です。\n\nこの問題を解決するためのソリューションはどれでしょうか。",
+  "option_a": "DynamoDBテーブルのDAXクラスターを有効化して、データ処理時のリクエストをキャッシュに保持することで、キュー処理を高速化する。Amazon EC2インスタンスのAuto Scalingグループにターゲット追跡ポリシーを設定して、CPU使用率に基づいてスケールするタイミングを決める。",
+  "option_b": "Amazon EC2インスタンスのAuto Scalingグループにターゲット追跡ポリシーを設定して、CPU使用率に基づいてスケールするタイミングを決める。",
+  "option_c": "Amazon EC2インスタンスのAuto Scalingグループにターゲット追跡ポリシーを設定して、Approximate Number Of Messages属性を使用したインスタンス当たりのメッセージ数を基準に、スケーリングを実施する。",
+  "option_d": "DynamoDBテーブルのDAXクラスターを有効化して、データ処理リクエストをキャッシュに保持することで、キュー処理を高速化する。",
+  "answer": "C",
+  "domain": "SQS / Auto Scaling",
+  "explanation": {
+    "key_conditions": "SQSキューが満杯 / CPU使用率100% / 予測困難なピーク / SQSを使った並行処理",
+    "what_is_asked": "SQSキュー深度に基づいたAuto Scalingでキュー処理を改善する方法",
+    "decision_axis": "SQSキュー積滞 → ApproximateNumberOfMessages でスケール / CPU基準は後追い",
+    "keywords": [
+      { "keyword": "SQSキューが満杯 + Auto Scaling", "pattern": "正解", "reason": "SQSのApproximateNumberOfMessagesをメトリクスにしてAuto Scalingするとキュー積滞に直接反応できる。CPU基準より早く正確にスケール" },
+      { "keyword": "CPU使用率に基づくスケーリング + SQSキュー満杯", "pattern": "誤り", "reason": "CPU使用率はキュー積滞の結果として上昇するため後追いになる。根本原因（キュー深度）を直接監視すべき" },
+      { "keyword": "DAX + キュー処理高速化", "pattern": "誤り", "reason": "DAXはDynamoDB読み取りキャッシュ。SQSキューの積滞問題は処理するEC2が足りないことが原因でDAXは解決策にならない" }
+    ],
+    "options_analysis": [
+      {
+        "option": "A",
+        "text": "DAX + ターゲット追跡（CPU）",
+        "is_correct": false,
+        "reason": "DAXはSQSキュー満杯の解決策にならない。CPU基準も後追いで非効率"
+      },
+      {
+        "option": "B",
+        "text": "ターゲット追跡（CPU）のみ",
+        "is_correct": false,
+        "reason": "CPU使用率はキュー積滞の結果。根本原因（キュー深度）を直接監視するApproximateNumberOfMessagesのほうが効果的"
+      },
+      {
+        "option": "C",
+        "text": "ターゲット追跡（ApproximateNumberOfMessages）",
+        "is_correct": true,
+        "reason": "SQSのApproximateNumberOfMessagesはキューの積滞を直接反映する。インスタンス当たりのメッセージ数を基準にすることでキュー深度に応じた効率的なスケーリングが可能"
+      },
+      {
+        "option": "D",
+        "text": "DAXのみ",
+        "is_correct": false,
+        "reason": "DAXはDynamoDB読み取りキャッシュ。EC2の処理能力不足によるキュー積滞には効果がない"
+      }
+    ],
+    "essence": "SQSキュー積滞のスケーリング＝ApproximateNumberOfMessagesを基準にしたターゲット追跡。CPU基準は後追いで非効率"
+  }
+}

@@ -1,0 +1,48 @@
+{
+  "exam_set": "set2",
+  "order": 51,
+  "body": "ある企業が大規模な動画配信プラットフォームを開発しています。このアプリケーションでは、5GBの動画ファイルをAmazon S3バケットにアップロードする必要がありますが、動画のアップロードに予想以上の時間がかかり、アプリケーションの性能に悪影響を及ぼす可能性があります。\n\nどのようにアップロードパフォーマンスを改善すればよいでしょうか。",
+  "option_a": "S3のクロスリージョンレプリケーションの設定を有効化して、リージョンを分散して5GBの動画オブジェクトを分割してアップロードする。",
+  "option_b": "S3のマルチパートアップロードを利用して、5GBの動画オブジェクトを分割してアップロードする。",
+  "option_c": "S3バケットに対してAWS Global Acceleratorを有効化して、高速なデータアップロードを実施する。",
+  "option_d": "S3のアップロードレプリケーションの設定を有効化する。",
+  "answer": "B",
+  "domain": "S3",
+  "explanation": {
+    "key_conditions": "5GBの大容量ファイル / アップロードパフォーマンス改善",
+    "what_is_asked": "大容量ファイルのS3アップロードを高速化する方法",
+    "decision_axis": "大容量ファイルの高速アップロード → マルチパートアップロード",
+    "keywords": [
+      { "keyword": "大容量ファイル + S3アップロード", "pattern": "正解", "reason": "マルチパートアップロードは100MB以上のファイルで推奨。ファイルを分割して並列アップロードするため高速" },
+      { "keyword": "CRRでアップロード高速化", "pattern": "誤り", "reason": "CRRはアップロード済みデータのレプリケーション。アップロード速度自体を改善しない" },
+      { "keyword": "S3にGlobal Accelerator", "pattern": "誤り", "reason": "Global AcceleratorはEC2/ALB/NLB向け。S3のアップロードにはS3 Transfer Accelerationを使う" }
+    ],
+    "options_analysis": [
+      {
+        "option": "A",
+        "text": "CRR + 分割アップロード",
+        "is_correct": false,
+        "reason": "CRRはアップロード後のレプリケーション機能。アップロード速度改善には関係しない"
+      },
+      {
+        "option": "B",
+        "text": "マルチパートアップロード",
+        "is_correct": true,
+        "reason": "マルチパートアップロードはファイルを複数のパートに分割して並列アップロードする。5GBなどの大容量ファイルのアップロードを大幅に高速化できる。AWSは100MB以上のファイルにはマルチパートアップロードを推奨"
+      },
+      {
+        "option": "C",
+        "text": "S3 + Global Accelerator",
+        "is_correct": false,
+        "reason": "AWS Global AcceleratorはEC2/ALB/NLBのグローバルルーティング向け。S3のアップロード高速化にはS3 Transfer Accelerationを使う"
+      },
+      {
+        "option": "D",
+        "text": "アップロードレプリケーション",
+        "is_correct": false,
+        "reason": "「アップロードレプリケーション」というS3の機能は存在しない"
+      }
+    ],
+    "essence": "大容量ファイル（5GB等）のS3アップロード高速化＝マルチパートアップロード。分割並列アップロードで速度改善"
+  }
+}

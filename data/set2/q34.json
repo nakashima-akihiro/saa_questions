@@ -1,0 +1,47 @@
+{
+  "exam_set": "set2",
+  "order": 34,
+  "body": "あなたはソリューションアーキテクトとして、新たにVPCを作成し、EC2インスタンスを設定しようとしています。新規に1つのVPCを設置し、プライベートサブネットとパブリックサブネットをそれぞれ2つずつ構成しました。パブリックサブネット内でEC2インスタンスを起動した際、インスタンスがDNS名を取得していないことに気づきました。\n\nこの問題の原因として考えられる要因は何でしょうか。",
+  "option_a": "サブネットのDNS hostnamesオプションが有効化されていない。",
+  "option_b": "VPCのDNS hostnamesオプションが有効化されていない。",
+  "option_c": "Route53のDNS hostnamesオプションが有効化されていない。",
+  "option_d": "EC2インスタンスのDNS hostnamesオプションが有効化されていない。",
+  "answer": "B",
+  "domain": "VPC",
+  "explanation": {
+    "key_conditions": "新規VPC / EC2インスタンスがDNS名を取得できない",
+    "what_is_asked": "EC2インスタンスにDNS名が割り当てられない原因",
+    "decision_axis": "DNSホスト名の設定はVPCレベルのオプション",
+    "keywords": [
+      { "keyword": "EC2がDNS名を取得しない", "pattern": "正解", "reason": "DNS名取得はVPCの「DNS hostnames」オプションで制御。新規VPCではデフォルトで無効" },
+      { "keyword": "サブネットのDNS hostnamesオプション", "pattern": "誤り", "reason": "DNS hostnamesはVPCレベルの設定。サブネットに個別のDNS hostnames設定はない" }
+    ],
+    "options_analysis": [
+      {
+        "option": "A",
+        "text": "サブネットのDNS hostnamesオプション",
+        "is_correct": false,
+        "reason": "DNS hostnamesはVPCレベルのオプション。サブネット個別には設定できない"
+      },
+      {
+        "option": "B",
+        "text": "VPCのDNS hostnamesオプション",
+        "is_correct": true,
+        "reason": "VPCの「DNS hostnames」オプションを有効にすることでEC2インスタンスにDNS名が割り当てられる。新規作成VPCではこのオプションはデフォルト無効"
+      },
+      {
+        "option": "C",
+        "text": "Route53のDNS hostnamesオプション",
+        "is_correct": false,
+        "reason": "Route53にDNS hostnamesオプションは存在しない。EC2インスタンスのDNS名はVPCの設定で制御される"
+      },
+      {
+        "option": "D",
+        "text": "EC2インスタンスのDNS hostnamesオプション",
+        "is_correct": false,
+        "reason": "EC2インスタンス個別にDNS hostnamesを設定する機能はない。VPCレベルで制御される"
+      }
+    ],
+    "essence": "EC2のDNS名取得はVPCの「DNS hostnames」オプションで制御。新規VPCではデフォルト無効のため明示的に有効化が必要"
+  }
+}

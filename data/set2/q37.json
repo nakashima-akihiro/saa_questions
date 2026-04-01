@@ -1,0 +1,48 @@
+{
+  "exam_set": "set2",
+  "order": 37,
+  "body": "あなたはソリューションアーキテクトとして、DynamoDBを用いたデータソリューションの設計に従事しています。このソリューションでは、毎週定期的にDynamoDBテーブルからセッションデータを取得し、Amazon S3バケットに保存し、それを基にレポートを生成する必要があります。現在はAWS DataPipelineを使用していますが、2024年7月にそのサービスが終了するため、このデータ移行パイプラインを他のサービスに移行する必要があります。\n\nこの要件を満たすためのアプローチを選択してください。",
+  "option_a": "AWS Glueにより定期的にDynamoDBテーブルデータをAmazon S3にエクスポートする。",
+  "option_b": "AWS Lambda関数により定期的にDynamoDBテーブルデータをAmazon S3にエクスポートする。",
+  "option_c": "DynamoDBの「Amazon S3への一括エクスポート（Export to S3）」機能を利用する。",
+  "option_d": "DynamoDBストリームにより定期的にDynamoDBテーブルデータをAmazon S3にエクスポートする。",
+  "answer": "A",
+  "domain": "Glue / DynamoDB",
+  "explanation": {
+    "key_conditions": "DataPipelineの移行 / 毎週定期的なDynamoDB → S3エクスポート / レポート生成",
+    "what_is_asked": "DataPipelineの代替として定期的なDynamoDB→S3データ移行を実現するサービス",
+    "decision_axis": "DataPipelineの後継 → AWS Glue（ETLサービス）",
+    "keywords": [
+      { "keyword": "DataPipelineの移行先 + 定期ETL", "pattern": "正解", "reason": "AWS GlueはDataPipelineの後継として推奨されるマネージドETLサービス。DynamoDB→S3の定期エクスポートに対応" },
+      { "keyword": "DynamoDB Export to S3", "pattern": "誤り", "reason": "DynamoDBのExport to S3は特定時点のスナップショット。定期スケジュールの自動実行機能を持たない" },
+      { "keyword": "DynamoDBストリーム", "pattern": "誤り", "reason": "DynamoDBストリームはリアルタイムの変更イベント。週次の定期バッチエクスポートには不適" }
+    ],
+    "options_analysis": [
+      {
+        "option": "A",
+        "text": "AWS Glueによる定期DynamoDB→S3エクスポート",
+        "is_correct": true,
+        "reason": "AWS GlueはAWSが推奨するDataPipelineの移行先。マネージドETLサービスでDynamoDB→S3の定期スケジュール実行が可能。運用オーバーヘッドも低い"
+      },
+      {
+        "option": "B",
+        "text": "Lambda関数による定期エクスポート",
+        "is_correct": false,
+        "reason": "Lambdaでも実装可能だが、DynamoDBの大量データを15分以内に処理できない可能性があり、カスタムコードの管理も必要。GlueよりもDataPipelineの後継として推奨度が低い"
+      },
+      {
+        "option": "C",
+        "text": "DynamoDB Export to S3機能",
+        "is_correct": false,
+        "reason": "Export to S3は手動/API呼び出しのスナップショット。自動スケジュール実行には別途仕組みが必要"
+      },
+      {
+        "option": "D",
+        "text": "DynamoDBストリーム",
+        "is_correct": false,
+        "reason": "DynamoDBストリームはリアルタイムの変更検知用。週次バッチエクスポートのユースケースとは異なる"
+      }
+    ],
+    "essence": "DataPipelineの後継＝AWS Glue。定期的なDynamoDB→S3のETLバッチ処理に最適"
+  }
+}

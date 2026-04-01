@@ -1,0 +1,48 @@
+{
+  "exam_set": "set2",
+  "order": 39,
+  "body": "ある企業は、複数のAmazon EC2インスタンス上にウェブアプリケーションを展開しています。これらのEC2インスタンスは、NLBのターゲットグループに組み込まれており、Auto Scalingグループを利用するように設定されています。\n\nソリューションアーキテクトは、カスタムスクリプトや独自のコードを使用せずに、このアプリケーションの可用性を向上させるように依頼されました。その際は、アプリケーションに対するHTTPエラーをNLBで検出し、これらのエラーが発生した際には、ウェブサービスを提供するEC2インスタンスを自動的に再起動する必要があります。\n\nこの要件を達成するために、ソリューションアーキテクトはどのような手段を講じるべきでしょうか。",
+  "option_a": "アプリケーションのログを1分ごとに評価するRoute53のヘルスチェックを有効化する。HTTPエラーが検出された場合、アプリケーションを再開させる。",
+  "option_b": "NLBのヘルスチェックプロトコルを「HTTP（またはHTTPS）」に変更する。Auto ScalingグループのELBヘルスチェック機能を有効化して、NLBのHTTPエラーが検出された場合、インスタンスが再開するようにAuto Scalingアクションを構成する。",
+  "option_c": "このアプリケーションのURLを指定して、NLBのヘルスチェックプロトコルを「HTTP（またはHTTPS）」に変更する。異常状態のインスタンスを置換するように、Auto Scalingアクションを構成する。",
+  "option_d": "UnhealthyHostCountのメトリクスをモニタリングするAmazon CloudWatchアラームを作成する。アラームがALARM状態になると異常状態のインスタンスを置換するように、Auto Scalingアクションを構成する。",
+  "answer": "B",
+  "domain": "NLB / Auto Scaling",
+  "explanation": {
+    "key_conditions": "NLBのHTTPエラー検出 / EC2の自動再起動 / カスタムコード不要",
+    "what_is_asked": "NLBのHTTPヘルスチェック + Auto ScalingのELBヘルスチェックでEC2を自動回復させる構成",
+    "decision_axis": "NLBはデフォルトTCPヘルスチェック → HTTPに変更 / Auto ScalingのELBヘルスチェックで異常インスタンスを置換",
+    "keywords": [
+      { "keyword": "NLB + HTTPエラー検出", "pattern": "正解", "reason": "NLBのデフォルトはTCPヘルスチェック。HTTPエラーを検出するにはプロトコルをHTTPに変更する必要がある" },
+      { "keyword": "Auto ScalingのELBヘルスチェック", "pattern": "正解", "reason": "Auto ScalingのELBヘルスチェックを有効化すると、ELB（NLB）がUnhealthyと判断したインスタンスをAuto Scalingが自動置換する" },
+      { "keyword": "「置換」ではなく「再開（再起動）」", "pattern": "正解", "reason": "Auto ScalingのELBヘルスチェックはインスタンスを終了して新しいインスタンスを起動（置換）するが、要件の「再起動」に相当する動作" }
+    ],
+    "options_analysis": [
+      {
+        "option": "A",
+        "text": "Route53ヘルスチェック",
+        "is_correct": false,
+        "reason": "Route53ヘルスチェックはDNSフェイルオーバー用。個別EC2インスタンスの自動再起動には使えない"
+      },
+      {
+        "option": "B",
+        "text": "NLBヘルスチェックをHTTPに変更 + Auto ScalingのELBヘルスチェック有効化",
+        "is_correct": true,
+        "reason": "NLBのヘルスチェックプロトコルをHTTPに変更してアプリレベルのエラーを検出。Auto ScalingのELBヘルスチェックを有効にすると異常インスタンスを自動で置換。カスタムコード不要"
+      },
+      {
+        "option": "C",
+        "text": "NLBヘルスチェックをHTTPに変更 + 異常インスタンスを置換するAuto Scalingアクション",
+        "is_correct": false,
+        "reason": "Auto ScalingのELBヘルスチェック機能を「有効化」することが重要。単純にAuto Scalingアクションを構成するだけでは不十分で、ELBヘルスチェック連携の明示的な設定が必要"
+      },
+      {
+        "option": "D",
+        "text": "CloudWatchアラーム + Auto Scalingアクション",
+        "is_correct": false,
+        "reason": "CloudWatchアラームを経由するとタイムラグが生じる。NLBヘルスチェック + Auto ScalingのELBヘルスチェックのほうがより直接的で効率的"
+      }
+    ],
+    "essence": "NLBのHTTPヘルスチェック有効化 + Auto ScalingのELBヘルスチェック有効化で異常EC2を自動置換。カスタムコード不要"
+  }
+}

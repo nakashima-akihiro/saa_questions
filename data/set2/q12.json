@@ -1,0 +1,49 @@
+{
+  "exam_set": "set2",
+  "order": 12,
+  "body": "ある企業では、EC2インスタンスを活用して社内業務システムを構築しています。あなたはソリューションアーキテクトとして、EC2インスタンスを基盤とした社内サーバーのOSレベルの稼働状況ログを取得し、管理する必要があります。\n\nこのようなログ管理をどう実現すればよいでしょうか。",
+  "option_a": "EC2インスタンスのフローログを有効化して、CloudWatchでログを取得する。",
+  "option_b": "AWS CloudTrailによりEC2インスタンスのログ取得を有効化して、CloudWatchに連携する。",
+  "option_c": "CloudWatchメトリクスでEC2インスタンスのログを有効化する。",
+  "option_d": "CloudWatchエージェントとCloudWatch Logsを設定することで、EC2インスタンスのログを取得する。",
+  "answer": "D",
+  "domain": "CloudWatch",
+  "explanation": {
+    "key_conditions": "EC2インスタンス / OSレベルの稼働状況ログ / ログ取得・管理",
+    "what_is_asked": "EC2のOSレベルログをCloudWatchで収集する方法",
+    "decision_axis": "OSレベルログ収集手段 / エージェントの必要性",
+    "keywords": [
+      { "keyword": "EC2 + OSレベルのログ", "pattern": "正解", "reason": "OSレベルのログ（/var/log等）の収集＝CloudWatchエージェントをEC2にインストール。デフォルトのCloudWatchではOSログは取得できない" },
+      { "keyword": "VPCフローログ", "pattern": "誤り", "reason": "VPCフローログはネットワークトラフィックのログ。OSレベルの稼働状況ログとは別物" },
+      { "keyword": "CloudTrail", "pattern": "誤り", "reason": "CloudTrailはAWS APIコールの監査ログ。OSレベルのアプリケーションログではない" },
+      { "keyword": "CloudWatchメトリクス", "pattern": "誤り", "reason": "CloudWatchメトリクスは数値データ（CPU使用率等）の収集。ログファイルの取得には使えない" }
+    ],
+    "options_analysis": [
+      {
+        "option": "A",
+        "text": "VPCフローログ + CloudWatch",
+        "is_correct": false,
+        "reason": "VPCフローログはネットワークレベルのトラフィックログ（送信元/先IPアドレス、ポート等）。OSレベルの稼働状況ログとは異なる"
+      },
+      {
+        "option": "B",
+        "text": "CloudTrail + CloudWatch",
+        "is_correct": false,
+        "reason": "CloudTrailはAWS APIコールの監査ログ（誰がいつどのAPIを呼んだか）。EC2 OS内部のアプリケーションログは収集できない"
+      },
+      {
+        "option": "C",
+        "text": "CloudWatchメトリクスでログ有効化",
+        "is_correct": false,
+        "reason": "CloudWatchメトリクスはCPU・メモリ等の数値メトリクスの収集。ログファイルの内容を収集する機能ではない"
+      },
+      {
+        "option": "D",
+        "text": "CloudWatchエージェント + CloudWatch Logs",
+        "is_correct": true,
+        "reason": "CloudWatchエージェントをEC2にインストールすることで、OSレベルのログファイル（/var/log/messages等）をCloudWatch Logsに転送できる。OSレベルログ収集の標準的な方法"
+      }
+    ],
+    "essence": "EC2のOSレベルログ収集＝CloudWatchエージェント必須。フローログはネットワーク、CloudTrailはAPI監査、メトリクスは数値データと混同しない"
+  }
+}

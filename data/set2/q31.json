@@ -1,0 +1,47 @@
+{
+  "exam_set": "set2",
+  "order": 31,
+  "body": "次のSCPで特定のOUに対してAWSリソースに対する権限範囲の設定を行っています。このOUには他にSCPは付与されていません。\n\n{\n    \"Version\": \"2012-10-17\",\n    \"Statement\": [\n        {\n            \"Effect\": \"Allow\",\n            \"Action\": [\n                \"ec2:*\",\n                \"IAM:*\",\n                \"cloudwatch:*\"\n            ],\n            \"Resource\": \"*\"\n        }\n    ]\n}\n\nこの設定内容として正しい内容を選択してください。",
+  "option_a": "このSCPを設定したOUのメンバーアカウント内の全てのユーザーはEC2の全ての権限を有している。",
+  "option_b": "このSCPを設定したOUのメンバーアカウントはEC2とCloudWatchのフルアクセス権限を設定することが可能である。",
+  "option_c": "このSCPを設定したOUのメンバーアカウント内の全てのユーザーはEC2の全ての権限を有していない。",
+  "option_d": "このSCPを設定したOUのメンバーアカウントはEC2とCloudWatchのフルアクセス権限を設定することができない。",
+  "answer": "B",
+  "domain": "Organizations / SCP",
+  "explanation": {
+    "key_conditions": "SCP Effect: Allow / Action: ec2:*, IAM:*, cloudwatch:* / 他にSCPなし",
+    "what_is_asked": "SCPはIAM許可を与えるものではなく、権限の境界（ガードレール）であることの理解",
+    "decision_axis": "SCPはガードレール（上限設定）/ 実際の許可はIAMポリシーが必要",
+    "keywords": [
+      { "keyword": "SCP Allow", "pattern": "正解", "reason": "SCPのAllowは「その権限をIAMポリシーで設定できる上限を許可する」もの。ユーザーへの直接許可ではない" },
+      { "keyword": "SCPでユーザーが権限を持つ", "pattern": "誤り", "reason": "SCPはIAM権限を直接付与しない。IAMポリシーが別途必要。SCPはガードレールにすぎない" }
+    ],
+    "options_analysis": [
+      {
+        "option": "A",
+        "text": "メンバーアカウント内の全ユーザーがEC2全権限を有している",
+        "is_correct": false,
+        "reason": "SCPはIAM権限を直接付与しない。SCPのAllowはIAMポリシーで設定できる範囲の上限を示すだけ。実際の権限はIAMポリシーで別途付与が必要"
+      },
+      {
+        "option": "B",
+        "text": "メンバーアカウントはEC2とCloudWatchのフルアクセス権限を設定することが可能",
+        "is_correct": true,
+        "reason": "SCPのAllowはメンバーアカウント内でIAMポリシーによってec2:*とcloudwatch:*を付与できることを意味する。SCPが許可した範囲内でのみIAMポリシーが効力を持つ"
+      },
+      {
+        "option": "C",
+        "text": "メンバーアカウント内の全ユーザーがEC2の権限を有していない",
+        "is_correct": false,
+        "reason": "SCPでec2:*が許可されているため、IAMポリシーでEC2権限を付与することが可能"
+      },
+      {
+        "option": "D",
+        "text": "EC2とCloudWatchのフルアクセス権限を設定することができない",
+        "is_correct": false,
+        "reason": "SCPでec2:*とcloudwatch:*がAllowされているため、IAMポリシーでフルアクセスを設定することは可能"
+      }
+    ],
+    "essence": "SCPのAllowはガードレール（IAMポリシーで設定できる上限）。SCPは直接ユーザーに権限を付与しない。実際の許可はIAMポリシーが必要"
+  }
+}

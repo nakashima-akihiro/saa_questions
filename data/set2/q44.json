@@ -1,0 +1,47 @@
+{
+  "exam_set": "set2",
+  "order": 44,
+  "body": "あなたはRedshiftクラスターのデータフローを厳格に管理することにより、セキュリティの向上が求められています。その一環として、VPCフローログを活用し、VPC内でのRedshiftクラスターに対するすべてのCOPYおよびUNLOADトラフィックを監視する必要があります。\n\nこの要件を達成するための監視手法を選定してください。",
+  "option_a": "Redshiftクラスターに対する拡張VPCルーティングを有効にする。",
+  "option_b": "Redshiftクラスターに対する監査ログを有効にする。",
+  "option_c": "Redshift Spectrumを利用する。",
+  "option_d": "VPCフローログをRedshiftに適用する。",
+  "answer": "A",
+  "domain": "Redshift",
+  "explanation": {
+    "key_conditions": "VPCフローログでCOPY/UNLOADトラフィックを監視 / VPC内のトラフィックを対象",
+    "what_is_asked": "RedshiftのCOPY/UNLOADトラフィックをVPCフローログで捕捉するための前提設定",
+    "decision_axis": "Redshiftのトラフィック → VPC経由にする → 拡張VPCルーティング",
+    "keywords": [
+      { "keyword": "VPCフローログ + Redshift COPY/UNLOAD", "pattern": "正解", "reason": "通常RedshiftのCOPY/UNLOADはAWSネットワーク経由（VPC外）。拡張VPCルーティングを有効にするとVPC内を経由するようになりVPCフローログで捕捉可能" },
+      { "keyword": "Redshift監査ログ", "pattern": "誤り", "reason": "監査ログはSQLクエリのログ。VPCフローログによるネットワークトラフィック監視とは異なる" }
+    ],
+    "options_analysis": [
+      {
+        "option": "A",
+        "text": "Redshift拡張VPCルーティング",
+        "is_correct": true,
+        "reason": "Redshiftの拡張VPCルーティングを有効にすると、COPY/UNLOADのトラフィックがVPC内のルートを経由するようになる。これによりVPCフローログでトラフィックを捕捉・監視できる"
+      },
+      {
+        "option": "B",
+        "text": "Redshift監査ログ",
+        "is_correct": false,
+        "reason": "監査ログはSQLクエリの実行記録。VPCレベルのネットワークトラフィック監視ではない"
+      },
+      {
+        "option": "C",
+        "text": "Redshift Spectrum",
+        "is_correct": false,
+        "reason": "Redshift SpectrumはS3上のデータを直接クエリする機能。VPCフローログ監視とは無関係"
+      },
+      {
+        "option": "D",
+        "text": "VPCフローログをRedshiftに適用",
+        "is_correct": false,
+        "reason": "VPCフローログはVPCレベルで有効化するもの。RedshiftのCOPY/UNLOADをVPCフローログで捕捉するには、まず拡張VPCルーティングでVPC内を経由させる必要がある"
+      }
+    ],
+    "essence": "RedshiftのCOPY/UNLOADをVPCフローログで監視するには拡張VPCルーティングが前提。これによりトラフィックがVPC内を経由するようになる"
+  }
+}

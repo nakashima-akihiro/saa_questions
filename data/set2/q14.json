@@ -1,0 +1,48 @@
+{
+  "exam_set": "set2",
+  "order": 14,
+  "body": "ある企業は、複数のAmazon EC2インスタンスおよびAmazon RDS DBインスタンスを使用してアプリケーションを運営しています。あなたはソリューションアーキテクトとして、このアプリケーションのコスト効率を向上させる役割を担っています。そのため、業務時間外にEC2インスタンスとDBインスタンスを自動的に起動および停止させることでコストを削減する方針を採用しました。\n\nこれらの要件を最も効率的に満たすソリューションは何でしょうか。",
+  "option_a": "EC2インスタンスとDBインスタンスを起動・停止するcronジョブを設定する。このジョブをAmazon EventBridgeスケジュールに設定する。",
+  "option_b": "EC2インスタンスとDBインスタンスを起動・停止するLambda関数を作成する。このLambda関数をAmazon EventBridgeスケジュールに設定する。",
+  "option_c": "EC2インスタンスとDBインスタンスを起動・停止するStepFunctionsワークフローを作成する。このワークフローの定期実行スケジュールを設定する。",
+  "option_d": "スケジュールドスケーリングを利用したAuto Scalingグループを使用して、EC2インスタンスのスケーリングを行う。業務時間外はDBインスタンスを0にスケールさせる。",
+  "answer": "B",
+  "domain": "Lambda / EventBridge",
+  "explanation": {
+    "key_conditions": "EC2とRDS DBインスタンスの業務時間外の自動起動・停止 / コスト削減 / 効率的",
+    "what_is_asked": "EC2とRDSの定期的な起動・停止を自動化する最適な方法",
+    "decision_axis": "サーバーレス自動化 / スケジュール実行",
+    "keywords": [
+      { "keyword": "定期的な起動・停止の自動化", "pattern": "正解", "reason": "EventBridgeスケジュール + Lambda関数が定番。サーバーレスで運用コスト最小" },
+      { "keyword": "cronジョブ + EventBridge", "pattern": "誤り", "reason": "cronジョブを実行するにはEC2が常時稼働している必要がある。Lambdaの方が効率的" },
+      { "keyword": "RDSを0にスケール", "pattern": "誤り", "reason": "RDS（Aurora Serverless除く）はAuto Scalingグループで0にスケールできない" }
+    ],
+    "options_analysis": [
+      {
+        "option": "A",
+        "text": "cronジョブ + EventBridge",
+        "is_correct": false,
+        "reason": "cronジョブはEC2等のサーバー上で実行が必要。サーバー管理の運用オーバーヘッドが発生する"
+      },
+      {
+        "option": "B",
+        "text": "Lambda + EventBridgeスケジュール",
+        "is_correct": true,
+        "reason": "Lambda関数がEC2/RDSのAPIを呼び出して起動・停止を制御。EventBridgeのcron/rate式でスケジュール実行。サーバーレスで運用オーバーヘッドなし"
+      },
+      {
+        "option": "C",
+        "text": "Step Functions + 定期実行",
+        "is_correct": false,
+        "reason": "Step Functionsはワークフローオーケストレーション向け。単純な起動・停止にはLambdaで十分であり、Step Functionsは過剰"
+      },
+      {
+        "option": "D",
+        "text": "Auto Scalingスケジュール + DBを0にスケール",
+        "is_correct": false,
+        "reason": "Auto Scalingグループの最小数を0にすることはできるがRDSはAuto Scalingグループで管理しない。RDSの停止はLambdaで制御する必要がある"
+      }
+    ],
+    "essence": "定期的なEC2/RDSの起動・停止自動化＝Lambda + EventBridgeスケジュール。cronジョブはサーバーが必要で非効率"
+  }
+}

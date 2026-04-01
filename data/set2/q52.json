@@ -1,0 +1,47 @@
+{
+  "exam_set": "set2",
+  "order": 52,
+  "body": "ある企業が運営するWEBアプリケーションはグローバルに利用されているため、Amazon CloudFrontを用いてコンテンツの配信を行っています。しかし、現在キャッシュされるべきデータがエッジロケーションに存在しないため、オリジンサーバーへのアクセスが頻繁に発生しています。この現象は、一般的に多く利用されるオブジェクトに対しても見られます。\n\nこの問題の最も考えられる原因はどれでしょうか。",
+  "option_a": "Amazon CloudFrontディストリビューション設定において、キャッシュすべきオブジェクト設定の指定範囲が狭い。",
+  "option_b": "オリジンサーバーの設定において、Cache-Controlのmax-ageディレクティブが低い値に設定されている。",
+  "option_c": "Amazon CloudFrontディストリビューション設定において、キャッシュするべきファイルサイズがCloudFront標準を超過している。",
+  "option_d": "Amazon CloudFrontディストリビューションのSSL証明書設定においてキャッシュが設定できていない。",
+  "answer": "B",
+  "domain": "CloudFront",
+  "explanation": {
+    "key_conditions": "キャッシュが機能していない / よく使われるオブジェクトもキャッシュされない / オリジンへのアクセスが頻繁",
+    "what_is_asked": "CloudFrontのキャッシュが機能しない（頻繁にオリジンアクセスが発生する）原因",
+    "decision_axis": "キャッシュ有効期限が短い → max-age設定が原因",
+    "keywords": [
+      { "keyword": "キャッシュされない + よく使われるオブジェクトも", "pattern": "正解", "reason": "Cache-Controlのmax-ageが低いとキャッシュが頻繁に期限切れになりオリジンへの再リクエストが発生する" },
+      { "keyword": "キャッシュ設定の指定範囲が狭い", "pattern": "誤り", "reason": "よく使われるオブジェクトもキャッシュされていない場合、範囲の問題ではなくキャッシュ有効期限の問題が疑われる" }
+    ],
+    "options_analysis": [
+      {
+        "option": "A",
+        "text": "CloudFrontのキャッシュ指定範囲が狭い",
+        "is_correct": false,
+        "reason": "特定のオブジェクトタイプがキャッシュされない場合に考えられる原因だが、「よく使われるオブジェクトも」キャッシュされないという広範な問題にはmax-age設定が主因"
+      },
+      {
+        "option": "B",
+        "text": "Cache-Controlのmax-ageが低い",
+        "is_correct": true,
+        "reason": "オリジンサーバーのCache-Control: max-ageが低い値（例：0や数秒）に設定されているとCloudFrontのキャッシュが頻繁に期限切れになり、全てのリクエストでオリジンへのアクセスが発生する"
+      },
+      {
+        "option": "C",
+        "text": "ファイルサイズがCloudFront標準を超過",
+        "is_correct": false,
+        "reason": "CloudFrontのキャッシュはファイルサイズで制限されない（最大20GBまでサポート）"
+      },
+      {
+        "option": "D",
+        "text": "SSL証明書設定でキャッシュが設定できない",
+        "is_correct": false,
+        "reason": "SSL証明書設定とキャッシュ動作は独立している。SSL証明書の問題でキャッシュが無効になることはない"
+      }
+    ],
+    "essence": "CloudFrontのキャッシュが機能しない主因＝オリジンのCache-Control max-ageが低い（頻繁に期限切れになる）"
+  }
+}

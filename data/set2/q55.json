@@ -1,0 +1,48 @@
+{
+  "exam_set": "set2",
+  "order": 55,
+  "body": "ある企業は、オンプレミス環境に存在する多数のSMBストレージから100TBを超えるデータをAWSに移行することを希望しています。これらのデータは複雑なディレクトリ構造を持ち、ほとんどが非構造化データです。既存のアプリケーションに変更を加えることなく、移行後のデータにアクセスできるようにする必要があります。\n\n最小限の運用上のオーバーヘッドで、これらの要件を満たすソリューションはどれですか。",
+  "option_a": "AWS DataPipelineを使用して、データをAmazon FSx for Lustreに移行する。",
+  "option_b": "AWS DataPipelineを使用して、データをAmazon FSx for Windows File Serverに移行する。",
+  "option_c": "AWS DataSyncを使用して、データをAmazon FSx for Lustreに移行する。",
+  "option_d": "AWS DataSyncを使用して、データをAmazon FSx for Windows File Serverに移行する。",
+  "answer": "D",
+  "domain": "DataSync / FSx",
+  "explanation": {
+    "key_conditions": "SMBストレージからのデータ移行 / 100TB超 / 複雑なディレクトリ構造 / アプリケーション変更なし / 運用オーバーヘッド最小",
+    "what_is_asked": "SMBファイルデータをアプリ変更なしでAWSに移行するサービスの組み合わせ",
+    "decision_axis": "SMBプロトコル対応 → FSx for Windows / オンプレからAWSへの大容量データ移行 → DataSync",
+    "keywords": [
+      { "keyword": "SMBストレージ + アプリ変更なし", "pattern": "正解", "reason": "SMBプロトコルをそのまま使うにはFSx for Windows File Server。LustreはLinux/HPCファイルシステム" },
+      { "keyword": "大容量データ移行 + 最小オーバーヘッド", "pattern": "正解", "reason": "DataSyncはオンプレミスからAWSへの大容量データ移行をマネージドで自動化。DataPipelineより適切" },
+      { "keyword": "DataPipeline", "pattern": "誤り", "reason": "DataPipelineはETLやデータ処理パイプライン向け。ファイルデータの移行にはDataSyncが適切" }
+    ],
+    "options_analysis": [
+      {
+        "option": "A",
+        "text": "DataPipeline + FSx for Lustre",
+        "is_correct": false,
+        "reason": "DataPipelineはデータ処理パイプライン向け。FSx for LustreはSMBではなくLustreプロトコル（Linux/HPC向け）"
+      },
+      {
+        "option": "B",
+        "text": "DataPipeline + FSx for Windows",
+        "is_correct": false,
+        "reason": "DataPipelineはファイルデータ移行に不適切。DataSyncが正しい選択"
+      },
+      {
+        "option": "C",
+        "text": "DataSync + FSx for Lustre",
+        "is_correct": false,
+        "reason": "DataSyncは正しいがFSx for LustreはSMBをサポートしない。SMBアプリケーションはFSx for Windows File Serverが必要"
+      },
+      {
+        "option": "D",
+        "text": "DataSync + FSx for Windows File Server",
+        "is_correct": true,
+        "reason": "DataSyncはSMBストレージからFSx for Windows File Serverへのフルマネージドのデータコピーをサポート。FSx for WindowsはSMBプロトコルを維持するためアプリケーション変更不要"
+      }
+    ],
+    "essence": "SMBデータのAWS移行＝DataSync（移行ツール）+ FSx for Windows File Server（SMBプロトコル維持）"
+  }
+}

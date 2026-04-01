@@ -1,0 +1,47 @@
+{
+  "exam_set": "set2",
+  "order": 53,
+  "body": "あなたはソリューションアーキテクトとして、社内の古いシステムをクラウドに移行するプロジェクトに関与しています。この古いアプリケーションはマルチキャストネットワーキングに依存しており、AWS上で確実に稼働させるためには特別な設定が求められます。\n\nこの要件を満たすためのアプローチを選択してください。",
+  "option_a": "VPC拡張ルーティングを有効化する。",
+  "option_b": "VPC間でVPCピアリングを実施する。",
+  "option_c": "AWS Transit Gatewayのマルチキャストを有効化する。",
+  "option_d": "仮想オーバレイネットワークをインスタンスのOSレベルで起動させる。",
+  "answer": "C",
+  "domain": "Transit Gateway",
+  "explanation": {
+    "key_conditions": "マルチキャストネットワーキング / AWS上での稼働",
+    "what_is_asked": "AWSでマルチキャストをサポートするネットワークサービス",
+    "decision_axis": "マルチキャスト → Transit Gatewayの専用機能",
+    "keywords": [
+      { "keyword": "マルチキャスト + AWS", "pattern": "正解", "reason": "AWSでマルチキャストをサポートするのはTransit Gatewayのみ。VPCはネイティブにマルチキャストをサポートしない" },
+      { "keyword": "VPC拡張ルーティング", "pattern": "誤り", "reason": "VPC拡張ルーティングはRedshiftのCOPY/UNLOADトラフィックをVPC経由にする機能。マルチキャストとは無関係" }
+    ],
+    "options_analysis": [
+      {
+        "option": "A",
+        "text": "VPC拡張ルーティング",
+        "is_correct": false,
+        "reason": "VPC拡張ルーティングはRedshift固有の機能。マルチキャストネットワークには関係しない"
+      },
+      {
+        "option": "B",
+        "text": "VPCピアリング",
+        "is_correct": false,
+        "reason": "VPCピアリングはVPC間のユニキャスト通信を接続する。マルチキャストをサポートしない"
+      },
+      {
+        "option": "C",
+        "text": "Transit Gatewayのマルチキャスト",
+        "is_correct": true,
+        "reason": "Transit GatewayはAWSで唯一マルチキャストをネイティブサポートするサービス。マルチキャストドメインを作成してVPC内のEC2インスタンス間でマルチキャスト通信を実現できる"
+      },
+      {
+        "option": "D",
+        "text": "仮想オーバレイネットワーク（OSレベル）",
+        "is_correct": false,
+        "reason": "OSレベルのオーバレイネットワークは実装が複雑で運用オーバーヘッドが高い。Transit Gatewayのマネージドなマルチキャスト機能を使うべき"
+      }
+    ],
+    "essence": "AWSでのマルチキャスト＝Transit Gatewayのマルチキャスト機能。VPCはネイティブにマルチキャストをサポートしない"
+  }
+}

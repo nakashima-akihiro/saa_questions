@@ -1,0 +1,48 @@
+{
+  "exam_set": "set2",
+  "order": 11,
+  "body": "ある企業は、Amazon EC2インスタンス上で業務アプリケーションを運用しています。このアプリケーションのデータレイヤーには、Amazon RDS for PostgreSQL DBインスタンスが使用されています。マスターユーザーパスワードは、30日ごとにローテーションして管理する必要があります。\n\n最小限の運用上のオーバーヘッドで、これらの要件を満たすソリューションはどれですか。",
+  "option_a": "AWS Secrets ManagerシークレットにAmazon RDS for PostgreSQLの認証情報を保存して、認証時に読み取るようにDBインスタンスを設定する。AWS Secrets Managerシークレットのパスワードローテーションを自動化する。",
+  "option_b": "AWS Systems Manager Parameter StoreにAmazon RDS for PostgreSQLの認証情報を保存して、認証時に読み取るようにDBインスタンスを設定する。AWS Systems Manager Parameter Storeのパスワードローテーションを自動化する。",
+  "option_c": "AWS Secrets ManagerシークレットにAmazon RDS for PostgreSQLの認証情報を保存して、認証時に読み取るようにアプリケーションを修正する。AWS Secrets Managerシークレットのパスワードローテーションを自動化する。",
+  "option_d": "AWS Systems Manager Parameter StoreにAmazon RDS for PostgreSQLの認証情報を保存して、認証時に読み取るようにアプリケーションを修正する。AWS Systems Manager Parameter Storeのパスワードローテーションを自動化する。",
+  "answer": "C",
+  "domain": "Secrets Manager",
+  "explanation": {
+    "key_conditions": "RDS for PostgreSQL / マスターユーザーパスワードのローテーション / 30日ごと / 運用オーバーヘッド最小",
+    "what_is_asked": "RDSパスワードの自動ローテーションを最小運用で実現するサービス",
+    "decision_axis": "自動ローテーション対応 / 認証情報の読み取り方（DBインスタンス vs アプリケーション）",
+    "keywords": [
+      { "keyword": "パスワードローテーション + RDS", "pattern": "正解", "reason": "RDSパスワード自動ローテーション＝Secrets Manager。RDSとの統合でローテーション自動化が組み込み提供される" },
+      { "keyword": "Parameter Store + パスワードローテーション", "pattern": "誤り", "reason": "Parameter Storeはシークレットローテーションのネイティブ機能がない。独自Lambdaが必要で運用オーバーヘッドが高い" },
+      { "keyword": "DBインスタンスを設定して読み取る", "pattern": "誤り", "reason": "DBインスタンスではなくアプリケーションがSecrets Managerからシークレットを読み取る。DBインスタンスに設定するものではない" }
+    ],
+    "options_analysis": [
+      {
+        "option": "A",
+        "text": "Secrets Manager + DBインスタンスを設定",
+        "is_correct": false,
+        "reason": "シークレットを読み取るのはアプリケーション側。DBインスタンス自体をSecrets Managerから読み取るように設定するわけではない"
+      },
+      {
+        "option": "B",
+        "text": "Parameter Store + DBインスタンスを設定",
+        "is_correct": false,
+        "reason": "Parameter Storeにはパスワードローテーションのネイティブ機能がなく、DBインスタンスへの設定も誤り"
+      },
+      {
+        "option": "C",
+        "text": "Secrets Manager + アプリケーションを修正",
+        "is_correct": true,
+        "reason": "Secrets ManagerはRDS統合のパスワード自動ローテーション機能を内蔵。アプリケーションがSecrets Managerから認証情報を取得するよう修正することで、ローテーションを透過的に処理できる。運用オーバーヘッド最小"
+      },
+      {
+        "option": "D",
+        "text": "Parameter Store + アプリケーションを修正",
+        "is_correct": false,
+        "reason": "Parameter Storeはパスワードローテーションのネイティブ機能がない。カスタムLambdaでの実装が必要で運用オーバーヘッドが高くなる"
+      }
+    ],
+    "essence": "RDSパスワード自動ローテーション＝Secrets Manager（ネイティブRDS統合）。Parameter Storeにはローテーション機能がない"
+  }
+}

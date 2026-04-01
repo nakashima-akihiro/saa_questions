@@ -1,0 +1,48 @@
+{
+  "exam_set": "set2",
+  "order": 25,
+  "body": "ある企業は、社内のインフラストラクチャをAWS上に構成して、独自のコールセンターアプリケーションを開発しています。このアプリケーションは、コールセンターの業務が最も活発な時間帯には高い負荷がかかりますが、ピークの時間帯は予測が難しく、非常に不規則なDBアクセスが発生します。事前に対策を講じることが困難です。そのため、ピーク時においても円滑に処理を行えるスケーラブルなシステムが求められています。\n\nデータベースはオンラインでのトランザクション処理（OLTP）が行われており、この処理も同様にスケーラブルである必要があります。\n\nこれらの要件を満たすためのコスト最適なソリューションはどれでしょうか。",
+  "option_a": "EC2インスタンスベースのWEBサーバーをマルチAZ構成にして、ELBとAutoScalingを設定したインフラ構成を展開する。さらにOLTP処理にはAmazon RDSを利用して、そこにRoute53を設定して、フェイルオーバーを実施する。",
+  "option_b": "EC2インスタンスベースのWEBサーバーをマルチAZ構成にして、ELBとAutoScalingを設定したインフラ構成を展開する。さらにOLTP処理にはAmazon Auroraのマルチクラスター構成を利用する。",
+  "option_c": "EC2インスタンスベースのWEBサーバーをマルチAZ構成にして、ELBとAutoScalingを設定したインフラ構成を展開する。さらにOLTP処理にはAmazon Aurora Serverlessを利用する。",
+  "option_d": "EC2インスタンスベースのWEBサーバーをマルチAZ構成にして、ELBとAutoScalingを設定したインフラ構成を展開する。さらにOLTP処理にはAmazon RDSのマルチAZ配置を利用する。",
+  "answer": "C",
+  "domain": "Aurora Serverless",
+  "explanation": {
+    "key_conditions": "ピークが予測困難 / 不規則なDBアクセス / OLTPがスケーラブル必要 / コスト最適",
+    "what_is_asked": "予測不可能な不規則なDBアクセスに自動スケールするコスト最適なOLTPデータベース",
+    "decision_axis": "予測困難な不規則アクセス + OLTP + コスト最適 → Aurora Serverless",
+    "keywords": [
+      { "keyword": "予測困難 + 不規則なDBアクセス + OLTP + コスト最適", "pattern": "正解", "reason": "予測不可能な不規則アクセス＝Aurora Serverless。需要に応じて自動スケール、不使用時はコスト0" },
+      { "keyword": "RDS マルチAZ", "pattern": "誤り", "reason": "RDS マルチAZは可用性向上のための待機レプリカ。スケーラビリティ（容量スケーリング）は提供しない" },
+      { "keyword": "Auroraマルチクラスター", "pattern": "誤り", "reason": "Auroraマルチクラスターは複数クラスターの構成。不規則アクセスへの自動スケールにはServerlessが適切" }
+    ],
+    "options_analysis": [
+      {
+        "option": "A",
+        "text": "RDS + Route53フェイルオーバー",
+        "is_correct": false,
+        "reason": "Route53フェイルオーバーは障害時のDNS切り替え。DBのスケーラビリティ問題を解決しない"
+      },
+      {
+        "option": "B",
+        "text": "Auroraマルチクラスター構成",
+        "is_correct": false,
+        "reason": "マルチクラスターは常時稼働コストが高く、不規則なアクセスへの自動スケールには不向き"
+      },
+      {
+        "option": "C",
+        "text": "Aurora Serverless",
+        "is_correct": true,
+        "reason": "Aurora Serverlessは需要に応じてDBキャパシティを自動スケールアップ/ダウン。不使用時はほぼゼロ。予測困難な不規則アクセスのOLTPに最適でコスト最適"
+      },
+      {
+        "option": "D",
+        "text": "RDS マルチAZ配置",
+        "is_correct": false,
+        "reason": "RDS マルチAZは可用性のためのスタンバイ構成。DBのキャパシティをスケールする機能ではない"
+      }
+    ],
+    "essence": "予測困難・不規則なDBアクセス + コスト最適＝Aurora Serverless。RDS マルチAZはスケーラビリティではなく可用性向上"
+  }
+}

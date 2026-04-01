@@ -1,0 +1,47 @@
+{
+  "exam_set": "set2",
+  "order": 40,
+  "body": "ある企業は、WEBアプリケーションをオンプレミス環境で運用しています。このアプリケーションは、ホワイトリストに登録された信頼できるIPアドレスからのアクセスのみを利用して接続を実施しています。企業はアプリケーションをAWSに移行することを決定したため、これらのオンプレミス環境で利用していたIPアドレスをAWS環境で利用できるように移管する必要があります。\n\nこの要件を満たすための移行手法はどれでしょうか。",
+  "option_a": "Elastic IPアドレスをセットして、ホワイトリストのIPアドレス範囲をマッピングする。",
+  "option_b": "CloudFrontディストリビューションとAWS WAFに対してIPマッチ条件を設定して、IPアドレス範囲をマッピングする。",
+  "option_c": "IPアドレス範囲を移行する申請書をAWSに提出する。",
+  "option_d": "Route Origin Authorization（ROA）を利用して、AWSアカウントに対して特定のIPアドレスを移行する。",
+  "answer": "D",
+  "domain": "ネットワーク / BYOIP",
+  "explanation": {
+    "key_conditions": "オンプレミスのIPアドレスをAWSに移管（BYOIP）/ ホワイトリストIPアドレスを継続使用",
+    "what_is_asked": "オンプレミスで使用していたIPアドレスをそのままAWSで使う移行方法",
+    "decision_axis": "BYOIP（Bring Your Own IP）の正しい手続き → ROA（Route Origin Authorization）",
+    "keywords": [
+      { "keyword": "既存IPアドレスをAWSに移管", "pattern": "正解", "reason": "BYOIP（Bring Your Own IP）機能を使うにはROA（Route Origin Authorization）が必要。AWSへのIPアドレス移行の正式手続き" },
+      { "keyword": "Elastic IP + マッピング", "pattern": "誤り", "reason": "Elastic IPはAWSが所有するIPアドレスの割り当て。オンプレミスのIPアドレスそのものを持ち込むことはできない" }
+    ],
+    "options_analysis": [
+      {
+        "option": "A",
+        "text": "Elastic IP + マッピング",
+        "is_correct": false,
+        "reason": "Elastic IPはAWSが管理するIPアドレスプールから割り当てられる。オンプレミスで使用していた特定のIPアドレスそのものを使うことはできない"
+      },
+      {
+        "option": "B",
+        "text": "CloudFront + WAF + IPマッチ",
+        "is_correct": false,
+        "reason": "IPマッチ条件はアクセス制御の設定。オンプレミスのIPアドレスをAWSに移管する方法ではない"
+      },
+      {
+        "option": "C",
+        "text": "申請書をAWSに提出",
+        "is_correct": false,
+        "reason": "申請書の提出だけでは不十分。BYOIP（Bring Your Own IP）のプロセスには ROAによる所有者証明が必要"
+      },
+      {
+        "option": "D",
+        "text": "Route Origin Authorization（ROA）を利用",
+        "is_correct": true,
+        "reason": "BYOIPはオンプレミスのIPアドレスをAWSで使う機能。ROA（Route Origin Authorization）はIPアドレスの所有者がAWSにルーティングを許可する認証文書。BYOIPの正式な手続き"
+      }
+    ],
+    "essence": "オンプレミスIPをAWSに持ち込む（BYOIP）＝ROA（Route Origin Authorization）が必要。Elastic IPはAWS所有のIPのみ"
+  }
+}

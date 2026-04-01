@@ -1,0 +1,47 @@
+{
+  "exam_set": "set2",
+  "order": 43,
+  "body": "あなたはソリューションアーキテクトとして、Amazon EC2インスタンスを基盤としたWEBアプリケーション開発に従事しています。このアプリケーションでは、データの読み込み、及び書き込み処理のために、Amazon RDSのDBインスタンスを頻繁に利用しています。システムの信頼性、可用性、パフォーマンスを確保するために、DBインスタンスのプロセスやスレッドがメモリをどのように活用しているかを常に監視する必要があります。\n\nこの要件に適したモニタリング手法はどれでしょうか。",
+  "option_a": "Amazon CloudWatchでCPU利用率をモニタリングする。",
+  "option_b": "Amazon CloudWatchでモニタリングするためのシナリオを設定する。",
+  "option_c": "Amazon RDSの拡張モニタリングを有効化する。",
+  "option_d": "Amazon CloudWatchエージェントをインスタンスに設定して、詳細なモニタリングを有効化する。",
+  "answer": "C",
+  "domain": "RDS",
+  "explanation": {
+    "key_conditions": "RDS DBインスタンスのプロセス・スレッド・メモリの監視 / OSレベルの詳細メトリクス",
+    "what_is_asked": "RDSのOSレベルのプロセス・スレッド・メモリを監視する方法",
+    "decision_axis": "RDSのOSレベル詳細監視 → 拡張モニタリング（Enhanced Monitoring）",
+    "keywords": [
+      { "keyword": "RDS + プロセス・スレッド・メモリの監視", "pattern": "正解", "reason": "RDS拡張モニタリングはDBインスタンスのOS上で動作するエージェントが収集するプロセス・スレッド・メモリ等の詳細メトリクスを提供" },
+      { "keyword": "CloudWatchエージェント + RDS", "pattern": "誤り", "reason": "CloudWatchエージェントはEC2にインストールするもの。RDSはマネージドサービスでエージェントをユーザーが設定できない" }
+    ],
+    "options_analysis": [
+      {
+        "option": "A",
+        "text": "CloudWatch CPU利用率",
+        "is_correct": false,
+        "reason": "CloudWatchはRDSの基本メトリクス（CPU、I/O等）を収集するが、プロセス・スレッド・メモリの詳細は取得できない"
+      },
+      {
+        "option": "B",
+        "text": "CloudWatchでシナリオを設定",
+        "is_correct": false,
+        "reason": "「CloudWatchのシナリオ」という機能は存在しない"
+      },
+      {
+        "option": "C",
+        "text": "RDS拡張モニタリング",
+        "is_correct": true,
+        "reason": "RDS拡張モニタリングはRDSインスタンスのOS上のエージェントが収集するリアルタイムメトリクス（プロセス、スレッド、メモリ使用状況）を提供する。標準CloudWatchよりも詳細なOSレベルの監視が可能"
+      },
+      {
+        "option": "D",
+        "text": "CloudWatchエージェント + 詳細モニタリング",
+        "is_correct": false,
+        "reason": "CloudWatchエージェントはEC2にインストールするもの。RDSはマネージドサービスで、ユーザーがエージェントをインストールすることはできない"
+      }
+    ],
+    "essence": "RDSのOSレベルのプロセス・スレッド・メモリ監視＝RDS拡張モニタリング（Enhanced Monitoring）"
+  }
+}
