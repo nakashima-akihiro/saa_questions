@@ -1,0 +1,27 @@
+{
+  "exam_set": "set1",
+  "order": 48,
+  "body": "ある企業は、AWS上でホストされている業務アプリケーションを活用し、日々の業務に関連する記録管理を行っています。業界の規定に従い、記録データは5年間保存する必要があります。これらの記録の大部分はあまりアクセスされませんが、監査の要求に応じて、24時間以内にデータを提供する義務があります。\n\nこの状況において、選択するべきコスト効率の良いストレージはどれでしょうか。",
+  "option_a": "Amazon Glacier Flexible Retrieval",
+  "option_b": "Amazon S3 Glacier Deep Archive",
+  "option_c": "S3 Standard",
+  "option_d": "S3 One-Zone IA",
+  "answer": "B",
+  "domain": "S3 / Glacier",
+  "explanation": {
+    "key_conditions": "5年間保存 / ほとんどアクセスしない / 24時間以内の取得要件 / コスト効率",
+    "what_is_asked": "長期保存・低アクセス・24時間以内取得のコスト最適ストレージ",
+    "decision_axis": "ほぼアクセスしない長期保存 → Glacier / 24時間以内 → Deep Archive（12時間）またはFlexible Retrieval（最大12時間標準） / コスト最安 → Deep Archive",
+    "keywords": [
+      { "keyword": "5年間保存 + 24時間以内取得 + コスト最安", "pattern": "正解", "reason": "Glacier Deep Archiveは最安コストのアーカイブ。標準取り出しで12時間以内（24時間要件を満たす）" },
+      { "keyword": "Glacier Flexible Retrieval + 24時間以内", "pattern": "誤り", "reason": "Flexible Retrievalの大容量取り出しは12時間以内。ただしDeep Archiveの方が安い。24時間以内ならDeep Archiveでも対応可能" }
+    ],
+    "options_analysis": [
+      { "option": "A", "text": "Glacier Flexible Retrieval", "is_correct": false, "reason": "Flexible Retrievalも24時間以内取得に対応するが、Deep Archiveよりコストが高い。長期保存でほぼアクセスしない要件にはDeep Archiveが最安" },
+      { "option": "B", "text": "S3 Glacier Deep Archive", "is_correct": true, "reason": "最安コストのアーカイブストレージ。標準取り出しで12時間以内（24時間要件を満たす）。5年間の長期保存でコスト最適" },
+      { "option": "C", "text": "S3 Standard", "is_correct": false, "reason": "S3 Standardは高可用性・高頻度アクセス向け。ほとんどアクセスしない長期保存にはコストが高すぎる" },
+      { "option": "D", "text": "S3 One-Zone IA", "is_correct": false, "reason": "One-Zone IAはコスト効率は良いが単一AZのためデータ損失リスクがある。また長期アーカイブよりGlacierの方が安い" }
+    ],
+    "essence": "ほぼアクセスしない5年間保存 + 24時間以内取得＝Glacier Deep Archive（最安コスト、標準取り出しで12時間以内）"
+  }
+}

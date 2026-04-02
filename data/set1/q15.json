@@ -1,0 +1,27 @@
+{
+  "exam_set": "set1",
+  "order": 15,
+  "body": "ある企業はAWS上で基幹システムを運用しており、このシステムはAmazon Aurora MySQLデータベースを用いてデータを管理しています。保存データは業務において極めて重要であるため、データセンター障害に備えた構成が求められます。要件としては、データセンター障害が発生した際には、数分以内にデータベースを再稼働させることができるようにして、ダウンタイムを最小限に抑える必要があります。\n\nこの要件を満たすために、コスト効率の良いソリューションを選定してください。",
+  "option_a": "Amazon Aurora Global Databaseによる高速フェールオーバーを有効化する。これによって、プライマリDBに障害が発生した場合でも、スタンバイDBが処理を継続する。",
+  "option_b": "Amazon Aurora Global Databaseを有効化する。プライマリDBに障害が発生した場合は、スタンバイDBインスタンスをプライマリDBインスタンスに昇格させる。",
+  "option_c": "Aurora DBクラスターのレプリカを複数アベイラビリティゾーンに展開する。プライマリDBに障害が発生した場合は、レプリカの１つをプライマリDBに昇格させる。",
+  "option_d": "AuroraDBクラスターのスナップショットを作成して、Amazon Data Lifecycle Managerを設定する。プライマリDBに障害が発生した場合は、Amazon DLMによってスナップショットから迅速にDBが復元される。",
+  "answer": "C",
+  "domain": "Aurora",
+  "explanation": {
+    "key_conditions": "データセンター（AZ）障害対応 / 数分以内に再稼働 / コスト効率良い",
+    "what_is_asked": "同一リージョン内AZ障害に対応するAurora高可用性構成",
+    "decision_axis": "AZ障害 + 数分以内復旧 + コスト最適 → Aurora マルチAZレプリカ（同リージョン） / Global DBはクロスリージョンで高コスト",
+    "keywords": [
+      { "keyword": "AZ障害 + 数分以内復旧 + Aurora", "pattern": "正解", "reason": "Aurora DBクラスターをマルチAZ展開し、プライマリ障害時にレプリカを数分以内に昇格。同リージョンのためGlobal DBより低コスト" },
+      { "keyword": "Aurora Global Database + AZ障害", "pattern": "誤り", "reason": "Global DBはクロスリージョンDR向け。AZ障害対応ならマルチAZレプリカで十分でコスト効率も良い" }
+    ],
+    "options_analysis": [
+      { "option": "A", "text": "Aurora Global Database 高速フェールオーバー", "is_correct": false, "reason": "Global DBはクロスリージョン用。AZ障害にはオーバースペックでコスト高" },
+      { "option": "B", "text": "Aurora Global Database スタンバイ昇格", "is_correct": false, "reason": "Global DBは別リージョンへのレプリケーション。AZ障害にはマルチAZレプリカが適切でコスト効率も良い" },
+      { "option": "C", "text": "Aurora マルチAZレプリカ", "is_correct": true, "reason": "Auroraのレプリカを複数AZに展開。プライマリ障害時にレプリカが数分以内に自動昇格。同リージョンのためコスト効率が良い" },
+      { "option": "D", "text": "スナップショット + DLM", "is_correct": false, "reason": "スナップショットからの復元は数分では不可能。RTOが数時間以上になりダウンタイム最小化要件を満たさない" }
+    ],
+    "essence": "同リージョンAZ障害 + 数分以内復旧 + コスト最適＝Aurora マルチAZレプリカ（Global DBはクロスリージョン用で不要）"
+  }
+}

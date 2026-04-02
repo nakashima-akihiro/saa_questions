@@ -1,0 +1,27 @@
+{
+  "exam_set": "set1",
+  "order": 42,
+  "body": "ある企業はAmazon S3バケットにコンテンツデータを保存し、Amazon CloudFrontディストリビューションを設定することで、S3バケット内のオブジェクトをユーザーに配信するアプリケーションを運営しています。あなたはこのアプリケーションの管理者として、最近、提供されるコンテンツのURLリンクが無断で使用されていることに気付きました。他サイトからの直リンクによる不正なリソース消費（ホットリンク）を防ぐために、どうすればよいでしょうか。\n\nこの要件を満たすために必要なソリューションはどれですか。",
+  "option_a": "署名付きURLを付与してオブジェクトのデータ配信を行う。",
+  "option_b": "AWS WAFによるリンクのReferer制限を行う。",
+  "option_c": "署名付きCookiesを付与してオブジェクトのデータ配信を行う。",
+  "option_d": "S3へのアクセス処理を暗号化することで、配信を制限する。",
+  "answer": "B",
+  "domain": "CloudFront / WAF",
+  "explanation": {
+    "key_conditions": "CloudFrontでのコンテンツ配信 / 他サイトからのホットリンク（直リンク）防止",
+    "what_is_asked": "CloudFrontで他サイトからの無断直リンク（ホットリンク）を防ぐ方法",
+    "decision_axis": "ホットリンク防止 → WAFのRefererヘッダーチェックで自サイトからのリクエストのみ許可",
+    "keywords": [
+      { "keyword": "CloudFront + ホットリンク防止 + WAF Referer", "pattern": "正解", "reason": "AWS WAFをCloudFrontに適用し、Refererヘッダーが自サイトのドメイン以外のリクエストを拒否する。他サイトからの直リンクアクセスを防止できる" },
+      { "keyword": "署名付きURL + ホットリンク防止", "pattern": "誤り", "reason": "署名付きURLは特定ユーザーへの一時アクセス制御。ホットリンク防止（Refererベースの制限）にはWAFが適切" }
+    ],
+    "options_analysis": [
+      { "option": "A", "text": "署名付きURL", "is_correct": false, "reason": "署名付きURLは期限付き・特定ユーザー向けアクセス制御。ホットリンク（他サイトからの直リンク）防止にはRefererチェックが必要" },
+      { "option": "B", "text": "AWS WAF Referer制限", "is_correct": true, "reason": "AWS WAFのルールでRefererヘッダーを検査し、自サイトのドメイン以外からのリクエストを拒否。他サイトからの直リンクによるリソース消費を防止できる" },
+      { "option": "C", "text": "署名付きCookies", "is_correct": false, "reason": "署名付きCookieは複数リソースへの一時アクセス制御。ホットリンク防止には直接対応しない" },
+      { "option": "D", "text": "S3アクセス暗号化", "is_correct": false, "reason": "暗号化はデータ保護の手法。ホットリンクによる不正リンク共有防止とは別の概念" }
+    ],
+    "essence": "CloudFrontでのホットリンク防止＝AWS WAFでRefererヘッダーを制限（自サイト以外のドメインからのリクエストを拒否）"
+  }
+}

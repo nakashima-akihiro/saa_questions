@@ -1,0 +1,27 @@
+{
+  "exam_set": "set1",
+  "order": 35,
+  "body": "ある企業は、AWS上でサーバーレスアプリケーションを活用し、コスト効率の高いワークフローを構築することを決定しました。あなたはソリューションアーキテクトとして、Amazon SQSキューとAWS Lambdaを用いて、AWSクラウドにおけるサーバーレスアプリケーションを設計しています。この構成において、フロントエンド処理を行うLambda関数からAmazon SQSキューにメッセージを送信し、Amazon SQSキューからメッセージを受け取ったEC2インスタンスのバックエンドサーバーがタスクを並行して処理します。その際、Lambda関数と連携するAmazon SQSキューはデフォルトの許可設定が利用されます。\n\nAmazon SQSキューの許可設定がデフォルトのままであることを前提にして、Lambda関数を使用してSQSにメッセージを送信するために必須となる設定はどれでしょうか。",
+  "option_a": "適切なポリシーが定義されたSQS アクセスポリシーをLambda関数に設定して、Amazon SQSへのアクセスを可能にする。",
+  "option_b": "Lambda関数をAmazon API Gatewayと統合して、Amazon SQSキューを処理するように設定する。",
+  "option_c": "適切なポリシーが付与されたIAMロールをLambda関数に設定して、Amazon SQSへのアクセスを許可する。",
+  "option_d": "セキュリティグループをLambda関数に設定して、Amazon SQSへのアクセスを可能にする。",
+  "answer": "C",
+  "domain": "Lambda / SQS / IAM",
+  "explanation": {
+    "key_conditions": "Lambda → SQS送信 / SQSアクセスポリシーはデフォルト",
+    "what_is_asked": "LambdaからSQSにメッセージを送信するために必要な設定",
+    "decision_axis": "LambdaからSQSへのアクセス → LambdaのIAMロールにSQS送信権限を付与",
+    "keywords": [
+      { "keyword": "Lambda → SQS送信 + IAMロール", "pattern": "正解", "reason": "LambdaからAWSサービスにアクセスするにはLambdaの実行IAMロールに必要な権限（sqs:SendMessage等）を付与する" },
+      { "keyword": "SQSアクセスポリシー → Lambdaに設定", "pattern": "誤り", "reason": "SQSアクセスポリシーはSQSリソース側のポリシー。Lambda関数自体にはアタッチしない" }
+    ],
+    "options_analysis": [
+      { "option": "A", "text": "SQSアクセスポリシーをLambdaに設定", "is_correct": false, "reason": "SQSアクセスポリシー（リソースポリシー）はSQSキューに設定するもの。Lambdaへのアタッチはできない" },
+      { "option": "B", "text": "Lambda + API Gateway統合", "is_correct": false, "reason": "API GatewayとLambdaの統合はHTTPリクエスト受け付け用。SQS送信権限の付与とは無関係" },
+      { "option": "C", "text": "IAMロールをLambdaに設定", "is_correct": true, "reason": "LambdaにsqsSendMessage等を含むIAMロールをアタッチすることで、SQSキューにメッセージを送信できる。SQSアクセスポリシーがデフォルトでも、Lambdaの実行ロールに権限があれば送信可能" },
+      { "option": "D", "text": "セキュリティグループをLambdaに設定", "is_correct": false, "reason": "セキュリティグループはネットワークレベルのアクセス制御。SQSへの権限付与にはIAMロールが必要" }
+    ],
+    "essence": "LambdaからSQSへのアクセス＝LambdaにIAMロール（sqs:SendMessage権限）をアタッチ"
+  }
+}

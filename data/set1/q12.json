@@ -1,0 +1,27 @@
+{
+  "exam_set": "set1",
+  "order": 12,
+  "body": "ある企業がAWSを活用してデータベースを構築するための要件を検討しています。あなたはソリューションアーキテクトとして、データベース要件に基づいて最適なAWSサービスを選定し、データベースを設定する役割を担っています。同社は、データベースに使用するサーバーのOS設定を自社で管理する考えです。\n\nこの要件に適合するデータベース構築の方法を選択してください。",
+  "option_a": "Amazon RDSを利用してデータベースを構築する。",
+  "option_b": "Amazon DynamoDBを利用してデータベースを構築する。",
+  "option_c": "Amazon Auroraを選択してデータベースを構築する。",
+  "option_d": "Amazon EC2インスタンスを利用してデータベースを構築する。",
+  "answer": "D",
+  "domain": "EC2 / Database",
+  "explanation": {
+    "key_conditions": "サーバーのOS設定を自社で管理",
+    "what_is_asked": "データベースサーバーのOSを自社管理できる構成",
+    "decision_axis": "OS管理が必要 → EC2上に自前でDB構築 / マネージドサービス（RDS/Aurora/DynamoDB）はOSアクセス不可",
+    "keywords": [
+      { "keyword": "OSを自社管理 + データベース", "pattern": "正解", "reason": "EC2インスタンス上にMySQLなどを自前インストールすればOSレベルの設定・管理が可能" },
+      { "keyword": "RDS / Aurora + OS管理", "pattern": "誤り", "reason": "RDS/AuroraはマネージドサービスでOSへのSSHアクセスやOS設定変更は不可" }
+    ],
+    "options_analysis": [
+      { "option": "A", "text": "Amazon RDS", "is_correct": false, "reason": "RDSはマネージドサービス。OSのSSHアクセス・設定変更は不可" },
+      { "option": "B", "text": "Amazon DynamoDB", "is_correct": false, "reason": "DynamoDBはサーバーレスNoSQLデータベース。OSの概念がない" },
+      { "option": "C", "text": "Amazon Aurora", "is_correct": false, "reason": "AuroraはRDSと同様マネージドサービス。OSへのアクセスは不可" },
+      { "option": "D", "text": "Amazon EC2", "is_correct": true, "reason": "EC2はIaaS。SSHでOSにアクセスし、OS設定・パッチ適用・DBソフトウェア管理を自社で行える" }
+    ],
+    "essence": "OSを自社管理 + DB＝EC2上に自前構築。RDS/Aurora/DynamoDBはOSレベルのアクセス不可"
+  }
+}

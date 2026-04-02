@@ -1,0 +1,27 @@
+{
+  "exam_set": "set1",
+  "order": 8,
+  "body": "ある企業では、AWSを利用して多くのウェブサイトとアプリケーションを運営しています。これらのウェブアプリケーションからは、毎日1TBを超えるクリックストリームデータが収集されており、ユーザーの行動データ解析に活用されています。現在、ソリューションアーキテクトは、これらの大量のデータを保存して、効果的に分析するためのプラットフォームを構築中です。\n\nこのデータ分析のために、ソリューションアーキテクトが採用すべきアプローチは何でしょうか。",
+  "option_a": "AWS Data Pipelineを構成して、Amazon S3バケットにデータを保存し、そのデータをAmazon EMRクラスターで分析する。",
+  "option_b": "AWS Data Pipelineを構成して、Amazon S3バケットにデータを保存する。Amazon Redshift Spectrumでバケット内のデータを分析する。",
+  "option_c": "Amazon Kinesis Data Streamsでデータを収集して、Amazon Data Firehoseを介して、S3バケットにデータを保存する。オブジェクトがS3バケットに格納された際にS3イベント通知を実行してAWS Lambda関数を起動してデータ分析を行う。",
+  "option_d": "Amazon Kinesis Data Streamsでデータを収集して、Amazon Data Firehoseを介して、S3バケットにデータを保存する。Amazon Redshift Spectrumでバケット内のデータを分析する。",
+  "answer": "D",
+  "domain": "Kinesis / Redshift",
+  "explanation": {
+    "key_conditions": "毎日1TB超のクリックストリーム / リアルタイム収集 + 大規模分析",
+    "what_is_asked": "大量ストリームデータの収集・保存・分析パイプライン",
+    "decision_axis": "ストリームデータ収集 → Kinesis / S3保存 → Firehose / 大規模SQL分析 → Redshift Spectrum",
+    "keywords": [
+      { "keyword": "大量ストリームデータ + S3保存 + SQLクエリ分析", "pattern": "正解", "reason": "Kinesis Data StreamsでリアルタイムにデータをキャプチャしFirehoseでS3に保存。Redshift SpectrumでS3上のデータをSQLで直接分析" },
+      { "keyword": "ストリームデータ + Lambda分析", "pattern": "誤り", "reason": "Lambda関数はスケーラブルだが、1TB超のデータ分析にはRedshift Spectrumの方が適切" }
+    ],
+    "options_analysis": [
+      { "option": "A", "text": "Data Pipeline + S3 + EMR", "is_correct": false, "reason": "Data Pipelineはバッチ処理向け。リアルタイムのストリームデータ収集にはKinesisが適切" },
+      { "option": "B", "text": "Data Pipeline + S3 + Redshift Spectrum", "is_correct": false, "reason": "Data Pipelineはバッチ処理向け。1TB超のリアルタイムストリームにはKinesisが必要" },
+      { "option": "C", "text": "Kinesis + Firehose + S3 + Lambda", "is_correct": false, "reason": "収集・保存は正しいがLambdaは大規模SQL分析には不向き。Redshift Spectrumが適切" },
+      { "option": "D", "text": "Kinesis + Firehose + S3 + Redshift Spectrum", "is_correct": true, "reason": "Kinesisでリアルタイム収集、Firehoseで自動S3保存、Redshift SpectrumでS3データを直接SQL分析。大規模データ分析の標準パターン" }
+    ],
+    "essence": "大量ストリームデータ収集・分析＝Kinesis Data Streams + Firehose + S3 + Redshift Spectrum"
+  }
+}

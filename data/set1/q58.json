@@ -1,0 +1,27 @@
+{
+  "exam_set": "set1",
+  "order": 58,
+  "body": "ある企業がサーバーレスアプリケーションを開発しています。このアプリケーションは、Amazon EventBridgeのルールによってトリガーされるAWS Lambda関数で構成されています。ソリューションアーキテクトは、最小権限の原則に基づき、AWS Lambda関数を実行するために必要なアクセス権限を適切に設定するadd-permissionコマンドを実行する必要があります。\n\nこの要件を達成するために、ソリューションアーキテクトはどのようなコマンドを実行するべきでしょうか。",
+  "option_a": "lambda:InvokeFunctionをアクションに、*をプリンシパルに設定した実行ルールを付与する。",
+  "option_b": "lambda:InvokeFunctionをアクションに、 events.amazonaws.comをプリンシパルに設定した実行ルールを付与する。",
+  "option_c": "lambda:LaunchFunctionをアクションに、*をプリンシパルに設定したリソースベースのポリシーを関数に付与する。",
+  "option_d": "lambda:InvokeFunctionをアクションに、 lambda.amazonaws.comをプリンシパルに設定したリソースベースのポリシーを関数に付与する。",
+  "answer": "B",
+  "domain": "Lambda / EventBridge",
+  "explanation": {
+    "key_conditions": "EventBridgeがLambdaを呼び出す / 最小権限の原則",
+    "what_is_asked": "EventBridgeからLambdaを呼び出すための最小権限設定",
+    "decision_axis": "EventBridgeがLambdaを呼び出す → lambda:InvokeFunction + プリンシパルはevents.amazonaws.com",
+    "keywords": [
+      { "keyword": "EventBridge → Lambda + add-permission", "pattern": "正解", "reason": "EventBridgeがLambdaを呼び出すにはlambda:InvokeFunctionアクションとプリンシパルにevents.amazonaws.comを設定したリソースベースポリシーが必要" },
+      { "keyword": "プリンシパル * + Lambda", "pattern": "誤り", "reason": "プリンシパルを*にすると全てのサービス・ユーザーがLambdaを呼び出せるようになり最小権限に反する" }
+    ],
+    "options_analysis": [
+      { "option": "A", "text": "lambda:InvokeFunction + プリンシパル *", "is_correct": false, "reason": "プリンシパル*は全員に実行権限を付与。最小権限の原則に反する" },
+      { "option": "B", "text": "lambda:InvokeFunction + events.amazonaws.com", "is_correct": true, "reason": "EventBridgeサービス（events.amazonaws.com）にのみlambda:InvokeFunctionを許可。最小権限の原則に基づいた正しい設定" },
+      { "option": "C", "text": "lambda:LaunchFunction + プリンシパル *", "is_correct": false, "reason": "lambda:LaunchFunctionというアクションは存在しない（正しくはlambda:InvokeFunction）" },
+      { "option": "D", "text": "lambda:InvokeFunction + lambda.amazonaws.com", "is_correct": false, "reason": "lambda.amazonaws.comはLambdaサービス自体のプリンシパル。EventBridgeのプリンシパルはevents.amazonaws.com" }
+    ],
+    "essence": "EventBridgeがLambdaを呼び出す権限＝lambda:InvokeFunction + プリンシパルにevents.amazonaws.com"
+  }
+}

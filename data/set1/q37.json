@@ -1,0 +1,27 @@
+{
+  "exam_set": "set1",
+  "order": 37,
+  "body": "ある企業は、AWSを活用してWEBアプリケーションを運用しています。このアプリケーションは、Amazon RDS MySQLのマルチAZ配置のデータベースインスタンスと、EC2インスタンスを基盤としたWEBサーバーで構成されています。ソリューションアーキテクトは、現在のデータベース認証方式が安全性に欠けるため、セキュリティ設定の強化を求められました。ユーザーの認証情報を自動的にローテーションし、WEBサーバーからのデータベース接続を安全に保つ必要があります。\n\nこの要件を達成するために、ソリューションアーキテクトはどのような対策を講じるべきでしょうか。",
+  "option_a": "ユーザー認証情報をAWS Secrets Managerのシークレットに保存する。IAMアクセス許可を付与して、EC2インスタンスによるAWS Secrets Managerへのアクセスを許可する。",
+  "option_b": "データベースユーザー認証機能をAWS Systems Manager パラメーターストアに保存する。IAMアクセス許可を付与して、EC2インスタンスによるOpsCenterへのアクセスを許可する。",
+  "option_c": "ユーザー認証情報をAWS Secrets Manager パラメーターストアに保存する。IAMアクセス許可を付与して、EC2インスタンスによる パラメーターストアへのアクセスを許可する。",
+  "option_d": "ユーザー認証情報をAWS Systems Manager パラメーターストアに保存する。IAMアクセス許可を付与して、EC2インスタンスによるOpsCenterへのアクセスを許可する。",
+  "answer": "A",
+  "domain": "Secrets Manager",
+  "explanation": {
+    "key_conditions": "DB認証情報の自動ローテーション / 安全な接続",
+    "what_is_asked": "DB認証情報を安全に管理し自動ローテーションするサービス",
+    "decision_axis": "DB認証情報の自動ローテーション → Secrets Manager（DB認証情報ローテーション機能あり）/ パラメーターストアは自動ローテーション機能なし",
+    "keywords": [
+      { "keyword": "DB認証情報 + 自動ローテーション", "pattern": "正解", "reason": "Secrets ManagerはRDS等のDB認証情報の自動ローテーション機能を内蔵。EC2からSecretsManagerに権限を付与して認証情報を取得させる" },
+      { "keyword": "Systems Manager パラメーターストア + 自動ローテーション", "pattern": "誤り", "reason": "パラメーターストアに自動ローテーション機能はない（Secrets Managerの専用機能）" }
+    ],
+    "options_analysis": [
+      { "option": "A", "text": "Secrets Manager + EC2からのアクセス許可", "is_correct": true, "reason": "Secrets ManagerはRDS認証情報の自動ローテーションをネイティブサポート。EC2のIAMロールにSecrets Managerへのアクセス権を付与することで安全に認証情報を取得できる" },
+      { "option": "B", "text": "パラメーターストア + OpsCenter", "is_correct": false, "reason": "パラメーターストアに自動ローテーション機能はない。OpsCenterは運用イベント管理ツールで認証情報アクセスとは無関係" },
+      { "option": "C", "text": "Secrets Manager パラメーターストア（誤記）", "is_correct": false, "reason": "「Secrets Managerパラメーターストア」という表記が誤り。Secrets ManagerとSystems Managerパラメーターストアは別サービス" },
+      { "option": "D", "text": "Systems Manager パラメーターストア + OpsCenter", "is_correct": false, "reason": "パラメーターストアは自動ローテーション機能なし。OpsCenterも認証情報管理とは無関係" }
+    ],
+    "essence": "DB認証情報の自動ローテーション＝AWS Secrets Manager（RDS認証情報の自動ローテーション機能内蔵）"
+  }
+}

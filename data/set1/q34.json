@@ -1,0 +1,27 @@
+{
+  "exam_set": "set1",
+  "order": 34,
+  "body": "ある企業は、オンプレミス環境において複数の仮想マシン(VM)とMySQLデータベースを利用したアプリケーションを運用しています。このアプリケーションの災害復旧(DR)対応として、AWSクラウドにリカバリ構成を実現する必要があります。このDR対応で求められる要件は以下の通りです。\n\n・自動フェイルオーバーが実施できる。\n・目標復旧時間（RTO）を15分とする。\n・フェイルオーバーソリューションをテストしてリカバリを検証できる。\n\nこれらの要件を満たす最適なソリューションはどれでしょうか。",
+  "option_a": "AWS DataSyncとAWS Storage Gatewayを使用してバックアップデータをAWSに同期させる。Amazon EC2、Amazon S3、ALBを使用してスタンバイ構成を準備する。Amazon Route53のフェイルオーバールーティングをスタンバイ構成とオンプレミス環境に設定する。",
+  "option_b": "AWS Replication Agentを使用して仮想マシン(VM)を増分的にAWS環境にレプリケートする。Elastic Disaster Recoveryを設定してウォームスタンバイ構成を準備する。",
+  "option_c": "AWS Backupを使用してオンプレミスのVMのバックアップを取得して、スタンバイ構成を保持する。Amazon Route53のフェイルオーバールーティングをバックアップ構成とオンプレミス環境に設定する。",
+  "option_d": "AWS DataSyncとAWS Storage Gatewayを使用してバックアップデータをAWS環境に同期させる。Elastic Disaster Recoveryを設定してウォームスタンバイ構成を準備する。",
+  "answer": "B",
+  "domain": "Disaster Recovery / Elastic DR",
+  "explanation": {
+    "key_conditions": "自動フェイルオーバー / RTO 15分 / DR検証可能",
+    "what_is_asked": "オンプレミスVMのDRをAWSで実現するサービス",
+    "decision_axis": "VM複製 + 自動フェイルオーバー + RTO15分 → AWS Elastic Disaster Recovery（EDR）",
+    "keywords": [
+      { "keyword": "オンプレミスVM DR + 自動フェイルオーバー + RTO15分", "pattern": "正解", "reason": "Elastic Disaster RecoveryはAWS Replication Agentでオンプレミスから継続的レプリケーション。フェイルオーバー時に数分でEC2として起動可能。テストドリルも可能" },
+      { "keyword": "DataSync + Storage GW + DR", "pattern": "誤り", "reason": "DataSyncはデータ転送ツール。自動フェイルオーバーやVM DR専用機能はない" }
+    ],
+    "options_analysis": [
+      { "option": "A", "text": "DataSync + Storage GW + Route53フェイルオーバー", "is_correct": false, "reason": "DataSyncはファイル転送。VMのレプリケーションやフェイルオーバー自動化にはElastic Disaster Recoveryが適切" },
+      { "option": "B", "text": "AWS Replication Agent + Elastic Disaster Recovery", "is_correct": true, "reason": "Replication AgentがVMを継続的に増分レプリケート。EDRがウォームスタンバイを管理し自動フェイルオーバー・テストドリルを提供。RTOは分単位で要件を満たす" },
+      { "option": "C", "text": "AWS Backup + Route53フェイルオーバー", "is_correct": false, "reason": "Backupはスナップショット形式。RTOが長くなり15分以内は難しい。自動フェイルオーバーの自動化も不完全" },
+      { "option": "D", "text": "DataSync + Storage GW + Elastic DR", "is_correct": false, "reason": "Elastic DRは正しいが、VMレプリケーションにはAWS Replication Agentを使う。DataSync + Storage GWはVM複製には不向き" }
+    ],
+    "essence": "オンプレミスVMのDR（RTO15分 + 自動フェイルオーバー）＝AWS Replication Agent + Elastic Disaster Recovery"
+  }
+}

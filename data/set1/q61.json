@@ -1,0 +1,27 @@
+{
+  "exam_set": "set1",
+  "order": 61,
+  "body": "ある企業はAmazon DynamoDBを用いた大量のデータ処理を実施するシステムを運用しています。最近、このデータベースに対する書き込み処理の件数が増加したため、データ処理の遅延や失敗が頻発しています。あなたはソリューションアーキテクトとして、書き込み操作がどのような状況でも失われないようにするための対策を求められています。\n\nこの要件を満たすための最適なアプローチを選定してください。",
+  "option_a": "DynamoDBにIOPSボリュームを利用する。さらにDynamoDBにはデッドレターキューを追加する。",
+  "option_b": "DynamoDBの書込処理に対してAmazon SQSキューによる分散処理プロセスを設定する。さらにAmazon SQSにはデッドレターキューを追加する。",
+  "option_c": "DynamoDBの書込処理に対してAmazon SQSキューとAWS Lambda関数による分散処理プロセスを設定する。さらにLambda関数にはデッドレターキューを追加する。",
+  "option_d": "EC2インスタンスによってDynamoDBのデータ処理を実行する。さらにEC2インスタンスにはデッドレターキューを追加する。",
+  "answer": "C",
+  "domain": "DynamoDB / SQS / Lambda",
+  "explanation": {
+    "key_conditions": "書き込み処理の増加 / 書き込み操作が失われないようにする",
+    "what_is_asked": "DynamoDB書き込みの信頼性向上（失敗しても失われない）構成",
+    "decision_axis": "書き込み失敗対策 → SQSでバッファリング + Lambda処理 + LambdaのDLQ（処理失敗メッセージを保存）",
+    "keywords": [
+      { "keyword": "DynamoDB書き込み失敗対策 + SQS + Lambda + DLQ", "pattern": "正解", "reason": "SQSで書き込みリクエストをキュー。LambdaがSQSから取得してDynamoDBに書き込み。Lambda処理失敗はDLQに移動して後で再処理可能。書き込みが失われない" },
+      { "keyword": "DynamoDB + DLQ直接", "pattern": "誤り", "reason": "DynamoDBにDLQを直接追加することはできない。DLQはSQSやLambdaの機能" }
+    ],
+    "options_analysis": [
+      { "option": "A", "text": "DynamoDB IOPSボリューム + DLQ", "is_correct": false, "reason": "DynamoDBはIOPSボリュームを持つサービスではない。DynamoDBに直接DLQを追加することもできない" },
+      { "option": "B", "text": "SQS + DLQ（Lambdaなし）", "is_correct": false, "reason": "SQSでバッファリングは正しいが、LambdaなしでSQSをDynamoDBに書き込む処理を実装するためには追加の仕組みが必要。LambdaのDLQが使えない" },
+      { "option": "C", "text": "SQS + Lambda + Lambda DLQ", "is_correct": true, "reason": "SQSが書き込みリクエストをバッファリング。LambdaがSQSをポーリングしてDynamoDBに書き込み。Lambda処理失敗時はDLQにメッセージが移動し再処理できる。書き込みが失われない設計" },
+      { "option": "D", "text": "EC2 + DLQ", "is_correct": false, "reason": "EC2にDLQを直接追加することはできない。サーバーレスのSQS + Lambdaの方が適切" }
+    ],
+    "essence": "DynamoDB書き込み失われない設計＝SQSバッファリング + Lambda処理 + LambdaのDLQ（失敗メッセージを保存して再処理）"
+  }
+}

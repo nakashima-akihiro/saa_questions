@@ -1,0 +1,27 @@
+{
+  "exam_set": "set1",
+  "order": 51,
+  "body": "あなたはソリューションアーキテクトとして、サーバーレスアーキテクチャを用いて業務用アプリケーションを開発しています。このアプリケーションでは、AWS Lambda関数が一連のビジネスロジックを実行し、Amazon DynamoDBテーブルからデータを取得します。その際、HTTPを介してこのアプリケーションを呼び出せるようにする必要があります。\n\nHTTP経由での呼び出しを実現するための最適なソリューションはどれでしょうか。（2つ選択）",
+  "option_a": "API Gateway APIを作成して、Lambda関数と統合する。",
+  "option_b": "IAMロールをLambda関数に設定して、HTTPアクセスを許可する。",
+  "option_c": "Lambda関数の設定において、HTTPアクセス許可を有効化する。",
+  "option_d": "Lambdaの関数URLをパブリックに設定する。",
+  "answer": "A,D",
+  "domain": "Lambda / API Gateway",
+  "explanation": {
+    "key_conditions": "HTTP経由でLambda関数を呼び出し",
+    "what_is_asked": "LambdaをHTTPエンドポイントとして公開する2つの方法",
+    "decision_axis": "Lambda HTTP呼び出し → API Gatewayとの統合 または Lambda関数URL（どちらもHTTPSエンドポイントを提供）",
+    "keywords": [
+      { "keyword": "Lambda + HTTP呼び出し + API Gateway", "pattern": "正解", "reason": "API GatewayとLambdaを統合することでHTTPSエンドポイントを作成してLambdaを呼び出せる。認証・スロットリング等の高度な制御が可能" },
+      { "keyword": "Lambda 関数URL パブリック", "pattern": "正解", "reason": "Lambda関数URLを有効化しAUTH_TYPEをNONEにするとパブリックなHTTPSエンドポイントとして直接Lambdaを呼び出せる" }
+    ],
+    "options_analysis": [
+      { "option": "A", "text": "API Gateway + Lambda統合", "is_correct": true, "reason": "API GatewayはHTTPSエンドポイントを提供しLambdaをバックエンドとして統合。認証・レート制限・ステージ管理など豊富な機能がある" },
+      { "option": "B", "text": "IAMロールでHTTPアクセス許可", "is_correct": false, "reason": "IAMロールはAWS内部の権限管理。HTTPエンドポイントを公開する仕組みではない" },
+      { "option": "C", "text": "Lambda HTTPアクセス許可設定", "is_correct": false, "reason": "Lambda関数の設定にHTTPアクセスを直接有効化する設定項目は存在しない（関数URLが正しい方法）" },
+      { "option": "D", "text": "Lambda 関数URL パブリック設定", "is_correct": true, "reason": "Lambda関数URLを有効化（AUTH_TYPE: NONE）することでHTTPSエンドポイントを直接Lambdaに付与。シンプルなHTTP呼び出しに最適" }
+    ],
+    "essence": "Lambda HTTP公開の2方法＝① API Gatewayとの統合（高機能）② Lambda関数URL（シンプル）"
+  }
+}

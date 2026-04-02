@@ -1,0 +1,27 @@
+{
+  "exam_set": "set1",
+  "order": 45,
+  "body": "あなたはソリューションアーキテクトとして、現在開発中のアプリケーションにAWSのメッセージングサービスを活用したメッセージ処理機能を追加する計画を立てています。最も重要な要件は、メッセージの順序が維持され、重複したメッセージが送信されないことです。\n\nこの要件を満たすために、最適なソリューションはどれでしょうか。（２つ選択）",
+  "option_a": "Amazon SQSのFIFOキューを利用する。",
+  "option_b": "Amazon SNSのFIFO トピックを利用する。",
+  "option_c": "Amazon SESのFIFO トピックを利用する。",
+  "option_d": "AWS Lambdaでメッセージを順序通りに処理する関数を設定する。",
+  "answer": "A,B",
+  "domain": "SQS / SNS",
+  "explanation": {
+    "key_conditions": "メッセージの順序維持 / 重複なし",
+    "what_is_asked": "順序保証・重複排除のメッセージングサービス",
+    "decision_axis": "順序保証 + 重複排除 → FIFO（SQS FIFO / SNS FIFO）",
+    "keywords": [
+      { "keyword": "メッセージ順序 + 重複なし + FIFO", "pattern": "正解", "reason": "SQS FIFOキューは送信順に配信し、重複排除IDで重複メッセージを排除。SNS FIFOトピックも同様の保証を提供" },
+      { "keyword": "Amazon SES FIFO", "pattern": "誤り", "reason": "SESはメール送信サービス。FIFOトピック/キュー機能は存在しない" }
+    ],
+    "options_analysis": [
+      { "option": "A", "text": "SQS FIFOキュー", "is_correct": true, "reason": "FIFO（先入れ先出し）キューはメッセージの順序を保証し、メッセージグループIDと重複排除IDで重複排除を実現" },
+      { "option": "B", "text": "SNS FIFOトピック", "is_correct": true, "reason": "SNS FIFOトピックはメッセージの順序保証と重複排除を提供。SQS FIFOキューと組み合わせてFan-outパターンにも使える" },
+      { "option": "C", "text": "Amazon SES FIFOトピック", "is_correct": false, "reason": "SESはメール送信サービスでFIFO機能はない" },
+      { "option": "D", "text": "Lambda + 順序処理", "is_correct": false, "reason": "Lambdaはメッセージングサービスではない。順序保証や重複排除の機能を持たない" }
+    ],
+    "essence": "メッセージ順序保証 + 重複排除＝SQS FIFOキュー または SNS FIFOトピック"
+  }
+}

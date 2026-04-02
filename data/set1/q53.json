@@ -1,0 +1,28 @@
+{
+  "exam_set": "set1",
+  "order": 53,
+  "body": "ある企業がDNSサーバーとしてRoute53を利用する計画を立てています。要件として、画像配信を迅速に行うために独自のドメイン名を用いてCloudFrontディストリビューションを設定する必要があります。あなたはソリューションアーキテクトとして、Route53のホストゾーンに新しいレコードを追加し、CloudFrontディストリビューションに独自のドメインを関連付ける役割を担っています。この際、IPv4に基づくドメイン設定が求められます。\n\nこの要件を満たすための適切なRoute53の設定手順はどれでしょうか。",
+  "option_a": "レコード作成において[CNAME] をオンにしてレコードタイプはAAAAにする。CloudFrontディストリビューションのドメインを指定する。",
+  "option_b": "レコード作成において[エイリアス] をオンにしてレコードタイプはAAAAにする。CloudFrontディストリビューションのドメインを指定する。",
+  "option_c": "レコード作成において[エイリアス] をオンにしてレコードタイプはAにする。CloudFrontディストリビューションのドメインを指定する。",
+  "option_d": "レコード作成において[CNAME] をオンにしてレコードタイプはAにする。CloudFrontディストリビューションのドメインを指定する。",
+  "answer": "C",
+  "domain": "Route53 / CloudFront",
+  "explanation": {
+    "key_conditions": "CloudFrontへの独自ドメイン設定 / IPv4",
+    "what_is_asked": "CloudFrontに独自ドメインを関連付けるRoute53のレコード設定",
+    "decision_axis": "CloudFront + カスタムドメイン → エイリアスレコード + タイプA（IPv4）/ CNAMEはゾーンApexには使えない",
+    "keywords": [
+      { "keyword": "CloudFront + 独自ドメイン + Route53 エイリアス + Aレコード", "pattern": "正解", "reason": "Route53のエイリアスレコードタイプAをCloudFrontのドメインに向ける。エイリアスはCloudFront等のAWSリソースに直接マッピングでき、ゾーンApexでも使用可能" },
+      { "keyword": "CNAME + CloudFront", "pattern": "誤り", "reason": "CNAMEはゾーンApex（ドメインルート）では使えない。Route53のエイリアスレコードを使うべき" },
+      { "keyword": "AAAAレコード + CloudFront + IPv4", "pattern": "誤り", "reason": "AAAAはIPv6用レコード。IPv4要件にはAレコードを使う" }
+    ],
+    "options_analysis": [
+      { "option": "A", "text": "CNAME + AAAA", "is_correct": false, "reason": "CNAMEはゾーンApexで使えない。AAAAはIPv6用。両方の理由で不正解" },
+      { "option": "B", "text": "エイリアス + AAAA", "is_correct": false, "reason": "エイリアスは正しいがAAAAはIPv6用レコード。IPv4要件にはAレコードが必要" },
+      { "option": "C", "text": "エイリアス + A", "is_correct": true, "reason": "Route53エイリアスレコードタイプAをCloudFrontのドメインに設定。エイリアスはCloudFrontへの直接マッピングができ、ゾーンApexでも使用可能。IPv4（Aレコード）要件も満たす" },
+      { "option": "D", "text": "CNAME + A", "is_correct": false, "reason": "CNAMEレコードタイプAの組み合わせは矛盾。CNAMEはドメイン名を別のドメイン名に向けるもので、Aレコードのように使わない" }
+    ],
+    "essence": "CloudFrontへの独自ドメイン（IPv4）＝Route53エイリアスレコード + タイプA（CNAMEはゾーンApex不可、AAAAはIPv6用）"
+  }
+}

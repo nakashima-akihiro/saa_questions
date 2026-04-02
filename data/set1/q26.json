@@ -1,0 +1,27 @@
+{
+  "exam_set": "set1",
+  "order": 26,
+  "body": "ある企業は、単一リージョン内の2つのアベイラビリティゾーン（AZ）に配置されたAmazon EC2インスタンスに対してALBおよびAuto Scalingが設定されたWebアプリケーションを運営しています。運用要件として、1つのAZがダウンし、かつAuto Scalingが残るAZで新たなインスタンスを起動できていない期間においても、アプリケーションが常に100％のピークロードが処理できるパフォーマンスを維持する必要があります。\n\nこの要件を満たすために必要なアーキテクチャの構成はどれでしょうか。",
+  "option_a": "3つのAZに対して、AZ毎に50％のピークロードを処理できるAuto Scaling設定を行ったEC2インスタンスを展開する。",
+  "option_b": "3つのAZに対して、AZ毎に30％のピークロードを処理できるAuto Scaling設定を行ったEC2インスタンスを展開する。",
+  "option_c": "２つのAZに対して、リージョン毎に50％のピークロードを処理できるAuto Scaling設定を行ったEC2インスタンスを展開する。",
+  "option_d": "２つのAZに対して、AZ毎に50％のピークロードを処理できるAuto Scaling設定を行ったEC2インスタンスを展開する。",
+  "answer": "A",
+  "domain": "EC2 / Auto Scaling",
+  "explanation": {
+    "key_conditions": "1AZダウン時でも100%ピークロード処理 / Auto Scalingがまだ追加できていない期間",
+    "what_is_asked": "1AZ障害時でも100%処理能力を保つための冗長構成",
+    "decision_axis": "1AZダウン後も100% → 残るAZだけで100%以上 → 3AZ×各50% = 2AZでも100%",
+    "keywords": [
+      { "keyword": "AZ障害時100%ピークロード + Auto Scalingが間に合わない", "pattern": "正解", "reason": "3AZ×各50%なら1AZダウンでも残り2AZで合計100%をカバー。2AZ×50%では1AZダウンで残り50%しか処理できない" },
+      { "keyword": "3AZ × 30%", "pattern": "誤り", "reason": "1AZダウンで残り2AZが60%。100%要件を満たさない" }
+    ],
+    "options_analysis": [
+      { "option": "A", "text": "3AZ × 各50%", "is_correct": true, "reason": "3AZに各50%キャパシティを展開。1AZがダウンしても残り2AZで100%のピークロードをカバーできる。Auto Scalingが追加できない期間も対応可能" },
+      { "option": "B", "text": "3AZ × 各30%", "is_correct": false, "reason": "1AZダウンで残り2AZが60%。100%ピークロードをカバーできない" },
+      { "option": "C", "text": "2AZ × リージョン毎50%", "is_correct": false, "reason": "リージョン全体で50%は1AZダウン時に25%しか残らない（概念が不正確）。要件を満たさない" },
+      { "option": "D", "text": "2AZ × 各50%", "is_correct": false, "reason": "1AZダウンで残り1AZが50%。100%要件を満たさない" }
+    ],
+    "essence": "1AZ障害時も100%稼働＝3AZ × AZ毎50%（1AZダウン後も2AZ × 50% = 100%）"
+  }
+}

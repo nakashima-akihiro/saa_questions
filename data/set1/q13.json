@@ -1,0 +1,26 @@
+{
+  "exam_set": "set1",
+  "order": 13,
+  "body": "ある企業がAWS上でウェブアプリケーションを開発しています。このアプリケーションは複数のEC2インスタンスにホストされており、Amazon SQSキューからメッセージを取得して、EC2インスタンスがそのメッセージを処理し、処理結果をAmazon RDS DBインスタンスに書き込む仕組みです。処理完了後、メッセージはキューから削除されます。Amazon SQSキュー内のメッセージは重複しないものの、RDS DBインスタンスに保存されたデータには時折重複レコードが見受けられます。\n\n重複メッセージの発生を防ぐために、ソリューションアーキテクトはどのような対策を講じるべきでしょうか。",
+  "option_a": "ChangeMessageVisibility をAPI使用して、適切な可視性タイムアウト値を設定する。",
+  "option_b": "AddPermission APIを使用して、適切な権限を付与する。",
+  "option_c": "CreateQueue APIを使用して、新しいキューを作成する。",
+  "option_d": "ReceiveMessage APIを使用して、適切な待機時間を設定する。",
+  "answer": "A",
+  "domain": "SQS",
+  "explanation": {
+    "key_conditions": "SQSメッセージは重複なし / RDBに重複レコード / 処理後にメッセージ削除",
+    "what_is_asked": "SQS処理中に複数コンシューマーが同一メッセージを処理しないようにする設定",
+    "decision_axis": "重複処理 → 可視性タイムアウトが短すぎる → ChangeMessageVisibilityで延長",
+    "keywords": [
+      { "keyword": "SQS + 重複レコード + 処理時間延長", "pattern": "正解", "reason": "可視性タイムアウトが処理時間より短いと、処理中のメッセージが別コンシューマーにも見えて二重処理が発生。ChangeMessageVisibilityで処理時間に合わせて延長する" }
+    ],
+    "options_analysis": [
+      { "option": "A", "text": "ChangeMessageVisibility + 可視性タイムアウト延長", "is_correct": true, "reason": "可視性タイムアウトが処理完了前に切れると他コンシューマーがメッセージを取得して二重処理が発生。ChangeMessageVisibilityAPIで処理時間に見合った値に延長する" },
+      { "option": "B", "text": "AddPermission API", "is_correct": false, "reason": "AddPermissionはSQSキューへのアクセス権限設定。重複処理とは無関係" },
+      { "option": "C", "text": "CreateQueue API", "is_correct": false, "reason": "新しいキューを作成しても重複処理の根本原因（可視性タイムアウト）は解決しない" },
+      { "option": "D", "text": "ReceiveMessage + 待機時間", "is_correct": false, "reason": "ReceiveMessageの待機時間はロングポーリング設定。重複処理の防止には関係しない" }
+    ],
+    "essence": "SQS重複処理防止＝可視性タイムアウトを処理時間より長く設定（ChangeMessageVisibility API）"
+  }
+}

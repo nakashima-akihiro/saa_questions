@@ -1,0 +1,27 @@
+{
+  "exam_set": "set1",
+  "order": 3,
+  "body": "ある企業は、AWS上でアプリケーションを開発しています。このアプリケーションはAWS Lambda関数を用いて実行されるサーバーレスアプリケーションです。データベース層にはAmazon RDS for MySQL DBインスタンスを使用し、Lambda関数によって多くのデータ処理を行う必要があります。その際の接続構成を最適化することが求められます。\n\n運用上のオーバーヘッドを抑えつつ、これらの要件を満たすソリューションはどれでしょうか。",
+  "option_a": "RDSエンドポイントを利用して、Amazon RDS DBインスタンスに接続する。",
+  "option_b": "RDS Proxyを構成して、Amazon RDS DBインスタンスへの接続にRDS Proxyを使用する。",
+  "option_c": "RDSライターエンドポイントを利用して、Amazon RDS DBインスタンスに接続する。",
+  "option_d": "RDSリーダーエンドポイントを利用して、Amazon RDS DBインスタンスに接続する。",
+  "answer": "B",
+  "domain": "RDS / Lambda",
+  "explanation": {
+    "key_conditions": "Lambda + RDS MySQL / 接続最適化 / 運用オーバーヘッド最小",
+    "what_is_asked": "Lambda関数からRDSへの接続を最適化するサービス",
+    "decision_axis": "Lambda + RDS接続最適化 → RDS Proxy（接続プーリング・管理）",
+    "keywords": [
+      { "keyword": "Lambda + RDS + 接続最適化", "pattern": "正解", "reason": "RDS ProxyはLambdaからの大量接続をプールして管理し、RDSへの接続過多を防ぐ。サーバーレス環境でのDB接続に最適" },
+      { "keyword": "RDSエンドポイント直接接続", "pattern": "誤り", "reason": "Lambdaが直接RDSに接続すると、スケールアウト時に接続数が増えすぎてRDSに負荷がかかる" }
+    ],
+    "options_analysis": [
+      { "option": "A", "text": "RDSエンドポイント直接", "is_correct": false, "reason": "Lambda同時実行数が増えると接続数が爆発的に増え、RDSの最大接続数を超える可能性がある" },
+      { "option": "B", "text": "RDS Proxy", "is_correct": true, "reason": "RDS ProxyがLambdaからの接続をプールし、RDSへの接続数を制御。接続の効率化と運用オーバーヘッドの削減を実現" },
+      { "option": "C", "text": "RDSライターエンドポイント", "is_correct": false, "reason": "接続プーリングがなく、Lambda大量起動時にRDS接続数問題が発生する" },
+      { "option": "D", "text": "RDSリーダーエンドポイント", "is_correct": false, "reason": "読み取り専用でありデータ処理用途に不適切。接続管理の最適化にもならない" }
+    ],
+    "essence": "Lambda + RDS接続最適化＝RDS Proxy。接続プーリングでLambdaスケールアウト時の接続過多を防止"
+  }
+}

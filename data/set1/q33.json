@@ -1,0 +1,26 @@
+{
+  "exam_set": "set1",
+  "order": 33,
+  "body": "次のバケットポリシーでS3バケットに対する権限設定を行っています。\n\n{\n  \"Version\": \"2012-10-17\",\n  \"Id\": \"S3PolicyId1\",\n  \"Statement\": [\n    {\n      \"Sid\": \"IPAllow\",\n      \"Effect\": \"Deny\",\n      \"Principal\": \"*\",\n      \"Action\": \"s3:*\",\n      \"Resource\": \"arn:aws:s3:::examplebucket/*\",\n      \"Condition\": {\n        \"NotIpAddress\": {\"aws:SourceIp\": \"54.240.143.0/24\"}\n      }\n    }\n  ]\n}\n\nこの設定内容として正しい内容を選択してください。",
+  "option_a": "このS3バケットに対して、指定された IP アドレス範囲から全てのアクションが実行可能である。",
+  "option_b": "このS3バケットに対して、指定された IP アドレス範囲以外から全てのアクションが実行可能である。",
+  "option_c": "このS3バケットに対して、指定された IP アドレス範囲からのアクセスが拒否されている。",
+  "option_d": "このS3バケットに対して、指定された IP アドレス範囲以外からのアクセスが拒否されている。",
+  "answer": "D",
+  "domain": "S3 / Bucket Policy",
+  "explanation": {
+    "key_conditions": "Effect: Deny / NotIpAddress条件 / aws:SourceIp: 54.240.143.0/24",
+    "what_is_asked": "Deny + NotIpAddressのバケットポリシーの評価結果",
+    "decision_axis": "Deny + NotIpAddress → 指定IP以外のすべてのアクセスを拒否（指定IPのみアクセス可）",
+    "keywords": [
+      { "keyword": "Deny + NotIpAddress + バケットポリシー", "pattern": "正解", "reason": "NotIpAddressは「指定したIP以外」の条件。Effect: DenyとNotIpAddressを組み合わせると、指定IPアドレス範囲以外からのすべてのアクセスが拒否される" }
+    ],
+    "options_analysis": [
+      { "option": "A", "text": "指定IPから全アクション実行可能", "is_correct": false, "reason": "正確には「指定IP以外が拒否」という意味。指定IPについては別のAllow設定が必要だが、このポリシー自体はDenyのみ" },
+      { "option": "B", "text": "指定IP以外から全アクション実行可能", "is_correct": false, "reason": "逆。Deny + NotIpAddressは指定IP以外のアクセスを拒否する。指定IP以外からはアクセス不可" },
+      { "option": "C", "text": "指定IPからのアクセスが拒否", "is_correct": false, "reason": "NotIpAddressは「指定IPではない場合」の条件。指定IPからはこのDenyが適用されない（拒否されない）" },
+      { "option": "D", "text": "指定IP以外からのアクセスが拒否", "is_correct": true, "reason": "NotIpAddress（IPアドレスが54.240.143.0/24でない場合）にDenyが適用される。つまり指定したIP範囲以外からのすべてのアクセスが拒否される" }
+    ],
+    "essence": "Deny + NotIpAddress＝指定したIPアドレス範囲以外からのアクセスをすべて拒否（ホワイトリスト型のIP制限）"
+  }
+}

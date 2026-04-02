@@ -1,0 +1,27 @@
+{
+  "exam_set": "set1",
+  "order": 5,
+  "body": "ある企業がAWS上で3層アプリケーションを開発しています。あなたはソリューションアーキテクトとして、このアプリケーションを複数のマイクロサービスに分割し、疎結合化することが求められています。その際、マイクロサービスの構築にはコンテナを利用します。また、運用要件として、AWS上でのコンテナ用コンピュートリソースの構成管理を不要にすることが求められています。\n\nこの要件を満たすために、どのようなアプローチを取るべきでしょうか。",
+  "option_a": "Amazon ECSクラスターをEC2起動モードでプロビジョニングする。ECSクラスターのEC2ノードにAmazon EC2 Auto Scalingグループをアタッチし、コンテナにタスクを定義する。",
+  "option_b": "AWS Lambda関数を作成して、マイクロサービスのコンポーネントを構成する。これらの関数をAmazon API Gatewayと統合して、スケーリングとトラフィック制御を実施する。",
+  "option_c": "Amazon ECSクラスターをEC2起動モードでプロビジョニングする。コンテナにEC2タスクをデプロイする。",
+  "option_d": "Amazon ECSクラスターをFargate起動モードでプロビジョニングする。コンテナにFargateタスクをデプロイする。",
+  "answer": "D",
+  "domain": "ECS / Fargate",
+  "explanation": {
+    "key_conditions": "コンテナを利用 / コンピュートリソースの構成管理を不要にする",
+    "what_is_asked": "コンテナインフラ管理が不要なサーバーレスコンテナ実行環境",
+    "decision_axis": "コンテナ管理不要 → ECS Fargate（サーバーレス） / 管理あり → ECS EC2起動モード",
+    "keywords": [
+      { "keyword": "コンテナ + インフラ管理不要", "pattern": "正解", "reason": "ECS FargateはEC2インスタンスのプロビジョニングやスケーリングが不要なサーバーレスコンテナ実行環境" },
+      { "keyword": "ECS EC2起動モード + コンテナ管理不要", "pattern": "誤り", "reason": "EC2起動モードはEC2インスタンスの管理が必要。コンテナ用インフラの構成管理が発生する" }
+    ],
+    "options_analysis": [
+      { "option": "A", "text": "ECS EC2起動モード + Auto Scaling", "is_correct": false, "reason": "EC2起動モードではEC2インスタンスの管理・スケーリング設定が必要。コンピュートリソース管理が発生する" },
+      { "option": "B", "text": "Lambda + API Gateway", "is_correct": false, "reason": "Lambdaはサーバーレスだがコンテナではなく関数。コンテナを使う要件に合わない" },
+      { "option": "C", "text": "ECS EC2起動モード", "is_correct": false, "reason": "EC2起動モードはEC2インフラの管理が必要" },
+      { "option": "D", "text": "ECS Fargate", "is_correct": true, "reason": "FargateはECSのサーバーレス起動モード。EC2インスタンスの管理が一切不要で、コンテナのCPU/メモリだけ指定すれば動作する" }
+    ],
+    "essence": "コンテナ + インフラ管理不要＝ECS Fargate。EC2インスタンスの管理が不要なサーバーレスコンテナ環境"
+  }
+}

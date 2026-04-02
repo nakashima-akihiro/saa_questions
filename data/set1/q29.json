@@ -1,0 +1,27 @@
+{
+  "exam_set": "set1",
+  "order": 29,
+  "body": "ある企業はAWS上でウェブアプリケーションを運営しています。このアプリケーションはEC2インスタンスをWEBサーバーとして活用し、ELBおよびAuto Scalingグループを構成して高い可用性を確保しています。また、ELBに対してRoute53を利用したドメインも設定しています。しかしながら、最近、長時間にわたるDDoS攻撃を受け、リクエストにかかるコストが増大しました。あなたはソリューションアーキテクトとして、このDDoS攻撃によるコスト増加を抑制する必要があります。\n\nこの要件を満たすために、ソリューションアーキテクトはどのような手段を講じるべきでしょうか。",
+  "option_a": "AWSサポートのDDoS攻撃コストプランを適用する。",
+  "option_b": "AWS Shield Advancedを適用する。",
+  "option_c": "Amazon GuardDutyを適用する。",
+  "option_d": "AWS Shield Standardを適用する。",
+  "answer": "B",
+  "domain": "Shield / DDoS",
+  "explanation": {
+    "key_conditions": "DDoS攻撃によるコスト増大の抑制",
+    "what_is_asked": "DDoS攻撃によるAWSコスト増加を防ぐサービス",
+    "decision_axis": "DDoSコスト増加 → Shield Advanced（DDoS Cost Protection機能あり）/ Shield StandardはDDoSコスト保護なし",
+    "keywords": [
+      { "keyword": "DDoS攻撃 + コスト増加抑制", "pattern": "正解", "reason": "Shield AdvancedにはDDoS Cost Protectionがあり、DDoS攻撃によるスケールアウトで発生したEC2等のコスト増加を補償する" },
+      { "keyword": "Shield Standard + コスト保護", "pattern": "誤り", "reason": "Shield StandardはL3/L4の基本的なDDoS防御のみ。DDoS Cost Protectionは含まれない" }
+    ],
+    "options_analysis": [
+      { "option": "A", "text": "AWSサポートDDoS攻撃コストプラン", "is_correct": false, "reason": "そのようなサポートプランは存在しない" },
+      { "option": "B", "text": "AWS Shield Advanced", "is_correct": true, "reason": "Shield AdvancedはDDoS攻撃によるAWSリソース（EC2、ELB等）のコスト増加を補償するDDoS Cost Protection機能を提供" },
+      { "option": "C", "text": "Amazon GuardDuty", "is_correct": false, "reason": "GuardDutyは脅威検出サービス。DDoS攻撃を防いだりコストを保護する機能はない" },
+      { "option": "D", "text": "AWS Shield Standard", "is_correct": false, "reason": "Shield StandardはデフォルトのL3/L4 DDoS防御。DDoSによるコスト増加の保護（Cost Protection）機能はない" }
+    ],
+    "essence": "DDoS攻撃によるコスト増加防止＝AWS Shield Advanced（DDoS Cost Protectionを含む）"
+  }
+}

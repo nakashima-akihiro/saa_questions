@@ -1,0 +1,27 @@
+{
+  "exam_set": "set1",
+  "order": 2,
+  "body": "ある金融機関は、銀行業務においてハイパフォーマンスコンピューティングと機械学習を活用した不正検出システムを開発しています。この金融機関は、ワークロードを迅速に処理するための分散処理を求めています。\n\n運用上のオーバーヘッドを抑制しつつ、これらの要件を満たすソリューションはどれでしょうか。",
+  "option_a": "Amazon EKSと複数のコンテナを利用して、ハイパフォーマンスコンピューティング (HPC) クラスターをデプロイする。",
+  "option_b": "AWS ParallelClusterとEFAを利用したMessage Passing Interface（MPI）ライブラリを使用して、ハイパフォーマンスコンピューティング (HPC) クラスターをデプロイする。",
+  "option_c": "Amazon EC2インスタンスにAmazon SQSを連携して、分散並列処理を構成し、ハイパフォーマンスコンピューティング (HPC) クラスターをデプロイする。",
+  "option_d": "Amazon ECSと複数のコンテナを利用して、ハイパフォーマンスコンピューティング (HPC) クラスターをデプロイする。",
+  "answer": "B",
+  "domain": "HPC / ParallelCluster",
+  "explanation": {
+    "key_conditions": "ハイパフォーマンスコンピューティング (HPC) / 機械学習 / 分散処理 / 運用オーバーヘッド最小",
+    "what_is_asked": "HPC向け分散処理を低運用オーバーヘッドで実現するAWSサービス",
+    "decision_axis": "HPC + 分散処理 → AWS ParallelCluster + EFA + MPI",
+    "keywords": [
+      { "keyword": "HPC + 分散処理 + 運用オーバーヘッド最小", "pattern": "正解", "reason": "AWS ParallelClusterはHPCクラスターのプロビジョニングを自動化。EFA（Elastic Fabric Adapter）は低レイテンシ・高帯域のネットワークでMPIを使った分散処理に最適" },
+      { "keyword": "EKS / ECS + HPC", "pattern": "誤り", "reason": "EKS/ECSはコンテナオーケストレーション。HPCの分散並列処理（MPI等）には専用のParallelCluster + EFAが適切" }
+    ],
+    "options_analysis": [
+      { "option": "A", "text": "EKS + コンテナ", "is_correct": false, "reason": "EKSはKubernetes管理サービス。HPCのMPIベース分散処理には不向き" },
+      { "option": "B", "text": "ParallelCluster + EFA + MPI", "is_correct": true, "reason": "AWS ParallelClusterはHPCクラスター管理を自動化し運用オーバーヘッドを削減。EFAは超低レイテンシネットワークでMPIのノード間通信を高速化" },
+      { "option": "C", "text": "EC2 + SQS", "is_correct": false, "reason": "SQSはメッセージキュー。HPCの密結合分散処理には不適切" },
+      { "option": "D", "text": "ECS + コンテナ", "is_correct": false, "reason": "ECSはコンテナ実行環境。HPCのMPIベース処理には専用HPC環境が必要" }
+    ],
+    "essence": "HPC分散処理＝AWS ParallelCluster + EFA + MPI。EFAで超低レイテンシのノード間通信を実現"
+  }
+}

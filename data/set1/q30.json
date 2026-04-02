@@ -1,0 +1,27 @@
+{
+  "exam_set": "set1",
+  "order": 30,
+  "body": "ある企業は、Amazon EC2インスタンス上で業務アプリケーションを運用しています。このアプリケーションのデータレイヤーにはAmazon DynamoDBテーブルが使用されています。同社は、このテーブルを過去24時間以内の任意の時点に復元できるようにする必要があります。\n\n運用上のオーバーヘッドを抑えつつ、これらの要件を満たすソリューションはどれでしょうか。",
+  "option_a": "DynamoDBテーブルに対してポイントインタイムリカバリを有効化する。",
+  "option_b": "DynamoDBテーブルに対してAWS Backupを設定して、バックアッププランを設定する。",
+  "option_c": "DynamoDBテーブルに対してAmazon EventBridgeイベントを設定して、バックアップスケジュールを設定する。",
+  "option_d": "DynamoDBテーブルに対してオンデマンドバックアップを有効化する。",
+  "answer": "A",
+  "domain": "DynamoDB",
+  "explanation": {
+    "key_conditions": "過去24時間以内の任意の時点に復元 / 運用オーバーヘッド最小",
+    "what_is_asked": "DynamoDBを任意の時点に復元できるバックアップ設定",
+    "decision_axis": "任意時点への復元 → PITR（ポイントインタイムリカバリ）/ オンデマンドはスナップショット形式で任意時点は不可",
+    "keywords": [
+      { "keyword": "DynamoDB + 任意の時点に復元 + 運用オーバーヘッド最小", "pattern": "正解", "reason": "PITRを有効化するだけで直近35日間の任意の時点（秒単位）への復元が可能。設定も簡単で運用オーバーヘッドが最小" },
+      { "keyword": "DynamoDB + オンデマンドバックアップ + 任意時点", "pattern": "誤り", "reason": "オンデマンドバックアップは手動で作成したスナップショット時点にしか復元できない。任意の時点への復元はPITRが必要" }
+    ],
+    "options_analysis": [
+      { "option": "A", "text": "DynamoDB PITR（ポイントインタイムリカバリ）", "is_correct": true, "reason": "PITRを有効化するだけで直近35日間の任意の時点に復元可能。自動継続バックアップで運用オーバーヘッドも最小" },
+      { "option": "B", "text": "AWS Backup", "is_correct": false, "reason": "AWS BackupはDynamoDBのバックアップを管理できるが、任意の時点への復元はPITRの方が簡便" },
+      { "option": "C", "text": "EventBridge + バックアップスケジュール", "is_correct": false, "reason": "スケジュールバックアップは設定したスナップショット時点のみ。任意の時点への復元はできない" },
+      { "option": "D", "text": "オンデマンドバックアップ", "is_correct": false, "reason": "オンデマンドは手動実行したバックアップ時点のみ復元可能。24時間以内の任意時点への復元はできない" }
+    ],
+    "essence": "DynamoDB任意時点への復元＝PITR（ポイントインタイムリカバリ）を有効化するだけ"
+  }
+}

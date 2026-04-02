@@ -1,0 +1,27 @@
+{
+  "exam_set": "set1",
+  "order": 52,
+  "body": "ある企業が新たにモバイルアプリケーションをAWS上で開発しています。現在、あなたはソリューションアーキテクトとして、ユーザー設定の保存方法について検討しています。個々のユーザー設定データのサイズは約10KBほどです。このモバイルアプリケーションを利用する顧客数は、リリース時に数万人に達すると予想されています。その際は、アプリケーション内でのユーザーセッションの迅速な処理が求められます。\n\nこれらの要件を満たすために、最も適切なデータベースはどれでしょうか。",
+  "option_a": "Amazon RDSを利用してユーザーのセッションデータを蓄積する。",
+  "option_b": "Amazon S3を利用してユーザーのセッションデータを蓄積する。",
+  "option_c": "Amazon RedShiftクラスターを利用してユーザーのセッションデータを蓄積する。",
+  "option_d": "DynamoDBテーブルを利用してユーザーのセッションデータを蓄積する。",
+  "answer": "D",
+  "domain": "DynamoDB",
+  "explanation": {
+    "key_conditions": "数万人のユーザー設定 / 10KB程度のデータ / 迅速な処理",
+    "what_is_asked": "大量ユーザーの小さなデータを低レイテンシで処理するDB",
+    "decision_axis": "大量ユーザー + 小データ + 低レイテンシ + スケーラブル → DynamoDB",
+    "keywords": [
+      { "keyword": "大量ユーザー + 低レイテンシ + セッションデータ", "pattern": "正解", "reason": "DynamoDBはKey-Value形式の高スループット・低レイテンシなNoSQL。数万人規模のユーザーデータを一桁ミリ秒で処理できる" },
+      { "keyword": "RDS + セッションデータ + 大量ユーザー", "pattern": "誤り", "reason": "RDSはスケールアップ型でDynamoDBほどの水平スケーリングができない。大量ユーザーのセッション処理にはボトルネックになりやすい" }
+    ],
+    "options_analysis": [
+      { "option": "A", "text": "Amazon RDS", "is_correct": false, "reason": "RDSはリレーショナルDB。数万人規模の高頻度セッションアクセスには水平スケーリングが困難" },
+      { "option": "B", "text": "Amazon S3", "is_correct": false, "reason": "S3はオブジェクトストレージ。低レイテンシなセッションデータ処理には不向き" },
+      { "option": "C", "text": "Amazon RedShift", "is_correct": false, "reason": "RedShiftはデータウェアハウス。OLAPクエリ向けでセッション処理の低レイテンシ要件には不適" },
+      { "option": "D", "text": "DynamoDB", "is_correct": true, "reason": "DynamoDBは水平スケーリング可能なサーバーレスNoSQL。数万人規模のユーザーセッションデータを一桁ミリ秒の低レイテンシで処理できる" }
+    ],
+    "essence": "大量ユーザーのセッションデータ + 低レイテンシ＝DynamoDB（水平スケーリング可能なKey-ValueストアDB）"
+  }
+}

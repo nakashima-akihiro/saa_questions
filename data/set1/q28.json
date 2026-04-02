@@ -1,0 +1,26 @@
+{
+  "exam_set": "set1",
+  "order": 28,
+  "body": "ある企業がオンプレミス環境からAWSへの移行を決定しました。この移行を円滑に進めるため、同社はコンサルティング会社と契約しました。移行作業においては、同社のAWSアカウントにあるAmazon EC2インスタンスのAmazon マシンイメージ (AMI) をコンサルティング会社のAWSアカウントと共有する必要があります。このAMIはAmazon S3バケットにバックアップされており、AWS KMSのカスタマー管理キーを用いてスナップショットの暗号化も行われています。あなたはソリューションアーキテクトとして、このAMIの共有設定を行う役割を担っています。\n\nこの要件を満たすために、ソリューションアーキテクトはどのような手順を踏むべきでしょうか。",
+  "option_a": "暗号化されたAMIを公開して、コンサルティング会社のAWSアカウントがアクセスできるようにする。AWS KMSのキーポリシーを変更して、コンサルティング会社のAWSアカウントが暗号化に使用されたKMSキーを使用できるようにする。",
+  "option_b": "AMIをコンサルティング会社のAWSアカウントのみと共有できるようにAMIのLaunchPermissionプロパティを変更する。AWS KMSのキーポリシーを変更して、コンサルティング会社のAWSアカウントが暗号化に使用されたKMSキーを使用できるようにする。",
+  "option_c": "AMIをコンサルティング会社のAWSアカウントのみと共有できるようにAMIのLaunchPermissionプロパティを変更する。AWS KMSのキーポリシーを変更して、コンサルティング会社の所有する新しいKMSキーを許可して、このAMIに適用する。",
+  "option_d": "AMIをコンサルティング会社のAWSアカウントのみと共有できるようにAMIのLaunchPermissionプロパティを変更する。コンサルティング会社のAWSアカウントが新たにAWS KMSカスタマーマネージドキーを作成して、そのキーを使用してAMIを再暗号化する。",
+  "answer": "B",
+  "domain": "AMI / KMS",
+  "explanation": {
+    "key_conditions": "KMS暗号化AMIを特定のAWSアカウントのみに共有 / セキュアな共有",
+    "what_is_asked": "KMS暗号化AMIを特定アカウントと安全に共有する手順",
+    "decision_axis": "AMI共有 → LaunchPermissionで特定アカウントを指定 / KMS暗号化AMIを使わせる → KMSキーポリシーで相手アカウントにkms:Decrypt等を許可",
+    "keywords": [
+      { "keyword": "KMS暗号化AMI + 特定アカウントのみ共有", "pattern": "正解", "reason": "LaunchPermissionで特定アカウントIDを指定してAMIを非公開で共有。さらにKMSキーポリシーで相手アカウントがそのキーを使えるよう許可" },
+      { "keyword": "AMI公開 + KMSキー", "pattern": "誤り", "reason": "AMIを公開してしまうと特定アカウントだけでなく誰でもアクセスできるようになる" }
+    ],
+    "options_analysis": [
+      { "option": "A", "text": "AMI公開 + KMSキーポリシー", "is_correct": false, "reason": "AMIを公開にすると全AWSアカウントからアクセス可能になる。特定アカウントのみに制限するにはLaunchPermissionを使う" },
+      { "option": "B", "text": "LaunchPermission変更 + KMSキーポリシー変更（自社キー使用許可）", "is_correct": true, "reason": "LaunchPermissionで特定アカウントIDのみにAMI共有。KMSキーポリシーで相手アカウントが暗号化キーを使用できるよう許可。正しい2ステップの手順" },
+      { "option": "C", "text": "LaunchPermission変更 + 新しいKMSキー適用", "is_correct": false, "reason": "相手の新しいKMSキーをAMIに適用することはできない。既存の自社KMSキーのポリシーで相手アカウントへのアクセスを許可するのが正しい方法" }
+    ],
+    "essence": "KMS暗号化AMIを特定アカウントと共有＝LaunchPermissionで特定アカウントを指定 + KMSキーポリシーで相手アカウントへのキー使用を許可"
+  }
+}

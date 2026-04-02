@@ -1,0 +1,27 @@
+{
+  "exam_set": "set1",
+  "order": 55,
+  "body": "ある企業は、1つのAmazon EC2インスタンス上で業務アプリケーションを運用しています。このアプリケーションのデータレイヤーには、Amazon RDS for MySQL DBインスタンスが使用されています。ピーク時間帯には、EC2インスタンスのCPU使用率が上昇するため、Amazon RDS DBインスタンスへの読み取りリクエストのパフォーマンスが低下しています。ソリューションアーキテクトは、このパフォーマンスを向上させたいと考えています。\n\nコスト最適に要件を満たすソリューションはどれでしょうか。",
+  "option_a": "EC2インスタンスを、よりCPUキャパシティの大きいEC2インスタンスタイプにリサイズする。最小サイズと最大サイズが1のAuto Scalingグループを設定する。読み取りリクエスト用にRDSリードレプリカを設定する。",
+  "option_b": "EC2インスタンスを、よりCPUキャパシティの大きいEC2インスタンスタイプにリサイズする。最小サイズが1、最大サイズが2のAuto Scalingグループを設定する。読み取りリクエスト用にRDSリードレプリカを設定する。",
+  "option_c": "EC2インスタンスに対して最小サイズが1、最大サイズが2のAuto Scalingグループを設定する。",
+  "option_d": "読み取りリクエスト用にRDSリードレプリカを設定する。",
+  "answer": "C",
+  "domain": "EC2 / Auto Scaling",
+  "explanation": {
+    "key_conditions": "EC2 CPU使用率上昇 → RDS読み取りパフォーマンス低下 / コスト最適",
+    "what_is_asked": "EC2のCPU高負荷によるRDB読み取りパフォーマンス低下の原因特定と解決",
+    "decision_axis": "EC2 CPU高負荷 → EC2のAuto Scalingで対応（EC2をスケールアウトすれば負荷分散） / EC2リサイズは不要・コスト高",
+    "keywords": [
+      { "keyword": "EC2 CPU上昇 + Auto Scaling + コスト最適", "pattern": "正解", "reason": "EC2のCPU使用率が原因。Auto Scalingで必要な時だけインスタンスを追加する方がコスト最適。リサイズは固定コスト増" },
+      { "keyword": "EC2リサイズ + RDSリードレプリカ", "pattern": "誤り", "reason": "EC2 CPUの問題にRDSリードレプリカは無関係。EC2リサイズはコスト高" }
+    ],
+    "options_analysis": [
+      { "option": "A", "text": "EC2リサイズ + Auto Scaling(min1,max1) + RDSリードレプリカ", "is_correct": false, "reason": "max1では実質Auto Scalingしない。リードレプリカはEC2 CPU問題とは無関係。EC2リサイズはコスト高" },
+      { "option": "B", "text": "EC2リサイズ + Auto Scaling(min1,max2) + RDSリードレプリカ", "is_correct": false, "reason": "EC2リサイズはコスト高。リードレプリカはEC2 CPU問題に無関係" },
+      { "option": "C", "text": "EC2 Auto Scaling(min1,max2)", "is_correct": true, "reason": "EC2のCPU使用率が原因なのでEC2をAuto Scalingで水平スケールアウトする。追加インスタンスがあれば負荷分散されRDSへの読み取り負荷も自然に分散。コスト最適" },
+      { "option": "D", "text": "RDSリードレプリカのみ", "is_correct": false, "reason": "根本原因はEC2のCPU使用率。RDSリードレプリカはRDB読み取り負荷対策だがEC2 CPUを解決しない" }
+    ],
+    "essence": "EC2 CPU高負荷によるDB読み取り低下＝EC2 Auto Scalingで水平スケールアウト（リサイズ不要、RDSリードレプリカはEC2問題の解決にならない）"
+  }
+}

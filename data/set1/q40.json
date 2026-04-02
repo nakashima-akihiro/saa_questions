@@ -1,0 +1,27 @@
+{
+  "exam_set": "set1",
+  "order": 40,
+  "body": "ある企業は、AWS上でWEBアプリケーションを運営しています。このアプリケーションは、Amazon EC2インスタンス、ELB、およびAuto Scalingグループで構成されています。あなたはソリューションアーキテクトとして、ELBにAWS Certificate Manager（ACM）からインポートされた証明書を設定し、トラフィックをHTTPSに切り替えました。この証明書管理において、同社のセキュリティチームが各証明書の有効期限の10日前に通知を受け取るように設定する必要があります。\n\nこの要件を達成するために、ソリューションアーキテクトはどのような手段を講じるべきでしょうか。",
+  "option_a": "ACM証明書の有効期限の10日前に、Amazon SNSトピックにカスタムメッセージをパブリッシュするルールをACMに追加する。",
+  "option_b": "ACM証明書の有効期限をチェックするAWS Configルールを作成して、10日以内に有効期限切れになる証明書がある場合は、Amazon SNSトピック通知を発出するAmazon CloudWatchアラームを設定する。",
+  "option_c": "ACM証明書の有効期限をチェックするAmazon EventBridgeルールを作成して、10日以内に有効期限切れになる証明書がある場合に、Amazonトピック通知を発出する。",
+  "option_d": "10日以内に期限が切れるACM証明書を検出するAmazon EventBridgeルールを作成する。AWS Lambda関数を呼び出すようにルールを設定する。Amazon SNSによってカスタムアラートを通知するようにLambda関数を設定する。",
+  "answer": "C",
+  "domain": "ACM / EventBridge",
+  "explanation": {
+    "key_conditions": "ACM証明書の有効期限10日前通知",
+    "what_is_asked": "ACM証明書期限切れ前の通知を自動化する方法",
+    "decision_axis": "ACM証明書期限イベント → EventBridgeルールで検知 → SNS通知（最もシンプル）",
+    "keywords": [
+      { "keyword": "ACM証明書期限 + EventBridge + SNS通知", "pattern": "正解", "reason": "EventBridgeはACMの証明書有効期限切れイベントを検知するルールを作成でき、直接SNSトピックに通知を送れる" },
+      { "keyword": "ACMにSNSルール追加", "pattern": "誤り", "reason": "ACM自体にSNSトピックへのパブリッシュルールを追加する機能はない" }
+    ],
+    "options_analysis": [
+      { "option": "A", "text": "ACMにSNSパブリッシュルール追加", "is_correct": false, "reason": "ACMには直接SNSにメッセージをパブリッシュするルール設定機能はない" },
+      { "option": "B", "text": "AWS Config + CloudWatchアラーム", "is_correct": false, "reason": "AWS ConfigでACM証明書を監視することはできるが、CloudWatchアラームはメトリクスベース。設定が複雑でEventBridgeの方がシンプル" },
+      { "option": "C", "text": "EventBridge → SNS通知", "is_correct": true, "reason": "EventBridgeのルールでACM証明書の期限切れイベントを検知し、SNSトピックに直接通知を送る最もシンプルな構成" },
+      { "option": "D", "text": "EventBridge → Lambda → SNS", "is_correct": false, "reason": "Lambdaを経由しても同じことができるが、EventBridge → SNS直接の方がシンプルで運用オーバーヘッドが少ない。Cの方が適切" }
+    ],
+    "essence": "ACM証明書期限通知＝EventBridgeルール → SNS通知（Lambda経由不要）"
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "exam_set": "set1",
+  "order": 44,
+  "body": "ある企業がサーバーレスアプリケーションを開発しています。このアプリケーションは、Amazon API Gatewayを介して呼び出されるAWS Lambda関数で構成されています。このLambda関数は顧客データを取得し、Amazon Aurora MySQLデータベースに保存します。しかし、Amazon Aurora MySQLデータベースのアップグレード中は、アップグレードが完了するまでLambda関数がデータベースに接続できず、その間に発生したデータは保存されません。あなたはソリューションアーキテクトとして、更新期間中のデータを保存する方法を考慮する必要があります。\n\nこの要件を満たすために、ソリューションアーキテクトはどのような対策を講じるべきでしょうか。",
+  "option_a": "Lambda関数が顧客データをLambdaのローカルストレージに保持し、このローカルストレージをスキャンして、顧客データをAuroraデータベースに保存する。",
+  "option_b": "Lambda関数が取得した顧客データをAmazon SQSキューに保存する。別のLambda関数がこのキューをポーリングして、顧客データをAuroraデータベースに保存する。",
+  "option_c": "Lambda関数の実行時間を上限まで増やす。その上で、このLambda関数でデータベースへの接続に失敗した場合の再試行処理を実装する。",
+  "option_d": "Amazon RDSプロキシをプロビジョニングし、このRDSプロキシに接続するようにLambda関数を構成する。",
+  "answer": "B",
+  "domain": "Lambda / SQS / Aurora",
+  "explanation": {
+    "key_conditions": "Auroraアップグレード中はDB接続不可 / その間のデータを失わずに保存",
+    "what_is_asked": "DB停止中にデータを一時保持し、復旧後に処理する疎結合な設計",
+    "decision_axis": "DB停止中のデータ保持 → SQSでバッファリング / Lambdaローカルストレージは揮発性で不可",
+    "keywords": [
+      { "keyword": "DB停止中 + データ保持 + SQS", "pattern": "正解", "reason": "SQSはメッセージを最大14日間保持。Auroraアップグレード中はSQSにデータをキュー。復旧後に別Lambdaがキューからポーリングしてデータを保存する疎結合設計" },
+      { "keyword": "Lambdaローカルストレージ + データ永続化", "pattern": "誤り", "reason": "Lambdaの/tmpストレージは一時的で関数実行環境が再利用されない場合はクリアされる。永続保存には使えない" }
+    ],
+    "options_analysis": [
+      { "option": "A", "text": "Lambdaローカルストレージ", "is_correct": false, "reason": "Lambdaの/tmpストレージは揮発性。別の関数実行環境では利用できず、データ損失リスクがある" },
+      { "option": "B", "text": "SQS + 別Lambda", "is_correct": true, "reason": "SQSがDB停止中のデータを安全に保持（最大14日）。Auroraアップグレード完了後に別LambdaがSQSからポーリングしてデータを保存。疎結合で信頼性が高い" },
+      { "option": "C", "text": "Lambda実行時間上限 + 再試行", "is_correct": false, "reason": "Lambdaの最大実行時間は15分。Auroraアップグレードはそれ以上かかる可能性がある。タイムアウト後はデータが失われる" },
+      { "option": "D", "text": "RDS Proxy", "is_correct": false, "reason": "RDS ProxyはDB接続プーリング管理。Auroraのアップグレード中はProxyを経由しても接続できない" }
+    ],
+    "essence": "DB停止中のデータ損失防止＝SQSでバッファリング → DB復旧後にLambdaがSQSからポーリングして処理"
+  }
+}

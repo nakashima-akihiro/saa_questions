@@ -1,0 +1,27 @@
+{
+  "exam_set": "set1",
+  "order": 49,
+  "body": "ある企業は、Amazon Route 53パブリックホストゾーンで公開されている単一のAmazon EC2インスタンスにホストされたウェブアプリケーションを運用しています。また同インスタンスはMySQLデータベースも同時に実行しています。ソリューションアーキテクトは、アプリケーションをスケーラブルで高可用性なアーキテクチャに再構成して、MySQLの読み取りレイテンシーも削減することが求められています。\n\nこれらの要件を満たすソリューションの組み合わせはどれでしょうか。（2つ選択）",
+  "option_a": "複数のアベイラビリティーゾーンにEC2インスタンスを展開するようにALBとAuto Scalingグループを設定する。",
+  "option_b": "別リージョンに2つ目のEC2インスタンスを起動する。Route53のフェイルオーバールーティングポリシーを使用して、両方のリージョン内のEC2インスタンスにルーティングを構成する。",
+  "option_c": "データベースをAmazon Aurora MySQLのグローバルデータベースに移行して、クロスリージョンリードレプリカを構成する。",
+  "option_d": "データベースをAmazon Aurora MySQLクラスターに移行して、プライマリDBインスタンスとリーダーDBインスタンスを別々のアベイラビリティーゾーンに作成する。",
+  "answer": "A,D",
+  "domain": "EC2 / Aurora",
+  "explanation": {
+    "key_conditions": "スケーラブル + 高可用性 / 読み取りレイテンシー削減",
+    "what_is_asked": "WEBサーバーの高可用性化 + DB読み取りレイテンシー削減（2つ選択）",
+    "decision_axis": "WEB高可用性 → ALB + Auto Scaling マルチAZ / DB読み取りレイテンシー削減 → Aurora + リーダーインスタンス（同リージョン）",
+    "keywords": [
+      { "keyword": "スケーラブル + 高可用性 + ALB + Auto Scaling", "pattern": "正解", "reason": "ALB + Auto Scaling をマルチAZに設定することでWEBサーバーの高可用性とスケーラビリティを実現" },
+      { "keyword": "Aurora MySQL + リーダーインスタンス + 読み取りレイテンシー削減", "pattern": "正解", "reason": "Aurora MySQLクラスターのリーダーインスタンスへ読み取りを分散することで読み取りレイテンシーを削減。マルチAZで高可用性も確保" }
+    ],
+    "options_analysis": [
+      { "option": "A", "text": "ALB + Auto Scaling マルチAZ", "is_correct": true, "reason": "マルチAZにEC2を展開しALBで負荷分散。AZ障害への耐性とトラフィック増加への自動スケーリングを実現" },
+      { "option": "B", "text": "別リージョン + Route53フェイルオーバー", "is_correct": false, "reason": "読み取りレイテンシー削減にも高可用性にも最適ではない。クロスリージョンはオーバースペック" },
+      { "option": "C", "text": "Aurora グローバルDB + クロスリージョンリードレプリカ", "is_correct": false, "reason": "クロスリージョンはコストが高くオーバースペック。同リージョン内のリーダーインスタンスで読み取りレイテンシー削減が可能" },
+      { "option": "D", "text": "Aurora MySQL クラスター + マルチAZリーダー", "is_correct": true, "reason": "Aurora MySQLクラスターでリーダーインスタンスへ読み取りを分散してレイテンシー削減。プライマリ/リーダーを別AZに配置して高可用性も確保" }
+    ],
+    "essence": "WEBスケーラブル高可用性＝ALB + Auto Scaling マルチAZ / DB読み取りレイテンシー削減＝Aurora MySQLクラスター + リーダーインスタンス"
+  }
+}

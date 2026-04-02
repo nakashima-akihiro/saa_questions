@@ -1,0 +1,27 @@
+{
+  "exam_set": "set1",
+  "order": 19,
+  "body": "ある企業は、社内のストレージをAWSにホストすることを検討しています。このストレージは、オンプレミスのアプリケーションサーバーにiSCSIデバイスを介して接続される必要があります。さらに、移行後はAWS上のストレージをプライマリーストレージとして使用する方針です。\n\nこの要件を満たすための適切な設定方法はどれでしょうか。",
+  "option_a": "S3バケットを作成して、S3コネクターをiSCSIデバイスとして利用する。",
+  "option_b": "EBSを作成して、EBSコネクターをiSCSIデバイスとして利用する。",
+  "option_c": "Glacierを作成して、GlacierコネクターをiSCSIデバイスとして利用する。",
+  "option_d": "AWS Storage GatewayをISCSIデバイスとして利用する。",
+  "answer": "D",
+  "domain": "Storage Gateway",
+  "explanation": {
+    "key_conditions": "iSCSIデバイス経由でオンプレミス接続 / AWSをプライマリストレージ",
+    "what_is_asked": "オンプレミスからiSCSIで接続できるAWSストレージサービス",
+    "decision_axis": "iSCSI + オンプレミス接続 → Storage Gatewayキャッシュ型ボリューム",
+    "keywords": [
+      { "keyword": "iSCSI + オンプレミス + AWSプライマリストレージ", "pattern": "正解", "reason": "Storage GatewayのキャッシュボリュームゲートウェイがiSCSIインターフェースを提供。オンプレミスのアプリはiSCSIでアクセスし、実データはS3に保存" },
+      { "keyword": "EBS + iSCSI", "pattern": "誤り", "reason": "EBSはEC2のブロックストレージ。オンプレミスからiSCSIで直接接続する機能はない" }
+    ],
+    "options_analysis": [
+      { "option": "A", "text": "S3 + iSCSI", "is_correct": false, "reason": "S3はオブジェクトストレージ。iSCSIプロトコルをネイティブに提供しない" },
+      { "option": "B", "text": "EBS + iSCSI", "is_correct": false, "reason": "EBSはEC2に接続するブロックストレージ。オンプレミスからiSCSI直接接続はできない" },
+      { "option": "C", "text": "Glacier + iSCSI", "is_correct": false, "reason": "GlacierはアーカイブストレージでiSCSI接続機能はない" },
+      { "option": "D", "text": "Storage Gateway iSCSI", "is_correct": true, "reason": "Storage Gatewayのボリュームゲートウェイ（キャッシュ型）はオンプレミスにiSCSIターゲットを提供。AWSのS3をプライマリストレージとして使用しながらiSCSI接続を実現" }
+    ],
+    "essence": "オンプレミスからiSCSI + AWSストレージ＝Storage Gatewayボリュームゲートウェイ"
+  }
+}

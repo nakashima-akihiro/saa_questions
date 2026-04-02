@@ -1,0 +1,27 @@
+{
+  "exam_set": "set1",
+  "order": 64,
+  "body": "ある企業が、高可用性を求めるWEBアプリケーションを開発しています。このアプリケーションは、Amazon EC2インスタンス上のWindowsサーバーでホストされています。アプリケーショントラフィックは、ELBを通じてインターネットと接続されています。過去に大規模なDDoS攻撃を受けてアプリケーションが停止した経験があるため、企業はこのような攻撃を未然に防ぐための対策を講じる必要があります。\n\nソリューションアーキテクトが採るべきアクションの組み合わせはどれでしょうか？（2つ選択）",
+  "option_a": "AWS Shield Advancedを適用してDDoS攻撃を止める。",
+  "option_b": "攻撃を自動的に遮断するようにAmazon GuardDutyを設定する。",
+  "option_c": "EC2インスタンスをオリジンサーバーとしてAmazon CloudFrontディストリビューションを設定し、WEBアプリケーションのコンテンツ配信処理に適用する。",
+  "option_d": "ELBをオリジンサーバーとしてAmazon CloudFrontディストリビューションを設定し、WEBアプリケーションのコンテンツ配信処理に適用する。",
+  "answer": "A,D",
+  "domain": "Shield / CloudFront",
+  "explanation": {
+    "key_conditions": "大規模DDoS攻撃への対策 / 高可用性",
+    "what_is_asked": "DDoS攻撃を防ぐためのAWSサービスの組み合わせ（2つ選択）",
+    "decision_axis": "DDoS防御 → Shield Advanced / コンテンツ配信 + DDoS吸収 → CloudFront（ELBをオリジンに設定）",
+    "keywords": [
+      { "keyword": "DDoS対策 + Shield Advanced + CloudFront", "pattern": "正解", "reason": "Shield AdvancedがDDoS攻撃を検知・軽減。CloudFrontをELBの前面に置くことでDDoSトラフィックをエッジで吸収・分散できる" },
+      { "keyword": "GuardDuty + DDoS自動遮断", "pattern": "誤り", "reason": "GuardDutyは脅威検出サービスで自動遮断機能はない" }
+    ],
+    "options_analysis": [
+      { "option": "A", "text": "AWS Shield Advanced", "is_correct": true, "reason": "Shield AdvancedはL3/L4/L7のDDoS攻撃を検知・軽減。DDoSレスポンスチームのサポートとコスト保護も含む" },
+      { "option": "B", "text": "GuardDuty 自動遮断", "is_correct": false, "reason": "GuardDutyは脅威検出サービス。DDoS攻撃の自動遮断機能は持たない" },
+      { "option": "C", "text": "EC2 + CloudFront", "is_correct": false, "reason": "CloudFrontのオリジンにはEC2直接ではなくELBを設定するのが推奨。ELBで適切に負荷分散してからEC2に転送" },
+      { "option": "D", "text": "ELB + CloudFront", "is_correct": true, "reason": "CloudFrontをELBの前面に配置することでDDoSトラフィックをエッジロケーションで分散・吸収。ELBをオリジンにすることで適切な負荷分散も維持" }
+    ],
+    "essence": "DDoS対策＝Shield Advanced + CloudFront（ELBをオリジンに設定）でエッジでの吸収とL3-L7 DDoS防御"
+  }
+}

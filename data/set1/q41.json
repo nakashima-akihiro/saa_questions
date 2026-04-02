@@ -1,0 +1,27 @@
+{
+  "exam_set": "set1",
+  "order": 41,
+  "body": "あなたはソリューションアーキテクトとして、Webサーバーとデータベースサーバーから構成されるWebアプリケーションのアーキテクチャを設計しています。Webサーバーとデータベースサーバーは、それぞれ異なるサブネットに配置されたEC2インスタンス上にホストされる予定です。この際、セキュリティを強化するために、データベースサーバーはWebサーバーからのトラフィックのみを受け入れる必要があります。また、このWebサーバーにはAuto Scalingグループを設定して、負荷に応じてインスタンスの数を増減させる必要があります。\n\nこの要件を満たすための適切なトラフィック設定方法はどれでしょうか。",
+  "option_a": "DBインスタンスのセキュリティグループのインバウンドルールにWEBサーバーインスタンスのプライベートIPアドレスを設定する。",
+  "option_b": "DBインスタンスのセキュリティグループのインバウンドルールにWEBサーバーインスタンスのセキュリティグループIDを設定する。",
+  "option_c": "DBインスタンスのセキュリティグループのインバウンドルールにWEBサーバーインスタンスのElastic IPアドレスを設定する。",
+  "option_d": "DBインスタンスのセキュリティグループのインバウンドルールにWEBサーバーインスタンスのパブリックIPアドレスを設定する。",
+  "answer": "B",
+  "domain": "VPC / Security Group",
+  "explanation": {
+    "key_conditions": "DBサーバーはWEBサーバーからのトラフィックのみ受け入れ / Auto Scalingでインスタンス数が増減",
+    "what_is_asked": "Auto Scalingで変動するWEBサーバーIPからDBへのアクセスを管理する設定",
+    "decision_axis": "Auto Scalingでインスタンス変動 → IPアドレスは変化する → セキュリティグループIDで制御",
+    "keywords": [
+      { "keyword": "Auto Scaling + セキュリティグループID + DB接続", "pattern": "正解", "reason": "Auto Scalingでインスタンスが増減するとIPアドレスが変化する。セキュリティグループIDで指定すればそのSGを持つ全インスタンスからの通信を許可でき、IP管理不要" },
+      { "keyword": "Auto Scaling + プライベートIPアドレス + DB", "pattern": "誤り", "reason": "Auto Scalingで新しいインスタンスが追加されるたびにIPアドレスが変わる。IPアドレスで管理するとメンテナンスが困難" }
+    ],
+    "options_analysis": [
+      { "option": "A", "text": "プライベートIPアドレスで指定", "is_correct": false, "reason": "Auto Scalingでインスタンスが増減するとIPアドレスが変わる。新しいインスタンスのIPを都度追加する運用は非現実的" },
+      { "option": "B", "text": "セキュリティグループIDで指定", "is_correct": true, "reason": "WEBサーバーのセキュリティグループIDをDBのインバウンドルールに指定。そのSGを持つ全インスタンス（Auto Scalingで追加されたものも含む）からの通信を自動的に許可" },
+      { "option": "C", "text": "Elastic IPアドレスで指定", "is_correct": false, "reason": "Elastic IPはインスタンスに固定的に割り当てるパブリックIP。Auto Scalingの全インスタンスへのEIP割り当ては非現実的" },
+      { "option": "D", "text": "パブリックIPアドレスで指定", "is_correct": false, "reason": "パブリックIPはインスタンス再起動で変わる。Auto Scalingとの組み合わせでの管理は困難" }
+    ],
+    "essence": "Auto Scalingで増減するEC2からのDB接続制御＝DBのSGインバウンドルールにWEBサーバーのセキュリティグループIDを指定"
+  }
+}

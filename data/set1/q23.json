@@ -1,0 +1,27 @@
+{
+  "exam_set": "set1",
+  "order": 23,
+  "body": "ある企業が自社の文書管理システムとしてAmazon S3バケットを導入しようとしています。初期段階では、保存される文書が頻繁に利用される可能性がありますが、4か月後にはその利用頻度が大幅に減少し、ほとんどアクセスされなくなる見込みです。したがって、これらの文書をアーカイブする必要があります。その際、コストを最適化することが求められます。\n\nこの要件を満たすためには、どのようなS3バケット設定が必要でしょうか。",
+  "option_a": "S3 Standard IAにデータを蓄積して、4カ月後にGlacier Instant Retrievalに移行するライフサイクルルールを設定する。",
+  "option_b": "S3 Standardにデータを蓄積して、4カ月後にGlacier Deep Archiveに移行するライフサイクルルールを設定する。",
+  "option_c": "S3 Standardにデータを蓄積して、4カ月後にGlacier Instant Retrievalに移行するライフサイクルルールを設定する。",
+  "option_d": "S3 Standard IAにデータを蓄積して、4カ月後にGlacier Deep Archiveに移行するライフサイクルルールを設定する。",
+  "answer": "B",
+  "domain": "S3 / Glacier",
+  "explanation": {
+    "key_conditions": "最初は頻繁にアクセス / 4か月後はほとんどアクセスしない / アーカイブ / コスト最適化",
+    "what_is_asked": "アクセス頻度に応じたS3ストレージクラスのライフサイクル設計",
+    "decision_axis": "初期: 頻繁アクセス → S3 Standard / 長期アーカイブ + ほぼアクセスなし → Glacier Deep Archive（最安）",
+    "keywords": [
+      { "keyword": "頻繁アクセス → 長期アーカイブ + コスト最適", "pattern": "正解", "reason": "初期はS3 Standardで高頻度アクセス対応。4か月後はGlacier Deep Archive（最低コストのアーカイブ）に移行。ほぼアクセスしない長期アーカイブに最安" },
+      { "keyword": "S3 Standard IA + アーカイブ開始", "pattern": "誤り", "reason": "初期は頻繁にアクセスされるためS3 Standard IAではアクセス料が高くなる。S3 Standardから始めるべき" }
+    ],
+    "options_analysis": [
+      { "option": "A", "text": "S3 Standard IA → Glacier Instant Retrieval", "is_correct": false, "reason": "初期の頻繁アクセスにS3 Standard IAは不向き（アクセス料が高い）。またGlacier Instant RetrievalはDeep Archiveより高コスト" },
+      { "option": "B", "text": "S3 Standard → Glacier Deep Archive", "is_correct": true, "reason": "初期のS3 Standardで頻繁アクセスに対応。4か月後に最安コストのGlacier Deep Archiveに移行。ほぼアクセスしない長期保存に最適" },
+      { "option": "C", "text": "S3 Standard → Glacier Instant Retrieval", "is_correct": false, "reason": "ほぼアクセスしないのにGlacier Instant RetrievalはDeep Archiveより高コスト" },
+      { "option": "D", "text": "S3 Standard IA → Glacier Deep Archive", "is_correct": false, "reason": "初期の頻繁アクセスにS3 Standard IAは不向き" }
+    ],
+    "essence": "頻繁アクセス→長期アーカイブ＝S3 Standard → Glacier Deep Archive（最安）。初期はS3 Standardを使う"
+  }
+}

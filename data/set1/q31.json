@@ -1,0 +1,26 @@
+{
+  "exam_set": "set1",
+  "order": 31,
+  "body": "次のIAMポリシーでEC2インスタンスに対する権限設定を行っています。\n\n{\n  \"Version\": \"2012-10-17\",\n  \"Statement\": [\n    {\n      \"Action\": \"ec2:*\",\n      \"Effect\": \"Allow\",\n      \"Resource\": \"*\"\n    },\n    {\n      \"Effect\": \"Deny\",\n      \"Action\": [\n        \"ec2:*ReservedInstances*\",\n        \"ec2:TerminateInstances\"\n      ],\n      \"Resource\": \"*\"\n    }\n  ]\n}\n\nこの設定内容として正しい内容を選択してください。",
+  "option_a": "リザーブドインスタンスの操作が許可されている。",
+  "option_b": "EC2インスタンスに対する全ての操作が許可されている。",
+  "option_c": "全てのEC2インスタンスを終了することができない。",
+  "option_d": "全てのリザーブドインスタンスに対してのみインスタンスを終了することができない。",
+  "answer": "C",
+  "domain": "IAM",
+  "explanation": {
+    "key_conditions": "ec2:* Allow + ec2:TerminateInstances Deny / IAMポリシーの評価ロジック",
+    "what_is_asked": "Allow + Deny が共存するIAMポリシーの評価結果",
+    "decision_axis": "Deny は Allow より優先される → TerminateInstances は Deny なので全EC2インスタンスへの終了操作が禁止",
+    "keywords": [
+      { "keyword": "IAM Deny + Allow 共存", "pattern": "正解", "reason": "IAMポリシーの評価でDenyはAllowより常に優先。ec2:*がAllowでもec2:TerminateInstancesがDenyなら終了操作は常に拒否される" }
+    ],
+    "options_analysis": [
+      { "option": "A", "text": "リザーブドインスタンス操作が許可", "is_correct": false, "reason": "ec2:*ReservedInstances*はDenyされている。リザーブドインスタンス関連操作は禁止" },
+      { "option": "B", "text": "EC2全操作が許可", "is_correct": false, "reason": "ec2:*がAllowでも、TerminateInstancesとReservedInstances操作はDenyが上書きするため全操作は許可されない" },
+      { "option": "C", "text": "全EC2インスタンスの終了が不可", "is_correct": true, "reason": "ec2:TerminateInstancesがDenyされているため、リソース指定なしのDenyは全EC2インスタンスへの終了操作を禁止する" },
+      { "option": "D", "text": "リザーブドインスタンスのみ終了不可", "is_correct": false, "reason": "ec2:TerminateInstancesのDenyはResource: *（全インスタンス）に適用される。リザーブドインスタンスのみではない" }
+    ],
+    "essence": "IAMポリシーはDenyが常にAllowに優先。ec2:TerminateInstancesがDenyなら全EC2インスタンスの終了が不可"
+  }
+}

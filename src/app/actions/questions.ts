@@ -25,7 +25,7 @@ export async function getQuestionStats(examSet: ExamSet): Promise<{
   correctCount: number
   history: { attempt: number; selected: string; is_correct: boolean }[]
 }[]> {
-  // 問題ごとの回答履歴を集計（結果画面マトリクス用）
+  // 問題一覧を取得（1クエリ）
   const { data: questions, error: qErr } = await supabase
     .from('questions')
     .select('id, order')
@@ -33,29 +33,39 @@ export async function getQuestionStats(examSet: ExamSet): Promise<{
     .order('order', { ascending: true })
 
   if (qErr) throw new Error(qErr.message)
+  if (!questions || questions.length === 0) return []
 
-  const result = []
-  for (const q of questions) {
-    const { data: answers, error: aErr } = await supabase
-      .from('answers')
-      .select('selected, is_correct, answered_at')
-      .eq('question_id', q.id)
-      .order('answered_at', { ascending: true })
+  // 全問題の回答を一括取得（1クエリ）
+  const questionIds = questions.map(q => q.id)
+  const { data: answers, error: aErr } = await supabase
+    .from('answers')
+    .select('question_id, selected, is_correct, answered_at')
+    .in('question_id', questionIds)
+    .order('answered_at', { ascending: true })
 
-    if (aErr) throw new Error(aErr.message)
+  if (aErr) throw new Error(aErr.message)
 
-    result.push({
+  // question_id でグループ化
+  const answersByQuestion = new Map<string, typeof answers>()
+  for (const a of answers ?? []) {
+    const list = answersByQuestion.get(a.question_id) ?? []
+    list.push(a)
+    answersByQuestion.set(a.question_id, list)
+  }
+
+  return questions.map(q => {
+    const qAnswers = answersByQuestion.get(q.id) ?? []
+    return {
       order: q.order,
-      totalAttempts: answers.length,
-      correctCount: answers.filter(a => a.is_correct).length,
-      history: answers.map((a, i) => ({
+      totalAttempts: qAnswers.length,
+      correctCount: qAnswers.filter(a => a.is_correct).length,
+      history: qAnswers.map((a, i) => ({
         attempt: i + 1,
         selected: a.selected,
         is_correct: a.is_correct,
       })),
-    })
-  }
-  return result
+    }
+  })
 }
 
 export async function getAllSetStats(): Promise<{

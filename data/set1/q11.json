@@ -1,0 +1,27 @@
+{
+  "exam_set": "set1",
+  "order": 11,
+  "body": "あなたはソリューションアーキテクトとして、AWS上でアプリケーションの開発およびテストを行っています。その際は、作業効率を高めるために、AWS環境のインフラ構成を一括にデプロイするような方法が求められています。それによって、開発環境やテスト環境を迅速にプロビジョニングしたり、容易に削除したりできるようにすることを目指しています。\n\nこの要件を満たす最も適切なAWSサービスの設定はどれでしょうか。",
+  "option_a": "AWS CodePipelineを設定して、コードを展開するパイプラインを構成することで迅速な環境設定と削除を可能にする。",
+  "option_b": "CloudFormationによりテスト環境用のテンプレートを作成する。このテンプレートを利用してテスト環境をデプロイできるようにする。",
+  "option_c": "EC2インスタンスのAMIとBashスクリプトを利用して、テスト環境構築を設定する。スクリプトを実行することで、テスト環境をデプロイできるようにする。",
+  "option_d": "Amazon ECRにイメージを作成して、テスト環境構築を設定する。このイメージを利用して、テスト環境をデプロイできるようにする。",
+  "answer": "B",
+  "domain": "CloudFormation",
+  "explanation": {
+    "key_conditions": "インフラ構成を一括デプロイ / 環境の迅速なプロビジョニングと削除",
+    "what_is_asked": "インフラをコードとして定義し繰り返しデプロイ・削除できるサービス",
+    "decision_axis": "IaC（インフラのコード化）+ 繰り返しデプロイ/削除 → CloudFormation",
+    "keywords": [
+      { "keyword": "インフラ一括デプロイ + 繰り返し作成・削除", "pattern": "正解", "reason": "CloudFormationはYAML/JSONテンプレートでインフラを定義。スタック作成で一括デプロイ、スタック削除で一括削除が可能" },
+      { "keyword": "CodePipeline + 環境プロビジョニング", "pattern": "誤り", "reason": "CodePipelineはCI/CDパイプライン。インフラのプロビジョニング自体はCloudFormationが担当" }
+    ],
+    "options_analysis": [
+      { "option": "A", "text": "CodePipeline", "is_correct": false, "reason": "CodePipelineはコードのビルド・テスト・デプロイの自動化。インフラの定義・プロビジョニングにはCloudFormationを使う" },
+      { "option": "B", "text": "CloudFormation テンプレート", "is_correct": true, "reason": "CloudFormationのスタックとしてインフラをコード化。テンプレート1つで開発・テスト環境を何度でも同一構成でデプロイ・削除できる" },
+      { "option": "C", "text": "AMI + Bashスクリプト", "is_correct": false, "reason": "EC2単体の設定は可能だが、VPC・サブネット・RDSなどマルチサービスのインフラ一括管理には不向き" },
+      { "option": "D", "text": "ECRイメージ", "is_correct": false, "reason": "ECRはコンテナイメージのレジストリ。インフラプロビジョニングには使わない" }
+    ],
+    "essence": "インフラの繰り返しデプロイ/削除＝CloudFormation。テンプレートでIaCを実現"
+  }
+}

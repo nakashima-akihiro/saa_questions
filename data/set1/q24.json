@@ -1,0 +1,27 @@
+{
+  "exam_set": "set1",
+  "order": 24,
+  "body": "ある企業は、AWS上でホストされている一連のアプリケーションの運用を行っています。この企業では、アプリケーション間の連携を実現するためにAmazon API Gatewayを導入することに決定しました。そのため、Amazon API Gateway API に対する権限管理を行い、API呼び出し時にAPIコール元に対して適切なアクセス権限を設定する必要があります。\n\nこの要件を満たすためのAPI Gatewayの最も適切な設定方法はどれでしょうか。",
+  "option_a": "AWS STSを利用して、API コールの呼び出し元に対して権限を付与する。",
+  "option_b": "IAMポリシーを利用して、API コールの呼び出し元に対して権限を付与する。",
+  "option_c": "AWS Configを利用して、API コールの呼び出し元に対して権限を付与する。",
+  "option_d": "IAMアクセスキーを利用して、API コールの呼び出し元に対して権限を付与する。",
+  "answer": "B",
+  "domain": "API Gateway / IAM",
+  "explanation": {
+    "key_conditions": "API Gatewayへのアクセス権限設定 / APIコール元への権限付与",
+    "what_is_asked": "API GatewayへのAPIコール権限を管理する方法",
+    "decision_axis": "API Gateway + 権限管理 → IAMポリシー（execute-api:Invoke等）",
+    "keywords": [
+      { "keyword": "API Gateway + アクセス権限 + IAMポリシー", "pattern": "正解", "reason": "IAMポリシーでexecute-api:Invokeアクションを設定することでAPI GatewayへのAPIコール権限を制御できる" },
+      { "keyword": "IAMアクセスキー + API Gateway", "pattern": "誤り", "reason": "IAMアクセスキーは認証情報であり権限付与の仕組みではない。権限管理はIAMポリシーで行う" }
+    ],
+    "options_analysis": [
+      { "option": "A", "text": "AWS STS", "is_correct": false, "reason": "STSは一時的な認証情報発行サービス。API Gatewayの権限設定にはIAMポリシーを使う" },
+      { "option": "B", "text": "IAMポリシー", "is_correct": true, "reason": "IAMポリシーのexecute-api:Invokeアクションを設定してAPIコール元ユーザー/ロールにアタッチ。API Gatewayへの適切なアクセス制御が実現できる" },
+      { "option": "C", "text": "AWS Config", "is_correct": false, "reason": "AWS Configはリソース設定の記録・コンプライアンスチェック。権限付与には使わない" },
+      { "option": "D", "text": "IAMアクセスキー", "is_correct": false, "reason": "アクセスキーはAWS APIの認証情報。権限の付与・制御はIAMポリシーで行う" }
+    ],
+    "essence": "API GatewayへのAPIコール権限管理＝IAMポリシー（execute-api:Invoke）"
+  }
+}

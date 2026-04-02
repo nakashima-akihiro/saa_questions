@@ -1,0 +1,27 @@
+{
+  "exam_set": "set1",
+  "order": 54,
+  "body": "ある企業は、コンテナ化されたアプリケーションを開発しています。このアプリケーションは、高い可用性とスケーラビリティを確保する必要があります。その際は、このコンテナアプリケーションのCPUリソースを設定して管理する必要があります。\n\nこれらの要件を満たすソリューションはどれでしょうか。",
+  "option_a": "Amazon Elastic Container Service (Amazon ECS)を使用してコンテナを構成し、CPUインスタンスファミリーのAmazon EC2インスタンスでアプリケーションを実行する。",
+  "option_b": "Amazon Elastic Kubernetes Service (Amazon EKS)を利用してコンテナを構成し、AWS Fargateを使用してコンピューティングリソースとCPUリソースへのアクセスを管理する。",
+  "option_c": "Amazon Elastic Container Service (Amazon ECS)を使用してコンテナを構成し、AWS Fargateを使用してコンピューティングリソースとCPUリソースへのアクセスを管理する。",
+  "option_d": "Amazon Elastic Container Service (Amazon ECS)を使用してコンテナを構成し、Amazon ECRを使用してコンピューティングリソースとCPUリソースへのアクセスを管理する。",
+  "answer": "A",
+  "domain": "ECS",
+  "explanation": {
+    "key_conditions": "高可用性 + スケーラビリティ / CPUリソースの設定・管理が必要",
+    "what_is_asked": "コンテナのCPUリソースを明示的に設定・管理できる構成",
+    "decision_axis": "CPUリソースを設定・管理 → ECS + EC2起動モード（CPUインスタンスファミリーで詳細なCPU制御可能）",
+    "keywords": [
+      { "keyword": "コンテナ + CPUリソース管理 + EC2インスタンスファミリー", "pattern": "正解", "reason": "ECS + EC2起動モードでCPU最適化インスタンスを選択することでCPUリソースを直接管理できる" },
+      { "keyword": "Fargate + CPUリソース管理", "pattern": "誤り", "reason": "FargateはCPU/メモリを抽象化してAWSが管理。詳細なCPUリソースの設定・管理は制限される" }
+    ],
+    "options_analysis": [
+      { "option": "A", "text": "ECS + CPUインスタンスファミリーEC2", "is_correct": true, "reason": "ECSでコンテナを管理し、CPUインスタンスファミリーのEC2でCPUリソースを最大限制御。高可用性・スケーラビリティもAuto Scalingで実現" },
+      { "option": "B", "text": "EKS + Fargate", "is_correct": false, "reason": "Fargateはサーバーレスでインフラ管理不要だが、CPUリソースを直接管理できない" },
+      { "option": "C", "text": "ECS + Fargate", "is_correct": false, "reason": "FargateはCPU/メモリを指定するがEC2インスタンスの詳細なCPU管理はできない" },
+      { "option": "D", "text": "ECS + ECR", "is_correct": false, "reason": "ECRはコンテナイメージのレジストリ。コンピューティングリソース管理の役割はない" }
+    ],
+    "essence": "コンテナのCPUリソース設定・管理＝ECS + EC2起動モード（CPUインスタンスファミリー）"
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "exam_set": "set1",
+  "order": 16,
+  "body": "あなたはソリューションアーキテクトとしてAmazon DynamoDBテーブルにデータを書き込むためのAWS Lambda関数を作成しました。このLambda関数がDynamoDBテーブルを操作できるように権限を設定する必要があります。\n\nどのように権限を設定すればよいでしょうか。",
+  "option_a": "Lambda関数に適切な権限を付与したIAMユーザーを設定してDynamoDBへのアクセスを許可する。",
+  "option_b": "Lambda関数に適切な権限を付与したIAMロールを設定してDynamoDBへのアクセスを許可する。",
+  "option_c": "Lambda関数に適切な権限を付与したIAMポリシーを設定してDynamoDBへのアクセスを許可する。",
+  "option_d": "Lambda関数に適切な権限を付与したリソースポリシーを設定してDynamoDBへのアクセスを許可する。",
+  "answer": "B",
+  "domain": "Lambda / IAM",
+  "explanation": {
+    "key_conditions": "Lambda関数からDynamoDBへのアクセス権限設定",
+    "what_is_asked": "AWSサービス（Lambda）に権限を付与する適切な方法",
+    "decision_axis": "AWSサービスへの権限付与 → IAMロール（IAMユーザーはAWSサービスには使わない）",
+    "keywords": [
+      { "keyword": "Lambda + DynamoDB権限 + IAMロール", "pattern": "正解", "reason": "AWSサービスに権限を付与する場合はIAMロールを使用。LambdaにIAMロールをアタッチし、そのロールにDynamoDBへのアクセスポリシーを付与する" },
+      { "keyword": "Lambda + IAMユーザー", "pattern": "誤り", "reason": "IAMユーザーは人が使うもの。AWSサービスへの権限付与にはIAMロールを使用する" }
+    ],
+    "options_analysis": [
+      { "option": "A", "text": "IAMユーザー", "is_correct": false, "reason": "IAMユーザーは人（または外部システム）が使うもの。AWSサービス（Lambda等）にはIAMロールを使う" },
+      { "option": "B", "text": "IAMロール", "is_correct": true, "reason": "AWSサービスへの権限付与はIAMロール。LambdaにIAMロールを割り当て、そのロールにDynamoDBWriteアクセスポリシーをアタッチする" },
+      { "option": "C", "text": "IAMポリシーを直接設定", "is_correct": false, "reason": "IAMポリシーはロールやユーザーにアタッチするもの。直接LambdaにIAMポリシーを設定するというAPIはない" },
+      { "option": "D", "text": "リソースポリシー", "is_correct": false, "reason": "リソースポリシーはリソース側のアクセス制御（S3バケットポリシー等）。Lambda関数の実行権限付与にはIAMロールを使う" }
+    ],
+    "essence": "AWSサービス（Lambda等）への権限付与＝IAMロール。IAMユーザーはAWSサービスに使わない"
+  }
+}

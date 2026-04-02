@@ -1,26 +1,27 @@
 {
   "exam_set": "set1",
   "order": 1,
-  "body": "テスト問題です。AWSのオブジェクトストレージサービスはどれですか？",
-  "option_a": "EC2",
-  "option_b": "S3",
-  "option_c": "RDS",
-  "option_d": "Lambda",
-  "answer": "B",
-  "domain": "S3",
+  "body": "ある企業は、オンプレミス環境においてWindowsサーバーを用いたバッチジョブを運用しています。このバッチジョブは、日次で最大1時間実行されます。ソリューションアーキテクトは、このバッチジョブプロセスをAWSに移行し、最適化する必要があります。\n\n運用上のオーバーヘッドを抑えつつ、これらの要件を満たすソリューションはどれでしょうか。",
+  "option_a": "AWS Batch上でEC2インスタンス・Windowsサーバーを起動し、Amazon EventBridgeを利用した日次スケジュールを設定したバッチジョブ処理を実施する。",
+  "option_b": "Auto Scalingグループを構成したAmazon EC2インスタンスのフリートに、Amazon EventBridgeを利用した日次スケジュールを設定したバッチジョブ処理を実施する。",
+  "option_c": "Amazon EventBridgeルールによって日次スケジュールを設定して、バッチジョブを処理するAWS Lambda関数を呼び出す。",
+  "option_d": "StepFunctionsのステートマシン上で日次スケジュールを設定して、バッチジョブ処理を実施する。",
+  "answer": "A",
+  "domain": "AWS Batch",
   "explanation": {
-    "key_conditions": "オブジェクトストレージサービスを問う",
-    "what_is_asked": "AWSのオブジェクトストレージサービス",
-    "decision_axis": "AWSサービスの基本知識",
+    "key_conditions": "Windowsサーバーを使ったバッチジョブ / 日次・最大1時間 / 運用オーバーヘッド最小",
+    "what_is_asked": "Windowsバッチジョブを低運用オーバーヘッドでAWSに移行するサービス",
+    "decision_axis": "バッチジョブ + Windows + 運用オーバーヘッド最小 → AWS Batch（バッチ処理専用マネージドサービス）",
     "keywords": [
-      { "keyword": "オブジェクトストレージ", "pattern": "正解", "reason": "S3はオブジェクトストレージサービス" }
+      { "keyword": "バッチジョブ + Windows + 運用オーバーヘッド最小", "pattern": "正解", "reason": "AWS BatchはEC2/Windows上でバッチジョブを自動管理するマネージドサービス。EventBridgeでスケジュール実行でき、インフラ管理不要" },
+      { "keyword": "Lambda + バッチジョブ + 1時間", "pattern": "誤り", "reason": "Lambdaの最大実行時間は15分。1時間のバッチジョブには対応できない" }
     ],
     "options_analysis": [
-      { "option": "A", "text": "EC2", "is_correct": false, "reason": "EC2はコンピューティングサービス" },
-      { "option": "B", "text": "S3", "is_correct": true, "reason": "S3はSimple Storage Serviceでオブジェクトストレージ" },
-      { "option": "C", "text": "RDS", "is_correct": false, "reason": "RDSはリレーショナルDBサービス" },
-      { "option": "D", "text": "Lambda", "is_correct": false, "reason": "Lambdaはサーバーレス関数実行サービス" }
+      { "option": "A", "text": "AWS Batch + EventBridge日次スケジュール", "is_correct": true, "reason": "AWS BatchはWindowsを含むバッチジョブのプロビジョニング・スケジュール・実行を自動管理。EventBridgeで日次スケジュールを設定できる。運用オーバーヘッド最小" },
+      { "option": "B", "text": "EC2 Auto Scaling + EventBridge", "is_correct": false, "reason": "EC2のAuto Scalingグループを手動で管理する必要がある。運用オーバーヘッドが高くAWS Batchより不適切" },
+      { "option": "C", "text": "EventBridge + Lambda", "is_correct": false, "reason": "Lambdaの最大実行時間は15分。最大1時間のバッチジョブには対応できない" },
+      { "option": "D", "text": "Step Functions", "is_correct": false, "reason": "Step FunctionsはワークフローオーケストレーションサービスでWindowsバッチジョブの直接実行には不向き。AWS Batchと組み合わせることはあるが単独では不適切" }
     ],
-    "essence": "S3がAWSの代表的なオブジェクトストレージであることを覚える"
+    "essence": "Windowsバッチジョブ移行 + 運用オーバーヘッド最小＝AWS Batch + EventBridgeスケジュール（Lambdaは15分制限で不可）"
   }
 }

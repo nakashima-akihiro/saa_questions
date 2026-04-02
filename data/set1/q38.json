@@ -1,0 +1,28 @@
+{
+  "exam_set": "set1",
+  "order": 38,
+  "body": "ある企業は、オンプレミス環境からAWSへの移行を決定しました。現在は火曜日であり、業務に影響を及ぼさないように、今週末の金曜日の夜から月曜日の朝までの72時間以内にデータ移行を完了させる必要があります。移行するデータの容量は10TBであり、データの安全な通信を確保することが求められています。現在、オンプレミス環境とVPCはインターネットを通じて接続されています。\n\nこの条件に適した移行方法を選定してください。",
+  "option_a": "Snowball edgeによるデータ移行を実施する。",
+  "option_b": "Direct Connect接続によるデータ転送を実施する。",
+  "option_c": "AWS サイト間 VPNを利用したVPN接続によるデータ転送を実施する。",
+  "option_d": "Storage Gatewayによるデータ移行を実施する。",
+  "answer": "C",
+  "domain": "VPN / Migration",
+  "explanation": {
+    "key_conditions": "72時間以内 / 10TB / 既存インターネット接続あり / データの安全な通信",
+    "what_is_asked": "既存インターネット接続を活用した短期間・安全なデータ移行方法",
+    "decision_axis": "既存インターネット接続あり + 安全な通信 + 短期間 → サイト間VPN（即時設定・暗号化通信）",
+    "keywords": [
+      { "keyword": "既存インターネット接続 + 安全 + 短期間移行", "pattern": "正解", "reason": "サイト間VPNはインターネット経由で暗号化された安全なトンネルを即日設定できる。10TB/72時間は転送速度次第だが設定の迅速さと安全性を確保" },
+      { "keyword": "Snowball Edge + 72時間以内", "pattern": "誤り", "reason": "Snowball Edgeはデバイス配送に数日かかる。72時間の制約に間に合わない可能性が高い" },
+      { "keyword": "Direct Connect + 短期間", "pattern": "誤り", "reason": "Direct Connectは専用線で安全だが、開通まで数週間〜数ヶ月かかる。72時間には対応不可" }
+    ],
+    "options_analysis": [
+      { "option": "A", "text": "Snowball Edge", "is_correct": false, "reason": "Snowball Edgeはデバイスの配送・受領に数日かかるため72時間の制約に対応できない" },
+      { "option": "B", "text": "Direct Connect", "is_correct": false, "reason": "Direct Connectは専用線の敷設に数週間〜数ヶ月が必要。既存インターネット接続を活用した即時対応には不向き" },
+      { "option": "C", "text": "サイト間VPN", "is_correct": true, "reason": "既存のインターネット接続上でIPSec暗号化のVPNトンネルを構築。設定は数時間で完了でき、暗号化による安全な通信を確保しながら72時間以内の移行が可能" },
+      { "option": "D", "text": "Storage Gateway", "is_correct": false, "reason": "Storage Gatewayはオンプレミスとクラウドのストレージ統合サービス。大量データの一括移行には不向き" }
+    ],
+    "essence": "既存インターネット接続 + 短期間 + 安全な移行＝サイト間VPN（即日設定・暗号化通信）"
+  }
+}

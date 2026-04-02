@@ -1,0 +1,29 @@
+{
+  "exam_set": "set1",
+  "order": 36,
+  "body": "ある企業のアプリケーションでは、大量のクリックストリームデータをAmazon S3バケットに保存するためのクリックストリーム分析ツールを開発しています。要件は、ウェブサイトから送信される膨大なクリックストリームをAPI経由で取得し、適切なデータ形式に変換してAmazon S3バケットに保存することです。その後、Amazon S3バケットに保存されたクリックストリームデータを迅速に分析するためのデータパイプラインを構成します。このパイプラインでは、データ内容に応じて保存データを分類した上で、一部のデータはさらに分析する必要があります。\n\n運用上のオーバーヘッドを抑えつつ、これらの要件を満たすソリューションはどれでしょうか。（３つ選択）",
+  "option_a": "Amazon API Gateway APIに連動したAWS Lambda関数がクリックストリームを取得し、Amazon Kinesis Data Streamsに配信する。",
+  "option_b": "Kinesis Data Streamsがクリックストリームデータを処理し、Amazon Data Firehose を使用してデータを Amazon S3バケットに保存する。",
+  "option_c": "AWS Glueクローラーを設定し、Amazon S3バケット内のデータを分割する。Amazon EMR Sparkジョブを設定し、データをクエリする。",
+  "option_d": "Amazon API Gateway APIに連動したAWS Lambda関数がクリックストリームを取得し、Amazon Data Firehose に配信する。",
+  "answer": "A,B,C",
+  "domain": "Kinesis / Glue / S3",
+  "explanation": {
+    "key_conditions": "API経由でクリックストリーム取得 / S3に保存 / データ分類 + 一部はさらに分析",
+    "what_is_asked": "クリックストリームの収集→S3保存→分析パイプライン（3つ選択）",
+    "decision_axis": "API取得 → API GW + Lambda → Kinesis / S3保存 → Firehose / 分類+分析 → Glue + EMR",
+    "keywords": [
+      { "keyword": "API GW + Lambda → Kinesis Data Streams", "pattern": "正解", "reason": "API GatewayでAPIを受け付けLambdaでKinesisに配信。APIからのストリームデータ収集の標準パターン" },
+      { "keyword": "Kinesis → Firehose → S3", "pattern": "正解", "reason": "Kinesis Data StreamsからFirehoseを介してS3に自動保存。サーバーレスで運用オーバーヘッド最小" },
+      { "keyword": "Glue + EMR Spark + S3データ分析", "pattern": "正解", "reason": "Glueクローラーでデータカタログ化・分類。EMR SparkジョブでS3データを大規模分析" },
+      { "keyword": "API GW + Lambda → Firehose直接", "pattern": "誤り", "reason": "LambdaからFirehoseに直接配信する構成はKinesis Data Streamsを経由しないため、バッファリングや複数コンシューマーへの配信が難しい" }
+    ],
+    "options_analysis": [
+      { "option": "A", "text": "API GW + Lambda → Kinesis Data Streams", "is_correct": true, "reason": "API GatewayがクリックストリームAPIを受け付けLambdaでKinesisに送信。大量リクエストのバッファリングが可能" },
+      { "option": "B", "text": "Kinesis → Firehose → S3", "is_correct": true, "reason": "KinesisからFirehoseを介して自動的にS3に保存。マネージドサービスで運用オーバーヘッド最小" },
+      { "option": "C", "text": "Glue + EMR Spark", "is_correct": true, "reason": "Glueクローラーでデータ分類・カタログ化。EMR SparkでS3上のデータを大規模分析" },
+      { "option": "D", "text": "API GW + Lambda → Firehose直接", "is_correct": false, "reason": "Kinesis Data Streamsを経由しないためリアルタイム処理やストリームの複数コンシューマーに対応しにくい" }
+    ],
+    "essence": "クリックストリームパイプライン＝API GW + Lambda → Kinesis Data Streams → Firehose → S3 → Glue + EMR分析"
+  }
+}

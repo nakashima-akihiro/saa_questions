@@ -1,0 +1,27 @@
+{
+  "exam_set": "set1",
+  "order": 27,
+  "body": "ある企業は、Amazon EC2インスタンスをウェブサーバーとして利用し、ELBおよびAuto Scalingグループを設定したアプリケーションを運営しています。このアプリケーションのデータベース層には、Amazon RDS MySQLデータベースが利用されています。最近、RDSインスタンスへの読み取り要求が増加しており、その結果、データベース処理のパフォーマンスが低下しています。\n\nコスト最適にDBインスタンスのパフォーマンスを向上させるソリューションはどれでしょうか。",
+  "option_a": "Amazon CloudFrontディストリビューションをデータベース構成の前面に設置する。",
+  "option_b": "Amazon RDS DBインスタンスをマルチAZ構成に変更する。",
+  "option_c": "Amazon RDS DBインスタンスに対してリードレプリカを増加させる。",
+  "option_d": "DynamoDBテーブルをAmazon RDS DBインスタンスのキャッシュレイヤーとして設置する。",
+  "answer": "C",
+  "domain": "RDS",
+  "explanation": {
+    "key_conditions": "RDS読み取り要求増加によるパフォーマンス低下 / コスト最適",
+    "what_is_asked": "RDSの読み取り負荷を軽減する最もコスト効率の良い方法",
+    "decision_axis": "読み取り負荷 → リードレプリカ（読み取りをレプリカに分散）",
+    "keywords": [
+      { "keyword": "RDS読み取り負荷 + パフォーマンス向上", "pattern": "正解", "reason": "リードレプリカは読み取りトラフィックをレプリカに分散してプライマリDBの負荷を軽減。読み取り重いワークロードに最適でコスト効率も良い" },
+      { "keyword": "RDS マルチAZ + 読み取り性能", "pattern": "誤り", "reason": "マルチAZは可用性向上のため。スタンバイインスタンスへの読み取りは基本的にできない（フェイルオーバー専用）" }
+    ],
+    "options_analysis": [
+      { "option": "A", "text": "CloudFront + DB前面", "is_correct": false, "reason": "CloudFrontはHTTPキャッシュ。DBへの直接読み取りトラフィックの削減には向かない" },
+      { "option": "B", "text": "RDS マルチAZ", "is_correct": false, "reason": "マルチAZはAZ障害への可用性対策。スタンバイは読み取り不可でパフォーマンス改善にならない" },
+      { "option": "C", "text": "RDS リードレプリカ増加", "is_correct": true, "reason": "リードレプリカは読み取り専用レプリカ。読み取りリクエストをレプリカに分散することでプライマリDBの負荷を軽減し、コスト効率よくパフォーマンスを改善" },
+      { "option": "D", "text": "DynamoDB キャッシュ", "is_correct": false, "reason": "DynamoDBをRDSのキャッシュとして使うのは設計が複雑でコストも高い。読み取り負荷にはリードレプリカが適切" }
+    ],
+    "essence": "RDS読み取り負荷軽減 + コスト最適＝リードレプリカ（マルチAZは可用性目的でパフォーマンス改善にならない）"
+  }
+}
