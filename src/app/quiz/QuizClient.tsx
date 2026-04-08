@@ -8,6 +8,9 @@ import type { Question, Session } from '@/types'
 type Props = {
   session: Session
   questions: Question[]
+  initialIndex: number
+  initialScore: number
+  isResumed: boolean
 }
 
 function isMultipleAnswer(answer: string) {
@@ -26,12 +29,12 @@ function checkCorrect(answer: string, selected: string[]): boolean {
 
 const OPTION_KEYS = ['A', 'B', 'C', 'D'] as const
 
-export default function QuizClient({ session, questions }: Props) {
+export default function QuizClient({ session, questions, initialIndex, initialScore, isResumed }: Props) {
   const router = useRouter()
-  const [currentIndex, setCurrentIndex] = useState(0)
+  const [currentIndex, setCurrentIndex] = useState(initialIndex)
   const [selected, setSelected] = useState<string[]>([])
   const [answered, setAnswered] = useState(false)
-  const [score, setScore] = useState(0)
+  const [score, setScore] = useState(initialScore)
 
   const question = questions[currentIndex]
   const isMultiple = isMultipleAnswer(question.answer)
@@ -74,6 +77,7 @@ export default function QuizClient({ session, questions }: Props) {
   }
 
   async function handleSkip() {
+    await recordAnswer(session.id, question.id, 'SKIP', false)
     if (currentIndex < questions.length - 1) {
       setCurrentIndex(i => i + 1)
       setSelected([])
@@ -98,6 +102,12 @@ export default function QuizClient({ session, questions }: Props) {
 
   return (
     <div className="space-y-6">
+      {/* 再開バナー */}
+      {isResumed && (
+        <div className="bg-yellow-50 border border-yellow-200 rounded-lg px-4 py-2 text-sm text-yellow-800">
+          前回の続きから再開しています
+        </div>
+      )}
       {/* 進捗 */}
       <div className="flex items-center justify-between text-sm text-gray-500">
         <span>{currentIndex + 1} / {questions.length}</span>

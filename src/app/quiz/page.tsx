@@ -1,6 +1,6 @@
 import { redirect } from 'next/navigation'
 import { getQuestions } from '../actions/questions'
-import { createSession } from '../actions/sessions'
+import { createSession, getIncompleteSession } from '../actions/sessions'
 import QuizClient from './QuizClient'
 import type { ExamSet } from '@/types'
 
@@ -18,7 +18,18 @@ export default async function QuizPage({
   const questions = await getQuestions(examSet, startIndex, 10)
   if (questions.length === 0) redirect('/')
 
-  const session = await createSession(examSet, startIndex)
+  const resumed = await getIncompleteSession(examSet, startIndex)
+  const session = resumed?.session ?? await createSession(examSet, startIndex)
+  const initialIndex = Math.min(resumed?.initialIndex ?? 0, questions.length - 1)
+  const initialScore = resumed?.initialScore ?? 0
 
-  return <QuizClient session={session} questions={questions} />
+  return (
+    <QuizClient
+      session={session}
+      questions={questions}
+      initialIndex={initialIndex}
+      initialScore={initialScore}
+      isResumed={!!resumed}
+    />
+  )
 }

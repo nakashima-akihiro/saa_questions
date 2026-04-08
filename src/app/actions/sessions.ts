@@ -50,6 +50,34 @@ export async function completeSession(
   if (error) throw new Error(error.message)
 }
 
+export async function getIncompleteSession(
+  examSet: ExamSet,
+  startIndex: number
+): Promise<{ session: Session; initialIndex: number; initialScore: number } | null> {
+  const { data: sessions } = await supabase
+    .from('sessions')
+    .select('*')
+    .eq('exam_set', examSet)
+    .eq('start_index', startIndex)
+    .is('completed_at', null)
+    .order('created_at', { ascending: false })
+    .limit(1)
+
+  if (!sessions || sessions.length === 0) return null
+
+  const session = sessions[0] as Session
+
+  const { data: answers } = await supabase
+    .from('answers')
+    .select('is_correct')
+    .eq('session_id', session.id)
+
+  const initialIndex = answers?.length ?? 0
+  const initialScore = answers?.filter(a => a.is_correct).length ?? 0
+
+  return { session, initialIndex, initialScore }
+}
+
 export async function getRecentSessions(limit: number = 20): Promise<Session[]> {
   const { data, error } = await supabase
     .from('sessions')
