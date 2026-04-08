@@ -73,6 +73,17 @@ export default function QuizClient({ session, questions }: Props) {
     }
   }
 
+  async function handleSkip() {
+    if (currentIndex < questions.length - 1) {
+      setCurrentIndex(i => i + 1)
+      setSelected([])
+      setAnswered(false)
+    } else {
+      await completeSession(session.id, score)
+      router.push(`/result/${session.exam_set}`)
+    }
+  }
+
   function getOptionStyle(key: string): string {
     const base = 'w-full text-left p-3 rounded-lg border-2 transition-colors '
     if (!answered) {
@@ -207,13 +218,21 @@ export default function QuizClient({ session, questions }: Props) {
       {/* ボタン */}
       <div className="flex gap-3">
         {!answered ? (
-          <button
-            onClick={handleAnswer}
-            disabled={selected.length === 0}
-            className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-40 disabled:cursor-not-allowed"
-          >
-            回答する
-          </button>
+          <>
+            <button
+              onClick={handleAnswer}
+              disabled={selected.length === 0}
+              className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-40 disabled:cursor-not-allowed"
+            >
+              回答する
+            </button>
+            <button
+              onClick={handleSkip}
+              className="px-6 py-2 bg-gray-100 text-gray-600 rounded-lg hover:bg-gray-200"
+            >
+              スキップ
+            </button>
+          </>
         ) : (
           <button
             onClick={handleNext}
